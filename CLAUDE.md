@@ -37,3 +37,10 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Never show a success message for something that didn't happen (for example, an alert that wasn't sent).
 - The app must work offline: no runtime requests to font or icon CDNs. Storage can fail, so go through `src/lib/storage.ts`.
 - Sentence case. Say "tap", not "click".
+- Emergency alerts open the Messages app via an `sms:` link (`src/lib/alert.ts`); the user taps Send. Copy must say so and never claim an alert was sent.
+
+## Installable app (PWA)
+
+- Configured in `vite.config.ts` with `vite-plugin-pwa`. Icons live in `public/icons/` (source: `icon.svg`).
+- `registerType: 'prompt'` is deliberate: never auto-reload, because it would wipe a message mid-sentence.
+- Everything must work offline. Bundle new assets locally and keep them inside the precache `globPatterns`.

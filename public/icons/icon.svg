@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0f3e17"/>
+  <!-- Speech bubble kept inside the central 80% so maskable crops never cut it -->
+  <path d="M136 146h240a40 40 0 0 1 40 40v120a40 40 0 0 1-40 40H246l-70 56v-56h-40a40 40 0 0 1-40-40V186a40 40 0 0 1 40-40z" fill="#e1f4df"/>
+  <!-- Sound bars -->
+  <g fill="#0f3e17">
+    <rect x="186" y="214" width="22" height="64" rx="11"/>
+    <rect x="245" y="190" width="22" height="112" rx="11"/>
+    <rect x="304" y="224" width="22" height="44" rx="11"/>
+  </g>
+</svg>
