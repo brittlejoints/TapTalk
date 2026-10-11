@@ -1,4 +1,5 @@
 import { ArrowRight, Droplet, Hand, Utensils, Volume2 } from 'lucide-react';
+import { SproutIllustration } from '../components/SproutIllustration';
 
 export function WelcomeScreen({ onStart }: { onStart: () => void }) {
   return (
@@ -9,7 +10,10 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
       </header>
 
       <section className="flex flex-col gap-[14px] rounded-tile bg-keylime px-[21px] py-7">
-        <span className="eyebrow text-forest">AAC for everyone</span>
+        <div className="flex items-start justify-between gap-3">
+          <span className="eyebrow pt-1 text-forest">AAC for everyone</span>
+          <SproutIllustration className="-mt-3 -mr-2 size-24 shrink-0" />
+        </div>
         <h1 className="font-display text-title leading-[1.05] font-light tracking-[-0.03em] text-balance text-forest">
           Your voice, one tap away.
         </h1>

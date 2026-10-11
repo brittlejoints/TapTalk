@@ -112,3 +112,156 @@
     transition: none;
   }
 }
+
+/*
+  Playful touches. Each one confirms something the user did (a tap, a spoken
+  message, a saved phrase). They play once, never loop, never delay speech or
+  move a target, and only run when BOTH the in-app setting (.playful) and the
+  device's motion setting allow it. Elements stay hidden otherwise.
+*/
+.ink,
+.bloom-leaf {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Watercolor ink spreading from where a tile was touched */
+  .playful .ink {
+    display: block;
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 9999px;
+    background: var(--color-forest);
+    pointer-events: none;
+    animation: ink-spread 520ms ease-out forwards;
+  }
+
+  /* New words hop into the message bar */
+  .playful .chip-in {
+    animation: chip-in 280ms cubic-bezier(0.2, 0.9, 0.3, 1.25);
+  }
+
+  /* Leaves drift up from the speak button when a message is spoken */
+  .playful .bloom-leaf {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    animation: leaf-rise 950ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  }
+
+  /* The star does a small twinkle when a phrase is saved */
+  .playful .twinkle {
+    animation: twinkle 520ms cubic-bezier(0.2, 0.9, 0.3, 1.3);
+  }
+
+  /* Welcome illustration: the sprout grows once */
+  .playful .grow-stem {
+    transform-origin: 50% 100%;
+    transform-box: fill-box;
+    animation: grow 900ms 150ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
+  .playful .grow-leaf {
+    transform-box: fill-box;
+    animation: unfurl 700ms cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  }
+  .playful .grow-leaf.left {
+    transform-origin: 100% 100%;
+    animation-delay: 750ms;
+  }
+  .playful .grow-leaf.right {
+    transform-origin: 0% 100%;
+    animation-delay: 900ms;
+  }
+  .playful .sparkle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: sparkle 900ms 1.2s ease-out both;
+  }
+}
+
+@keyframes ink-spread {
+  from {
+    transform: scale(0);
+    opacity: 0.18;
+  }
+  to {
+    transform: scale(22);
+    opacity: 0;
+  }
+}
+
+@keyframes chip-in {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes leaf-rise {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% - 56px)) scale(1) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
+@keyframes twinkle {
+  0% {
+    transform: scale(0.6) rotate(-20deg);
+  }
+  60% {
+    transform: scale(1.25) rotate(8deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes unfurl {
+  from {
+    transform: scale(0) rotate(-25deg);
+  }
+  to {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

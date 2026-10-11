@@ -88,7 +88,7 @@ export function BoardScreen({
       <MessageBar
         words={words}
         speaking={speaking}
-        canSave={!savedPhrases.some((p) => p.toLowerCase() === sentence.toLowerCase())}
+        saved={savedPhrases.some((p) => p.toLowerCase() === sentence.toLowerCase())}
         onSpeak={() => onSpeak(sentence)}
         onStop={onStop}
         onDelete={() => setWords(removeLastWord)}

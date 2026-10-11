@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import { useState, type PointerEvent } from 'react';
 import { TILE_COLOR_CLASS, type TileColorId } from '../data/colors';
 
 interface TileProps {
@@ -15,11 +16,20 @@ interface TileProps {
 /** One board tile. Used by the grid and by the custom tile editor's preview, so both always match. */
 export function Tile({ label, color, icon: Icon, photo, variant = 'word', onClick, className = '' }: TileProps) {
   const phrase = variant === 'phrase';
+  // Where the last touch landed, for the ink ripple (hidden by CSS unless playful touches are on).
+  const [ink, setInk] = useState<{ x: number; y: number; id: number } | null>(null);
+
+  const startInk = (e: PointerEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setInk({ x: e.clientX - rect.left, y: e.clientY - rect.top, id: Date.now() });
+  };
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`pressable tile-edge flex min-w-0 flex-col items-center justify-center gap-[7px] overflow-hidden rounded-tile p-[7px] text-center leading-tight text-forest ${
+      onPointerDown={startInk}
+      className={`pressable tile-edge relative flex min-w-0 flex-col items-center justify-center gap-[7px] overflow-hidden rounded-tile p-[7px] text-center leading-tight text-forest ${
         TILE_COLOR_CLASS[color]
       } ${phrase ? 'text-[15px] font-medium' : 'text-tile font-semibold'} ${className}`}
     >
@@ -33,6 +43,7 @@ export function Tile({ label, color, icon: Icon, photo, variant = 'word', onClic
         Icon && <Icon size={phrase ? 20 : 32} strokeWidth={1.6} aria-hidden="true" className="shrink-0" />
       )}
       <span className="line-clamp-2 break-words">{label}</span>
+      {ink && <span key={ink.id} className="ink" style={{ left: ink.x, top: ink.y }} aria-hidden="true" />}
     </button>
   );
 }

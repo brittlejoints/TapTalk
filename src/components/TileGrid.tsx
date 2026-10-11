@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Sprout } from 'lucide-react';
 import { TILES_PER_PAGE, type Category, type Word } from '../data/vocabulary';
 import { paginate } from '../lib/pagination';
 import { Tile } from './Tile';
@@ -19,6 +19,21 @@ interface TileGridProps {
  */
 export function TileGrid({ category, words, page, variant = 'word', onTile, onNextPage }: TileGridProps) {
   const { slots, hasMore, index, count } = paginate(words, TILES_PER_PAGE, page);
+
+  if (words.length === 0) {
+    return (
+      <div
+        id="tile-grid"
+        role="tabpanel"
+        aria-labelledby={`tab-${category.id}`}
+        className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 rounded-tile bg-keylime p-7 text-center"
+      >
+        <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
+        <p className="font-display text-[28px] leading-tight font-light text-forest">Nothing saved yet</p>
+        <p className="max-w-[28ch] text-charcoal">Build a message, then tap the star to keep it here.</p>
+      </div>
+    );
+  }
 
   return (
     <div

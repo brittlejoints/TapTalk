@@ -245,6 +245,16 @@ export function SettingsScreen({
         />
       </Section>
 
+      <Section title="Feel">
+        <Toggle
+          id="playful"
+          label="Playful touches"
+          hint="Small, quick animations when you tap, speak and save. Turn off for a calmer screen. Your device's Reduce Motion setting always turns them off."
+          checked={settings.playful}
+          onChange={(playful) => onUpdate({ playful })}
+        />
+      </Section>
+
       <Section title="Voice">
         {speechSupported ? (
           <>

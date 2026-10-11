@@ -10,6 +10,8 @@ export interface Settings {
   rate: number;
   /** The user's name, used in emergency alert messages. */
   yourName: string;
+  /** Small celebratory animations. The OS Reduce Motion setting always overrides this. */
+  playful: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -18,6 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   voiceURI: null,
   rate: 1,
   yourName: '',
+  playful: true,
 };
 
 /**
@@ -32,6 +35,7 @@ export function normalizeSettings(raw: unknown): Settings {
     voiceURI: typeof v.voiceURI === 'string' ? v.voiceURI : DEFAULT_SETTINGS.voiceURI,
     rate: typeof v.rate === 'number' && v.rate >= 0.5 && v.rate <= 2 ? v.rate : DEFAULT_SETTINGS.rate,
     yourName: typeof v.yourName === 'string' ? v.yourName.slice(0, 60) : DEFAULT_SETTINGS.yourName,
+    playful: typeof v.playful === 'boolean' ? v.playful : DEFAULT_SETTINGS.playful,
   };
 }
 

@@ -39,7 +39,7 @@ export default function App() {
   };
 
   return (
-    <div className={`h-full ${settings.highVisibility ? 'high-visibility' : ''}`}>
+    <div className={`h-full ${settings.highVisibility ? 'high-visibility' : ''} ${settings.playful ? 'playful' : ''}`}>
       {view === 'welcome' && <WelcomeScreen onStart={start} />}
       {view === 'board' && (
         <BoardScreen
