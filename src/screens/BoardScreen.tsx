@@ -1,14 +1,17 @@
-import { Settings as SettingsIcon, Siren } from 'lucide-react';
+import { MessageCircle, Settings as SettingsIcon, Siren } from 'lucide-react';
 import { useState } from 'react';
 import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
 import { TileGrid } from '../components/TileGrid';
-import { CATEGORIES, type CategoryId } from '../data/vocabulary';
+import { TILE_ICONS } from '../data/icons';
+import { CATEGORIES, type CategoryId, type Word } from '../data/vocabulary';
+import type { CustomTile } from '../lib/customTiles';
 import { addWord, removeLastWord, toSentence } from '../lib/message';
 
 interface BoardScreenProps {
   savedPhrases: string[];
+  customTiles: CustomTile[];
   speakOnTap: boolean;
   speaking: boolean;
   onSpeak: (text: string) => void;
@@ -20,6 +23,7 @@ interface BoardScreenProps {
 
 export function BoardScreen({
   savedPhrases,
+  customTiles,
   speakOnTap,
   speaking,
   onSpeak,
@@ -29,8 +33,25 @@ export function BoardScreen({
   onSettings,
 }: BoardScreenProps) {
   const [categoryId, setCategoryId] = useState<CategoryId>('needs');
+  const [page, setPage] = useState(0);
   const [words, setWords] = useState<string[]>([]);
   const category = CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[1];
+
+  // Built-in words first, then the user's own tiles, so built-in tiles keep their positions.
+  const tileWords: Word[] =
+    category.id === 'saved'
+      ? savedPhrases.map((label) => ({ label, icon: MessageCircle }))
+      : [
+          ...category.words,
+          ...customTiles
+            .filter((t) => t.category === category.id)
+            .map((t) => ({ label: t.label, icon: TILE_ICONS[t.icon], photo: t.photo, color: t.color })),
+        ];
+
+  const selectCategory = (id: CategoryId) => {
+    setCategoryId(id);
+    setPage(0);
+  };
   const sentence = toSentence(words);
 
   const handleWord = (word: string) => {
@@ -76,12 +97,15 @@ export function BoardScreen({
 
       <CoreRow onWord={handleWord} />
 
-      <CategoryTabs categories={CATEGORIES} current={categoryId} onSelect={setCategoryId} />
+      <CategoryTabs categories={CATEGORIES} current={categoryId} onSelect={selectCategory} />
 
       <TileGrid
         category={category}
-        phrases={category.id === 'saved' ? savedPhrases : undefined}
+        words={tileWords}
+        page={page}
+        variant={category.id === 'saved' ? 'phrase' : 'word'}
         onTile={handleWord}
+        onNextPage={() => setPage((p) => p + 1)}
       />
     </main>
   );

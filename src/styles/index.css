@@ -19,6 +19,17 @@
   --color-sage: #b1dbb8;
   --color-slate: #b6ced5;
 
+  /* Light tile palette: forest text reaches about 10:1 on every one.
+     No pink or red tints, so red keeps meaning Help. */
+  --color-tile-keylime: #e1f4df;
+  --color-tile-mint: #d3ecd8;
+  --color-tile-sea: #d3ede8;
+  --color-tile-mist: #dbe8ee;
+  --color-tile-lilac: #e9e2f5;
+  --color-tile-butter: #faefc2;
+  --color-tile-peach: #fde0cb;
+  --color-tile-sand: #efe8dc;
+
   /* Help: the one non-botanical hue, reserved for emergency UI */
   --color-help: #b3261e;
   --color-help-wash: #f8ded9;
@@ -81,6 +92,14 @@
     filter: brightness(0.93);
     transform: scale(0.97);
   }
+}
+
+/*
+  Light tiles nearly vanish on cream, so each tile gets a soft hairline in a
+  darker shade of its own color. This is an edge, not a shadow or elevation.
+*/
+@utility tile-edge {
+  box-shadow: inset 0 0 0 1px rgb(15 62 23 / 0.16);
 }
 
 /* Accessibility setting: outlines tiles for users who need clear edges */

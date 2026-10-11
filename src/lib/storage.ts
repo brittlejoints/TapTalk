@@ -17,11 +17,14 @@ export function loadJSON<T>(key: string, fallback: T, isValid: (value: unknown) 
   }
 }
 
-export function saveJSON(key: string, value: unknown): void {
+/** Returns false when storage is unavailable or full, so callers can tell the user. */
+export function saveJSON(key: string, value: unknown): boolean {
   try {
     localStorage.setItem(PREFIX + key, JSON.stringify(value));
+    return true;
   } catch {
     // Not fatal: the app keeps working for this session.
+    return false;
   }
 }
 

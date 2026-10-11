@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { TileColorId } from './colors';
 import {
   Angry, Annoyed, Bandage, Bath, Bed, Coffee, Droplet, Flame, Frown, Ghost,
   GraduationCap, Hand, Heart, HeartHandshake, HeartPulse, House, Laugh, LifeBuoy,
@@ -8,19 +9,21 @@ import {
 
 export type CategoryId = 'saved' | 'needs' | 'feelings' | 'people' | 'medical';
 
-/** Surface tokens a category can use. Each maps to a Tailwind bg class. */
-export type Surface = 'mint' | 'sage' | 'slate';
-
 export interface Word {
   label: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  /** A data URL, for custom tiles with a photo. Shown instead of the icon. */
+  photo?: string;
+  /** Overrides the category color (custom tiles). */
+  color?: TileColorId;
 }
 
 export interface Category {
   id: CategoryId;
   label: string;
   icon: LucideIcon;
-  surface: Surface;
+  /** Default tile color for this category (Fitzgerald-inspired where it fits). */
+  color: TileColorId;
   words: Word[];
 }
 
@@ -32,14 +35,14 @@ export const CATEGORIES: Category[] = [
     id: 'saved',
     label: 'Saved',
     icon: Star,
-    surface: 'mint',
+    color: 'keylime',
     words: [], // filled from the user's saved phrases
   },
   {
     id: 'needs',
     label: 'Needs',
     icon: Coffee,
-    surface: 'sage',
+    color: 'peach',
     words: [
       { label: 'I want', icon: Hand },
       { label: 'I need', icon: LifeBuoy },
@@ -56,7 +59,7 @@ export const CATEGORIES: Category[] = [
     id: 'feelings',
     label: 'Feelings',
     icon: Smile,
-    surface: 'slate',
+    color: 'mist',
     words: [
       { label: 'Happy', icon: Smile },
       { label: 'Sad', icon: Frown },
@@ -73,7 +76,7 @@ export const CATEGORIES: Category[] = [
     id: 'people',
     label: 'People',
     icon: Users,
-    surface: 'sage',
+    color: 'butter',
     words: [
       { label: 'Me', icon: User },
       { label: 'You', icon: UserRound },
@@ -90,7 +93,7 @@ export const CATEGORIES: Category[] = [
     id: 'medical',
     label: 'Medical',
     icon: HeartPulse,
-    surface: 'slate',
+    color: 'lilac',
     words: [
       { label: 'Medicine', icon: Pill },
       { label: 'It hurts', icon: Zap },
@@ -117,10 +120,3 @@ export const DEFAULT_SAVED_PHRASES = [
   'Not now',
   'Good morning',
 ];
-
-/** Static class names so Tailwind can find them at build time. */
-export const SURFACE_CLASS: Record<Surface, string> = {
-  mint: 'bg-mint',
-  sage: 'bg-sage',
-  slate: 'bg-slate',
-};

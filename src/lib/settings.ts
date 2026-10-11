@@ -35,7 +35,9 @@ export function useSettings() {
     loadJSON('settings', DEFAULT_SETTINGS, isSettings),
   );
 
-  useEffect(() => saveJSON('settings', settings), [settings]);
+  useEffect(() => {
+    saveJSON('settings', settings);
+  }, [settings]);
 
   const update = (patch: Partial<Settings>) => setSettings((prev) => ({ ...prev, ...patch }));
 
