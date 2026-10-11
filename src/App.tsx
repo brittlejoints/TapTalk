@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DEFAULT_SAVED_PHRASES, TILES_PER_PAGE } from './data/vocabulary';
+import { useEmergencyContacts } from './lib/contacts';
 import { useCustomTiles } from './lib/customTiles';
 import { savePhrase } from './lib/message';
 import { useSettings } from './lib/settings';
@@ -19,6 +20,7 @@ export default function App() {
   const { settings, update } = useSettings();
   const speech = useSpeech(settings.voiceURI, settings.rate);
   const custom = useCustomTiles();
+  const emergency = useEmergencyContacts();
   const [editingTileId, setEditingTileId] = useState<string | null>(null);
   const [view, setView] = useState<View>(() =>
     loadJSON('onboarded', false, isBoolean) ? 'board' : 'welcome',
@@ -52,7 +54,15 @@ export default function App() {
           onSettings={() => setView('settings')}
         />
       )}
-      {view === 'help' && <HelpScreen onSpeak={speech.speak} onClose={() => setView('board')} />}
+      {view === 'help' && (
+        <HelpScreen
+          contacts={emergency.contacts}
+          yourName={settings.yourName}
+          onSpeak={speech.speak}
+          onClose={() => setView('board')}
+          onSetUpContacts={() => setView('settings')}
+        />
+      )}
       {view === 'settings' && (
         <SettingsScreen
           settings={settings}
@@ -60,6 +70,9 @@ export default function App() {
           speechSupported={speech.supported}
           savedPhrases={savedPhrases}
           customTiles={custom.tiles}
+          contacts={emergency.contacts}
+          onSaveContact={emergency.saveContact}
+          onRemoveContact={emergency.removeContact}
           onAddTile={() => {
             setEditingTileId(null);
             setView('tile-editor');

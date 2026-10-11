@@ -1,8 +1,10 @@
-import { ArrowLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { ArrowLeft, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { ContactForm } from '../components/ContactForm';
 import { TILE_COLOR_CLASS } from '../data/colors';
 import { TILE_ICONS } from '../data/icons';
 import { CATEGORIES } from '../data/vocabulary';
+import { MAX_CONTACTS, type EmergencyContact } from '../lib/contacts';
 import type { CustomTile } from '../lib/customTiles';
 import type { Settings } from '../lib/settings';
 
@@ -12,6 +14,9 @@ interface SettingsScreenProps {
   speechSupported: boolean;
   savedPhrases: string[];
   customTiles: CustomTile[];
+  contacts: EmergencyContact[];
+  onSaveContact: (contact: EmergencyContact) => boolean;
+  onRemoveContact: (id: string) => void;
   onAddTile: () => void;
   onEditTile: (id: string) => void;
   onUpdate: (patch: Partial<Settings>) => void;
@@ -66,6 +71,9 @@ export function SettingsScreen({
   speechSupported,
   savedPhrases,
   customTiles,
+  contacts,
+  onSaveContact,
+  onRemoveContact,
   onAddTile,
   onEditTile,
   onUpdate,
@@ -73,6 +81,9 @@ export function SettingsScreen({
   onRemovePhrase,
   onBack,
 }: SettingsScreenProps) {
+  /** Which contact form is open: 'new', a contact id, or none. */
+  const [editingContact, setEditingContact] = useState<string | null>(null);
+
   return (
     <main className="mx-auto flex min-h-full max-w-lg flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(28px,env(safe-area-inset-bottom))]">
       <header className="flex items-center gap-2">
@@ -86,6 +97,91 @@ export function SettingsScreen({
         </button>
         <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-forest">Settings</h1>
       </header>
+
+      <Section title="Emergency contacts">
+        <p className="-mt-1 text-sm text-charcoal">
+          When you tap Alert on the Help screen, your messages app opens with an alert to these people, ready to send.
+          Contacts are saved only on this device.
+        </p>
+        <label htmlFor="your-name" className="flex flex-col gap-1">
+          <span className="font-semibold text-forest">Your name (shown in alerts)</span>
+          <input
+            id="your-name"
+            value={settings.yourName}
+            maxLength={60}
+            onChange={(e) => onUpdate({ yourName: e.target.value })}
+            placeholder="For example: Sam"
+            className="h-12 rounded-tile bg-cream px-3.5 text-[17px] text-charcoal placeholder:text-muted"
+            autoComplete="off"
+          />
+        </label>
+
+        {contacts.length > 0 && (
+          <ul className="flex flex-col gap-1.5">
+            {contacts.map((c) =>
+              editingContact === c.id ? (
+                <li key={c.id}>
+                  <ContactForm
+                    contact={c}
+                    onSave={(next) => {
+                      const ok = onSaveContact(next);
+                      if (ok) setEditingContact(null);
+                      return ok;
+                    }}
+                    onDelete={(id) => {
+                      onRemoveContact(id);
+                      setEditingContact(null);
+                    }}
+                    onCancel={() => setEditingContact(null)}
+                  />
+                </li>
+              ) : (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    onClick={() => setEditingContact(c.id)}
+                    className="flex w-full items-center gap-3 rounded-tile bg-cream p-1.5 pr-3 text-left"
+                    aria-label={`Edit contact: ${c.name}`}
+                  >
+                    <span className="grid size-11 shrink-0 place-items-center rounded-full bg-tile-mint text-forest">
+                      <Phone size={18} aria-hidden="true" />
+                    </span>
+                    <span className="flex min-w-0 flex-1 flex-col">
+                      <span className="truncate font-semibold text-forest">{c.name}</span>
+                      <span className="truncate text-sm text-muted">
+                        {[c.relationship, c.phone].filter(Boolean).join(' · ')}
+                      </span>
+                    </span>
+                    <ChevronRight size={18} className="text-muted" aria-hidden="true" />
+                  </button>
+                </li>
+              ),
+            )}
+          </ul>
+        )}
+
+        {editingContact === 'new' ? (
+          <ContactForm
+            onSave={(next) => {
+              const ok = onSaveContact(next);
+              if (ok) setEditingContact(null);
+              return ok;
+            }}
+            onCancel={() => setEditingContact(null)}
+          />
+        ) : contacts.length < MAX_CONTACTS ? (
+          <button
+            type="button"
+            onClick={() => setEditingContact('new')}
+            className="pressable inline-flex h-12 items-center justify-center gap-2 rounded-tile bg-forest font-medium text-cream"
+          >
+            <Plus size={20} aria-hidden="true" />
+            Add an emergency contact
+          </button>
+        ) : (
+          <p className="text-sm text-muted">You can save up to {MAX_CONTACTS} emergency contacts.</p>
+        )}
+      </Section>
 
       <Section title="Your tiles">
         <button
