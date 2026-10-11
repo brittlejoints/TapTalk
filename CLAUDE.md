@@ -30,7 +30,7 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 
 ## AAC rules
 
-- The talk board never scrolls. Tiles stay in fixed positions (3x3), and empty slots stay empty rather than reflowing. Categories with more than 9 tiles page via a "More" tile in the last slot (`src/lib/pagination.ts`).
+- The talk board never scrolls. Tiles stay in fixed positions (3x3), and empty slots stay empty rather than reflowing. Each category has 8 built-in words; slot 9 is always navigation ("My words", then "More"/"Back" on the user's own pages), so custom tiles never move built-in words (`src/lib/boardPages.ts`).
 - Touch targets are at least 44px. Check layouts at 320x568 (iPhone SE) as well as 390x844.
 - Never animate or scale selected states, and never use looping or pulsing animation.
 - Focus styles use `:focus-visible` only.

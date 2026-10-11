@@ -1,40 +1,49 @@
-import { ChevronRight, Sprout } from 'lucide-react';
-import { TILES_PER_PAGE, type Category, type Word } from '../data/vocabulary';
-import { paginate } from '../lib/pagination';
+import { ArrowLeft, ChevronRight, Sprout } from 'lucide-react';
+import type { ReactNode } from 'react';
+import type { Category, Word } from '../data/vocabulary';
+import type { Slot } from '../lib/boardPages';
 import { Tile } from './Tile';
+
+export type NavSlot = Exclude<Slot<Word>, { kind: 'word' } | null>;
 
 interface TileGridProps {
   category: Category;
-  words: Word[];
-  page: number;
+  slots: Slot<Word>[];
   variant?: 'word' | 'phrase';
+  /** Shown in place of word slots, e.g. for an empty page. Navigation keeps its slot. */
+  emptyMessage?: ReactNode;
   onTile: (label: string) => void;
-  onNextPage: () => void;
+  onNav: (slot: NavSlot) => void;
+}
+
+function NavTile({ slot, category, onNav }: { slot: NavSlot; category: Category; onNav: (slot: NavSlot) => void }) {
+  const name = category.label.toLowerCase();
+  const content =
+    slot.kind === 'mine'
+      ? { icon: <Sprout size={30} strokeWidth={1.6} aria-hidden="true" />, label: 'My words', sub: slot.count ? String(slot.count) : null, aria: `My ${name} words, ${slot.count} tiles` }
+      : slot.kind === 'more'
+        ? { icon: <ChevronRight size={30} aria-hidden="true" />, label: 'More', sub: `${slot.page} of ${slot.pages}`, aria: `More of my ${name} words, page ${slot.page} of ${slot.pages}` }
+        : { icon: <ArrowLeft size={28} aria-hidden="true" />, label: 'Back', sub: null, aria: `Back to ${name}` };
+
+  return (
+    <button
+      type="button"
+      onClick={() => onNav(slot)}
+      aria-label={content.aria}
+      className="pressable flex flex-col items-center justify-center gap-1 rounded-tile bg-forest text-cream"
+    >
+      {content.icon}
+      <span className="font-semibold">{content.label}</span>
+      {content.sub && <span className="text-xs opacity-80">{content.sub}</span>}
+    </button>
+  );
 }
 
 /**
  * A fixed 3x3 grid that fills the remaining screen height. Empty slots stay
- * blank, so every tile keeps its position. When a category has more than 9
- * tiles, the last slot is always the "More" tile.
+ * blank, and slot 9 is always navigation, so every tile keeps its position.
  */
-export function TileGrid({ category, words, page, variant = 'word', onTile, onNextPage }: TileGridProps) {
-  const { slots, hasMore, index, count } = paginate(words, TILES_PER_PAGE, page);
-
-  if (words.length === 0) {
-    return (
-      <div
-        id="tile-grid"
-        role="tabpanel"
-        aria-labelledby={`tab-${category.id}`}
-        className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 rounded-tile bg-keylime p-7 text-center"
-      >
-        <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
-        <p className="font-display text-[28px] leading-tight font-light text-forest">Nothing saved yet</p>
-        <p className="max-w-[28ch] text-charcoal">Build a message, then tap the star to keep it here.</p>
-      </div>
-    );
-  }
-
+export function TileGrid({ category, slots, variant = 'word', emptyMessage, onTile, onNav }: TileGridProps) {
   return (
     <div
       id="tile-grid"
@@ -42,39 +51,33 @@ export function TileGrid({ category, words, page, variant = 'word', onTile, onNe
       aria-labelledby={`tab-${category.id}`}
       className="grid min-h-0 flex-1 grid-cols-3 grid-rows-3 gap-[7px]"
     >
-      {slots.map((word, i) => {
-        const key = `${category.id}-${index}-${i}`;
-        if (hasMore && i === slots.length - 1) {
+      {emptyMessage ? (
+        <>
+          <div className="col-span-3 row-span-2 flex flex-col items-center justify-center gap-3 rounded-tile bg-keylime p-6 text-center">
+            {emptyMessage}
+          </div>
+          <div className="col-span-2" aria-hidden="true" />
+          {slots[8] && slots[8].kind !== 'word' && <NavTile slot={slots[8]} category={category} onNav={onNav} />}
+        </>
+      ) : (
+        slots.map((slot, i) => {
+          const key = `${category.id}-${i}`;
+          if (!slot) return <div key={key} aria-hidden="true" />;
+          if (slot.kind !== 'word') return <NavTile key={key} slot={slot} category={category} onNav={onNav} />;
+          const { word } = slot;
           return (
-            <button
-              key={key}
-              type="button"
-              onClick={onNextPage}
-              className="pressable flex flex-col items-center justify-center gap-1 rounded-tile bg-forest text-cream"
-              aria-label={`More ${category.label.toLowerCase()} tiles, page ${index + 1} of ${count}`}
-            >
-              <ChevronRight size={30} aria-hidden="true" />
-              <span className="font-semibold">More</span>
-              <span className="text-xs opacity-80">
-                {index + 1} of {count}
-              </span>
-            </button>
+            <Tile
+              key={`${key}-${word.label}`}
+              label={word.label}
+              icon={word.icon}
+              photo={word.photo}
+              color={word.color ?? category.color}
+              variant={variant}
+              onClick={() => onTile(word.label)}
+            />
           );
-        }
-        return word ? (
-          <Tile
-            key={key}
-            label={word.label}
-            icon={word.icon}
-            photo={word.photo}
-            color={word.color ?? category.color}
-            variant={variant}
-            onClick={() => onTile(word.label)}
-          />
-        ) : (
-          <div key={key} aria-hidden="true" />
-        );
-      })}
+        })
+      )}
     </div>
   );
 }

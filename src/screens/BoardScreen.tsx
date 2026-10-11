@@ -1,11 +1,12 @@
-import { MessageCircle, Settings as SettingsIcon, Siren } from 'lucide-react';
+import { MessageCircle, Settings as SettingsIcon, Siren, Sprout } from 'lucide-react';
 import { useState } from 'react';
 import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
-import { TileGrid } from '../components/TileGrid';
+import { TileGrid, type NavSlot } from '../components/TileGrid';
 import { TILE_ICONS } from '../data/icons';
-import { CATEGORIES, type CategoryId, type Word } from '../data/vocabulary';
+import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word } from '../data/vocabulary';
+import { boardPage, type Slot } from '../lib/boardPages';
 import type { CustomTile } from '../lib/customTiles';
 import { addWord, removeLastWord, toSentence } from '../lib/message';
 
@@ -37,16 +38,41 @@ export function BoardScreen({
   const [words, setWords] = useState<string[]>([]);
   const category = CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[1];
 
-  // Built-in words first, then the user's own tiles, so built-in tiles keep their positions.
-  const tileWords: Word[] =
-    category.id === 'saved'
-      ? savedPhrases.map((label) => ({ label, icon: MessageCircle }))
-      : [
-          ...category.words,
-          ...customTiles
-            .filter((t) => t.category === category.id)
-            .map((t) => ({ label: t.label, icon: TILE_ICONS[t.icon], photo: t.photo, color: t.color })),
-        ];
+  const isSaved = category.id === 'saved';
+  const customWords: Word[] = customTiles
+    .filter((t) => t.category === category.id)
+    .map((t) => ({ label: t.label, icon: TILE_ICONS[t.icon], photo: t.photo, color: t.color }));
+
+  // Saved phrases fill all 9 slots. Other categories keep slot 9 for "My words".
+  const layout = isSaved
+    ? {
+        page: 0,
+        slots: Array.from({ length: TILES_PER_PAGE }, (_, i): Slot<Word> =>
+          savedPhrases[i] ? { kind: 'word', word: { label: savedPhrases[i], icon: MessageCircle } } : null,
+        ),
+      }
+    : boardPage(category.words, customWords, page);
+
+  const handleNav = (slot: NavSlot) => {
+    if (slot.kind === 'mine') setPage(1);
+    else if (slot.kind === 'more') setPage(slot.page + 1);
+    else setPage(0);
+  };
+
+  const emptyMessage =
+    isSaved && savedPhrases.length === 0 ? (
+      <>
+        <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
+        <p className="font-display text-[28px] leading-tight font-light text-forest">Nothing saved yet</p>
+        <p className="max-w-[28ch] text-charcoal">Build a message, then tap the star to keep it here.</p>
+      </>
+    ) : !isSaved && layout.page > 0 && customWords.length === 0 ? (
+      <>
+        <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
+        <p className="font-display text-[28px] leading-tight font-light text-forest">Your own words grow here</p>
+        <p className="max-w-[30ch] text-charcoal">Add names, places and favorites in Settings, under Your tiles.</p>
+      </>
+    ) : undefined;
 
   const selectCategory = (id: CategoryId) => {
     setCategoryId(id);
@@ -101,11 +127,11 @@ export function BoardScreen({
 
       <TileGrid
         category={category}
-        words={tileWords}
-        page={page}
-        variant={category.id === 'saved' ? 'phrase' : 'word'}
+        slots={layout.slots}
+        variant={isSaved ? 'phrase' : 'word'}
+        emptyMessage={emptyMessage}
         onTile={handleWord}
-        onNextPage={() => setPage((p) => p + 1)}
+        onNav={handleNav}
       />
     </main>
   );

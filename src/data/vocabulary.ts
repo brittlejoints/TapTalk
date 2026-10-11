@@ -2,8 +2,8 @@ import type { LucideIcon } from 'lucide-react';
 import type { TileColorId } from './colors';
 import {
   Angry, Annoyed, Bandage, Bath, Bed, Coffee, Droplet, Flame, Frown, Ghost,
-  GraduationCap, Hand, Heart, HeartHandshake, HeartPulse, House, Laugh, LifeBuoy,
-  Meh, Moon, Pill, RotateCw, Smile, Snowflake, Star, Stethoscope, Syringe,
+  GraduationCap, Hand, Heart, HeartHandshake, HeartPulse, Laugh, LifeBuoy,
+  Moon, Pill, RotateCw, Smile, Snowflake, Star, Stethoscope, Syringe,
   Thermometer, ThumbsUp, User, UserRound, Users, Utensils, Wind, Zap,
 } from 'lucide-react';
 
@@ -27,7 +27,10 @@ export interface Category {
   words: Word[];
 }
 
-/** Boards show 9 tiles in a fixed 3x3 grid so positions never move. */
+/**
+ * Boards show 9 tiles in a fixed 3x3 grid so positions never move. Categories
+ * have 8 built-in words; slot 9 is reserved for "My words" (see boardPages.ts).
+ */
 export const TILES_PER_PAGE = 9;
 
 export const CATEGORIES: Category[] = [
@@ -49,7 +52,6 @@ export const CATEGORIES: Category[] = [
       { label: 'Water', icon: Droplet },
       { label: 'Food', icon: Utensils },
       { label: 'Bathroom', icon: Bath },
-      { label: 'Sleep', icon: Bed },
       { label: 'Hot', icon: Flame },
       { label: 'Cold', icon: Snowflake },
       { label: 'Pain', icon: Zap },
@@ -68,7 +70,6 @@ export const CATEGORIES: Category[] = [
       { label: 'Scared', icon: Ghost },
       { label: 'Tired', icon: Moon },
       { label: 'Excited', icon: Laugh },
-      { label: 'Bored', icon: Meh },
       { label: 'Okay', icon: ThumbsUp },
     ],
   },
@@ -82,7 +83,6 @@ export const CATEGORIES: Category[] = [
       { label: 'You', icon: UserRound },
       { label: 'Mom', icon: Heart },
       { label: 'Dad', icon: Heart },
-      { label: 'Family', icon: House },
       { label: 'Friend', icon: Users },
       { label: 'Teacher', icon: GraduationCap },
       { label: 'Nurse', icon: Stethoscope },
@@ -100,7 +100,6 @@ export const CATEGORIES: Category[] = [
       { label: 'Sick', icon: Thermometer },
       { label: 'Dizzy', icon: RotateCw },
       { label: "Can't breathe", icon: Wind },
-      { label: 'Heart', icon: HeartPulse },
       { label: 'Bandage', icon: Bandage },
       { label: 'Shot', icon: Syringe },
       { label: 'Rest', icon: Bed },
