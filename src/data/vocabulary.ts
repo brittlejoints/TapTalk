@@ -14,6 +14,8 @@ export interface Word {
   icon?: LucideIcon;
   /** A data URL, for custom tiles with a photo. Shown instead of the icon. */
   photo?: string;
+  /** An emoji, for custom tiles. Shown instead of the icon. */
+  emoji?: string;
   /** Overrides the category color (custom tiles). */
   color?: TileColorId;
 }

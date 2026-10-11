@@ -2,7 +2,7 @@ import { ArrowLeft, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { TILE_COLOR_CLASS } from '../data/colors';
-import { TILE_ICONS } from '../data/icons';
+import { iconFor } from '../data/icons';
 import { CATEGORIES } from '../data/vocabulary';
 import { MAX_CONTACTS, type EmergencyContact } from '../lib/contacts';
 import type { CustomTile } from '../lib/customTiles';
@@ -199,7 +199,7 @@ export function SettingsScreen({
         ) : (
           <ul className="flex flex-col gap-1.5">
             {customTiles.map((t) => {
-              const Icon = TILE_ICONS[t.icon];
+              const Icon = iconFor(t.icon);
               const categoryLabel = CATEGORIES.find((c) => c.id === t.category)?.label;
               return (
                 <li key={t.id}>
@@ -210,7 +210,13 @@ export function SettingsScreen({
                     aria-label={`Edit tile: ${t.label}, in ${categoryLabel}`}
                   >
                     <span className={`tile-edge grid size-11 shrink-0 place-items-center overflow-hidden rounded-[10px] text-forest ${TILE_COLOR_CLASS[t.color]}`}>
-                      {t.photo ? <img src={t.photo} alt="" className="size-full object-cover" /> : <Icon size={20} aria-hidden="true" />}
+                      {t.photo ? (
+                        <img src={t.photo} alt="" className="size-full object-cover" />
+                      ) : t.emoji ? (
+                        <span className="emoji text-[22px] leading-none" aria-hidden="true">{t.emoji}</span>
+                      ) : (
+                        <Icon size={20} aria-hidden="true" />
+                      )}
                     </span>
                     <span className="flex min-w-0 flex-1 flex-col">
                       <span className="truncate font-semibold text-forest">{t.label}</span>

@@ -1,11 +1,11 @@
-import { ArrowLeft, Check, ImagePlus, X } from 'lucide-react';
-import { useId, useRef, useState, type ReactNode } from 'react';
+import { ArrowLeft, Check } from 'lucide-react';
+import { useId, useState, type ReactNode } from 'react';
 import { Tile } from '../components/Tile';
 import { TILE_COLOR_CLASS, TILE_COLORS, type TileColorId } from '../data/colors';
-import { TILE_ICONS, type TileIconId } from '../data/icons';
+import { iconFor, type TileIconId } from '../data/icons';
+import { PicturePicker, type PictureMode } from '../components/PicturePicker';
 import { CATEGORIES } from '../data/vocabulary';
 import { MAX_LABEL_LENGTH, type CustomCategoryId, type CustomTile } from '../lib/customTiles';
-import { resizePhoto } from '../lib/image';
 
 const CATEGORY_OPTIONS = CATEGORIES.filter((c) => c.id !== 'saved') as (typeof CATEGORIES[number] & {
   id: CustomCategoryId;
@@ -45,9 +45,10 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
   const [colorChosen, setColorChosen] = useState(!isNew);
   const [icon, setIcon] = useState<TileIconId>(tile?.icon ?? 'star');
   const [photo, setPhoto] = useState<string | undefined>(tile?.photo);
+  const [emoji, setEmoji] = useState<string | undefined>(tile?.emoji);
+  const [pictureMode, setPictureMode] = useState<PictureMode>(tile?.photo ? 'photo' : tile?.emoji ? 'emoji' : 'icon');
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
-  const fileInput = useRef<HTMLInputElement>(null);
   const labelId = useId();
 
   const trimmed = label.trim();
@@ -57,19 +58,17 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
     if (!colorChosen) setColor(defaultColorFor(next));
   };
 
-  const handlePhoto = async (file: File | undefined) => {
-    if (!file) return;
-    try {
-      setPhoto(await resizePhoto(file));
-      setError(null);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'That photo couldn’t be used.');
-    }
-  };
-
   const save = () => {
     if (!trimmed) {
       setError('Add a word or phrase for this tile.');
+      return;
+    }
+    if (pictureMode === 'photo' && !photo) {
+      setError('Add a photo, or switch to Icon or Emoji.');
+      return;
+    }
+    if (pictureMode === 'emoji' && !emoji) {
+      setError('Pick an emoji, or switch to Icon or Photo.');
       return;
     }
     const saved = onSave({
@@ -78,7 +77,9 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
       category,
       color,
       icon,
-      ...(photo ? { photo } : {}),
+      // Only the chosen picture type is saved; the icon stays as a fallback.
+      ...(pictureMode === 'photo' && photo ? { photo } : {}),
+      ...(pictureMode === 'emoji' && emoji ? { emoji } : {}),
     });
     if (saved) onClose();
     else setError('Couldn’t save: this device’s storage is full. Remove a photo or delete some tiles, then try again.');
@@ -105,8 +106,9 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
         <Tile
           label={trimmed || 'Your word'}
           color={color}
-          icon={TILE_ICONS[icon]}
-          photo={photo}
+          icon={iconFor(icon)}
+          photo={pictureMode === 'photo' ? photo : undefined}
+          emoji={pictureMode === 'emoji' ? emoji : undefined}
           onClick={() => trimmed && onSpeak(trimmed)}
           className="h-[130px] w-[110px]"
         />
@@ -184,66 +186,27 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
         </div>
       </Field>
 
-      <Field legend="Picture" hint="A real photo is often easiest to recognize. Otherwise, pick an icon.">
-        <div className="flex flex-col gap-[14px]">
-          {photo ? (
-            <div className="flex items-center gap-3">
-              <img src={photo} alt="Chosen photo" className="size-16 rounded-[10px] object-cover" />
-              <button
-                type="button"
-                onClick={() => setPhoto(undefined)}
-                className="inline-flex h-11 items-center gap-1.5 rounded-full bg-cream px-4 font-medium text-forest"
-              >
-                <X size={18} aria-hidden="true" />
-                Remove photo
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => fileInput.current?.click()}
-              className="pressable inline-flex h-12 items-center justify-center gap-2 rounded-tile bg-forest font-medium text-cream"
-            >
-              <ImagePlus size={20} aria-hidden="true" />
-              Add a photo
-            </button>
-          )}
-          <input
-            ref={fileInput}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              void handlePhoto(e.target.files?.[0]);
-              e.target.value = '';
-            }}
-          />
-
-          <div className={photo ? 'opacity-50' : ''}>
-            <p className="mb-2 text-sm text-forest">{photo ? 'Icon (used if you remove the photo)' : 'Icon'}</p>
-            <div className="grid grid-cols-6 gap-1.5" role="radiogroup" aria-label="Icon">
-              {(Object.keys(TILE_ICONS) as TileIconId[]).map((id) => {
-                const Icon = TILE_ICONS[id];
-                const selected = icon === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    role="radio"
-                    aria-checked={selected}
-                    aria-label={id.replace('-', ' ')}
-                    onClick={() => setIcon(id)}
-                    className={`grid aspect-square min-h-11 place-items-center rounded-[10px] ${
-                      selected ? 'bg-forest text-cream' : 'bg-cream text-forest'
-                    }`}
-                  >
-                    <Icon size={22} strokeWidth={1.75} aria-hidden="true" />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+      <Field legend="Picture">
+        <PicturePicker
+          mode={pictureMode}
+          icon={icon}
+          emoji={emoji}
+          photo={photo}
+          onModeChange={(m) => {
+            setPictureMode(m);
+            setError(null);
+          }}
+          onIcon={setIcon}
+          onEmoji={(e) => {
+            setEmoji(e);
+            setError(null);
+          }}
+          onPhoto={(p) => {
+            setPhoto(p);
+            setError(null);
+          }}
+          onError={setError}
+        />
       </Field>
 
       {error && (

@@ -4,7 +4,7 @@ import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
 import { TileGrid, type NavSlot } from '../components/TileGrid';
-import { TILE_ICONS } from '../data/icons';
+import { iconFor } from '../data/icons';
 import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word } from '../data/vocabulary';
 import { boardPage, type Slot } from '../lib/boardPages';
 import type { CustomTile } from '../lib/customTiles';
@@ -53,7 +53,7 @@ export function BoardScreen({
   const isSaved = category.id === 'saved';
   const customWords: Word[] = customTiles
     .filter((t) => t.category === category.id)
-    .map((t) => ({ label: t.label, icon: TILE_ICONS[t.icon], photo: t.photo, color: t.color }));
+    .map((t) => ({ label: t.label, icon: iconFor(t.icon), photo: t.photo, emoji: t.emoji, color: t.color }));
 
   // Saved phrases fill all 9 slots. Other categories keep slot 9 for "My words".
   const layout = isSaved

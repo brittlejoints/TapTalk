@@ -7,6 +7,7 @@ interface TileProps {
   color: TileColorId;
   icon?: LucideIcon;
   photo?: string;
+  emoji?: string;
   variant?: 'word' | 'phrase';
   onClick?: () => void;
   /** Extra classes, e.g. a fixed size for the editor preview. */
@@ -14,7 +15,7 @@ interface TileProps {
 }
 
 /** One board tile. Used by the grid and by the custom tile editor's preview, so both always match. */
-export function Tile({ label, color, icon: Icon, photo, variant = 'word', onClick, className = '' }: TileProps) {
+export function Tile({ label, color, icon: Icon, photo, emoji, variant = 'word', onClick, className = '' }: TileProps) {
   const phrase = variant === 'phrase';
   // Where the last touch landed, for the ink ripple (hidden by CSS unless playful touches are on).
   const [ink, setInk] = useState<{ x: number; y: number; id: number } | null>(null);
@@ -39,6 +40,10 @@ export function Tile({ label, color, icon: Icon, photo, variant = 'word', onClic
           alt=""
           className="aspect-square max-h-[58%] min-h-0 w-auto rounded-[9px] object-cover"
         />
+      ) : emoji ? (
+        <span className={`emoji shrink-0 leading-none ${phrase ? 'text-[22px]' : 'text-[36px]'}`} aria-hidden="true">
+          {emoji}
+        </span>
       ) : (
         Icon && <Icon size={phrase ? 20 : 32} strokeWidth={1.6} aria-hidden="true" className="shrink-0" />
       )}

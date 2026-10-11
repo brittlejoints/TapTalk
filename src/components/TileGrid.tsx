@@ -71,6 +71,7 @@ export function TileGrid({ category, slots, variant = 'word', emptyMessage, onTi
               label={word.label}
               icon={word.icon}
               photo={word.photo}
+              emoji={word.emoji}
               color={word.color ?? category.color}
               variant={variant}
               onClick={() => onTile(word.label)}

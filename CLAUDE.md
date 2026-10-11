@@ -26,7 +26,8 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - No box-shadows for elevation. Depth comes from layered tints. Press feedback uses the `pressable` utility.
 - Serif (`font-display`, weight 300) only at 26px and larger. Everything tappable uses the sans, 600 weight, 17px or larger on tiles.
 - Radius: `rounded-tile` (14px) for tiles, cards and buttons; `rounded-full` for pills and tabs.
-- Icons: `lucide-react` only. No emoji in UI.
+- Icons: `lucide-react` only. No emoji in UI chrome; emoji appear only as pictures users choose for custom tiles (`src/data/emoji.ts`, drawn with the device's emoji font via the `.emoji` class).
+- Custom tile pictures: icons by id (`src/data/icons.ts`, grouped in `ICON_GROUPS`; never rename or remove an id), emoji, or a resized photo. Keep every icon in exactly one group (tested).
 - Logo: `src/components/Wordmark.tsx`, a hand-drawn SVG (one 11-unit rounded stroke; the "l" is the icon's sound bars). Never replace it with live text, and keep its grid (see the component comment) if you edit it.
 
 ## AAC rules

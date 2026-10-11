@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { isTileColorId, type TileColorId } from '../data/colors';
+import { isEmoji } from '../data/emoji';
 import { isTileIconId, type TileIconId } from '../data/icons';
 import type { CategoryId } from '../data/vocabulary';
 import { loadJSON, saveJSON } from './storage';
@@ -14,6 +15,8 @@ export interface CustomTile {
   icon: TileIconId;
   /** Optional photo as a small JPEG data URL. Shown instead of the icon. */
   photo?: string;
+  /** Optional emoji. Shown instead of the icon (a photo wins if both are set). */
+  emoji?: string;
 }
 
 export const MAX_LABEL_LENGTH = 40;
@@ -30,7 +33,8 @@ function isCustomTile(value: unknown): value is CustomTile {
     CUSTOM_CATEGORIES.includes(t.category as CustomCategoryId) &&
     isTileColorId(t.color) &&
     isTileIconId(t.icon) &&
-    (t.photo === undefined || (typeof t.photo === 'string' && t.photo.startsWith('data:image/')))
+    (t.photo === undefined || (typeof t.photo === 'string' && t.photo.startsWith('data:image/'))) &&
+    (t.emoji === undefined || isEmoji(t.emoji))
   );
 }
 

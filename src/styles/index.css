@@ -76,6 +76,11 @@
   }
 }
 
+/* User-chosen emoji on tiles use the device's color emoji font */
+.emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+}
+
 @utility eyebrow {
   font-size: var(--text-eyebrow);
   font-weight: 600;
