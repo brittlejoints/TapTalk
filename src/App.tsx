@@ -47,6 +47,9 @@ export default function App() {
           customTiles={custom.tiles}
           speakOnTap={settings.speakOnTap}
           speaking={speech.speaking}
+          spokenText={speech.spokenText}
+          spokenCharIndex={speech.charIndex}
+          wordPulse={speech.wordPulse}
           onSpeak={speech.speak}
           onStop={speech.stop}
           onSavePhrase={(phrase) => setSavedPhrases((prev) => savePhrase(prev, phrase, TILES_PER_PAGE))}

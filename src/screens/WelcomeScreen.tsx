@@ -1,11 +1,12 @@
 import { ArrowRight, Droplet, Hand, Utensils, Volume2 } from 'lucide-react';
 import { SproutIllustration } from '../components/SproutIllustration';
+import { Wordmark } from '../components/Wordmark';
 
 export function WelcomeScreen({ onStart }: { onStart: () => void }) {
   return (
     <main className="mx-auto flex min-h-full max-w-lg flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(21px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
-        <span className="font-display text-[27px] leading-none font-light text-forest">Tap Talk</span>
+        <Wordmark className="h-[30px] w-auto text-forest" />
         <span className="rounded-full bg-keylime px-3 py-1.5 text-[13px] text-forest">Free · No account</span>
       </header>
 

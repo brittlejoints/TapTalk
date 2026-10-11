@@ -27,12 +27,15 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Serif (`font-display`, weight 300) only at 26px and larger. Everything tappable uses the sans, 600 weight, 17px or larger on tiles.
 - Radius: `rounded-tile` (14px) for tiles, cards and buttons; `rounded-full` for pills and tabs.
 - Icons: `lucide-react` only. No emoji in UI.
+- Logo: `src/components/Wordmark.tsx`, a hand-drawn SVG (one 11-unit rounded stroke; the "l" is the icon's sound bars). Never replace it with live text, and keep its grid (see the component comment) if you edit it.
 
 ## AAC rules
 
 - The talk board never scrolls. Tiles stay in fixed positions (3x3), and empty slots stay empty rather than reflowing. Each category has 8 built-in words; slot 9 is always navigation ("My words", then "More"/"Back" on the user's own pages), so custom tiles never move built-in words (`src/lib/boardPages.ts`).
 - Touch targets are at least 44px. Check layouts at 320x568 (iPhone SE) as well as 390x844.
 - Never animate or scale selected states, and never use looping or pulsing animation.
+- The message bar has a fixed height (it scrolls internally) so a long message never moves the tiles. Typing goes into a draft owned by `BoardScreen`; it becomes words on Enter, Speak or a tile tap, and the caret always stays at the end.
+- Playful touches (CSS in `index.css`, JS in `src/lib/delight.ts`) must confirm a user action, play once, and run only when `.playful` is set and reduced motion is off.
 - Focus styles use `:focus-visible` only.
 - Never show a success message for something that didn't happen (for example, an alert that wasn't sent).
 - The app must work offline: no runtime requests to font or icon CDNs. Storage can fail, so go through `src/lib/storage.ts`.

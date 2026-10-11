@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addWord, MAX_MESSAGE_WORDS, removeLastWord, savePhrase, toSentence } from './message';
+import { addTypedWords, addWord, MAX_MESSAGE_WORDS, removeLastWord, savePhrase, toSentence } from './message';
 
 describe('message bar helpers', () => {
   it('builds a sentence word by word', () => {
@@ -28,5 +28,23 @@ describe('savePhrase', () => {
 
   it('respects the limit', () => {
     expect(savePhrase(['a', 'b', 'c'], 'd', 3)).toEqual(['d', 'a', 'b']);
+  });
+});
+
+describe('wordIndexAt', () => {
+  it('maps a spoken character position to the word on screen', async () => {
+    const { wordIndexAt } = await import('./useSpeech');
+    const words = ['I want', 'Water'];
+    expect(wordIndexAt(words, 0)).toBe(0);
+    expect(wordIndexAt(words, 2)).toBe(0); // "want" is still the first chip
+    expect(wordIndexAt(words, 7)).toBe(1);
+    expect(wordIndexAt(words, 99)).toBe(1);
+  });
+});
+
+describe('addTypedWords', () => {
+  it('splits typed text into one word per chip and ignores extra spaces', () => {
+    expect(addTypedWords(['I want'], '  grandma   pizza ')).toEqual(['I want', 'grandma', 'pizza']);
+    expect(addTypedWords([], '   ')).toEqual([]);
   });
 });

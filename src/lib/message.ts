@@ -23,3 +23,11 @@ export function savePhrase(saved: string[], phrase: string, limit: number): stri
   const withoutDuplicate = saved.filter((p) => p.toLowerCase() !== trimmed.toLowerCase());
   return [trimmed, ...withoutDuplicate].slice(0, limit);
 }
+
+/** Adds typed text as separate words (one chip each), stopping at the limit. */
+export function addTypedWords(words: string[], text: string): string[] {
+  return text
+    .split(/\s+/)
+    .filter(Boolean)
+    .reduce((acc, word) => addWord(acc, word), words);
+}

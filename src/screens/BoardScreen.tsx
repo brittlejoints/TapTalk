@@ -8,13 +8,20 @@ import { TILE_ICONS } from '../data/icons';
 import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word } from '../data/vocabulary';
 import { boardPage, type Slot } from '../lib/boardPages';
 import type { CustomTile } from '../lib/customTiles';
-import { addWord, removeLastWord, toSentence } from '../lib/message';
+import { flyStarTo, tapHaptic } from '../lib/delight';
+import { addTypedWords, addWord, removeLastWord, toSentence } from '../lib/message';
+import { wordIndexAt } from '../lib/useSpeech';
+import { Wordmark } from '../components/Wordmark';
 
 interface BoardScreenProps {
   savedPhrases: string[];
   customTiles: CustomTile[];
   speakOnTap: boolean;
   speaking: boolean;
+  /** What the speech engine is saying, and where it is, for the word highlight. */
+  spokenText: string | null;
+  spokenCharIndex: number | null;
+  wordPulse: number;
   onSpeak: (text: string) => void;
   onStop: () => void;
   onSavePhrase: (phrase: string) => void;
@@ -27,6 +34,9 @@ export function BoardScreen({
   customTiles,
   speakOnTap,
   speaking,
+  spokenText,
+  spokenCharIndex,
+  wordPulse,
   onSpeak,
   onStop,
   onSavePhrase,
@@ -36,6 +46,8 @@ export function BoardScreen({
   const [categoryId, setCategoryId] = useState<CategoryId>('needs');
   const [page, setPage] = useState(0);
   const [words, setWords] = useState<string[]>([]);
+  /** Text typed into the message bar that hasn't become words yet. */
+  const [draft, setDraft] = useState('');
   const category = CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[1];
 
   const isSaved = category.id === 'saved';
@@ -80,16 +92,37 @@ export function BoardScreen({
   };
   const sentence = toSentence(words);
 
+  /** Turns any typed draft into words first, so typing then tapping keeps the order. */
+  const withDraft = (base: string[]) => (draft.trim() ? addTypedWords(base, draft) : base);
+
   const handleWord = (word: string) => {
-    setWords((prev) => addWord(prev, word));
+    tapHaptic();
+    setWords(addWord(withDraft(words), word));
+    setDraft('');
     if (speakOnTap) onSpeak(word);
   };
+
+  const commitDraft = () => {
+    setWords(withDraft(words));
+    setDraft('');
+  };
+
+  const speakMessage = (pending: string) => {
+    const all = pending.trim() ? addTypedWords(words, pending) : words;
+    setWords(all);
+    setDraft('');
+    onSpeak(toSentence(all));
+  };
+
+  // Highlight the word being spoken, but only when it's this message being read.
+  const spokenIndex =
+    speaking && spokenText === sentence && spokenCharIndex !== null ? wordIndexAt(words, spokenCharIndex) : -1;
 
   return (
     <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
-        <h1 className="font-display text-[27px] leading-none font-light tracking-[-0.01em] text-forest">
-          Tap Talk
+        <h1 className="text-forest">
+          <Wordmark className="h-[30px] w-auto" talkPulse={speaking ? wordPulse : 0} />
         </h1>
         <div className="flex items-center gap-1">
           <button
@@ -114,11 +147,18 @@ export function BoardScreen({
       <MessageBar
         words={words}
         speaking={speaking}
+        spokenIndex={spokenIndex}
         saved={savedPhrases.some((p) => p.toLowerCase() === sentence.toLowerCase())}
-        onSpeak={() => onSpeak(sentence)}
+        onSpeak={speakMessage}
         onStop={onStop}
         onDelete={() => setWords(removeLastWord)}
-        onSave={() => onSavePhrase(sentence)}
+        onSave={(from) => {
+          onSavePhrase(sentence);
+          flyStarTo(from, document.getElementById('tab-saved'));
+        }}
+        draft={draft}
+        onDraftChange={setDraft}
+        onCommitDraft={commitDraft}
       />
 
       <CoreRow onWord={handleWord} />
