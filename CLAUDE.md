@@ -42,6 +42,8 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - The app must work offline: no runtime requests to font or icon CDNs. Storage can fail, so go through `src/lib/storage.ts`.
 - Sentence case. Say "tap", not "click".
 - Emergency alerts open the Messages app via an `sms:` link (`src/lib/alert.ts`); the user taps Send. Copy must say so and never claim an alert was sent.
+- Any crash renders `src/components/ErrorBoundary.tsx` instead of a blank screen; the whole app is wrapped in it.
+- Greeting (`src/lib/greeting.ts`): shows "Good morning/afternoon/evening" with the user's name on welcome, and once per day as the empty-bar placeholder on the board.
 
 ## Installable app (PWA)
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { DEFAULT_SAVED_PHRASES, TILES_PER_PAGE } from './data/vocabulary';
 import { useEmergencyContacts } from './lib/contacts';
 import { useCustomTiles } from './lib/customTiles';
@@ -39,10 +40,12 @@ export default function App() {
   };
 
   return (
+    <ErrorBoundary>
     <div className={`h-full ${settings.highVisibility ? 'high-visibility' : ''} ${settings.playful ? 'playful' : ''}`}>
       {view === 'welcome' && <WelcomeScreen onStart={start} />}
       {view === 'board' && (
         <BoardScreen
+          yourName={settings.yourName}
           savedPhrases={savedPhrases}
           customTiles={custom.tiles}
           speakOnTap={settings.speakOnTap}
@@ -101,5 +104,6 @@ export default function App() {
         />
       )}
     </div>
+    </ErrorBoundary>
   );
 }

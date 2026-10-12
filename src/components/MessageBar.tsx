@@ -1,4 +1,4 @@
-import { Delete, Square, Star, Volume2 } from 'lucide-react';
+import { CircleX, Delete, Square, Star, Volume2 } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 
 interface MessageBarProps {
@@ -12,6 +12,8 @@ interface MessageBarProps {
   onSpeak: (pending: string) => void;
   onStop: () => void;
   onDelete: () => void;
+  /** Clears every word and any draft. */
+  onClear: () => void;
   /** Receives the star button, so the board can fly a star from it to the Saved tab. */
   onSave: (from: HTMLElement) => void;
   /** Text typed into the bar but not yet added as words (owned by the board). */
@@ -19,6 +21,8 @@ interface MessageBarProps {
   onDraftChange: (text: string) => void;
   /** Adds the draft to the message as words. */
   onCommitDraft: () => void;
+  /** Shown in place of the typing placeholder when the message is empty (e.g. a greeting). */
+  emptyMessage?: string;
 }
 
 /** Leaves that drift up from the speak button (hidden by CSS unless playful touches are on). */
@@ -59,10 +63,12 @@ export function MessageBar({
   onSpeak,
   onStop,
   onDelete,
+  onClear,
   onSave,
   draft,
   onDraftChange,
   onCommitDraft,
+  emptyMessage,
 }: MessageBarProps) {
   const empty = words.length === 0;
   const inputId = useId();
@@ -132,7 +138,7 @@ export function MessageBar({
               input.current?.blur();
             }
           }}
-          placeholder={empty ? 'Tap words, or tap here to type' : typing ? 'Type a word' : ''}
+          placeholder={empty ? emptyMessage ?? 'Tap words, or tap here to type' : typing ? 'Type a word' : ''}
           aria-label="Type words to add to the message"
           enterKeyHint="done"
           autoComplete="off"
@@ -153,6 +159,20 @@ export function MessageBar({
             <Star size={22} aria-hidden="true" />
           </button>
         ))}
+      {words.length >= 2 && (
+        <button
+          type="button"
+          onClick={() => {
+            onClear();
+            setJustSaved(false);
+          }}
+          className="grid size-11 place-items-center rounded-md text-muted"
+          aria-label="Clear the whole message"
+          title="Clear the message"
+        >
+          <CircleX size={22} aria-hidden="true" />
+        </button>
+      )}
       <button
         type="button"
         onClick={() => {

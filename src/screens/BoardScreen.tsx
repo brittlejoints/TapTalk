@@ -1,5 +1,5 @@
 import { MessageCircle, Settings as SettingsIcon, Siren, Sprout } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
@@ -10,10 +10,14 @@ import { boardPage, type Slot } from '../lib/boardPages';
 import type { CustomTile } from '../lib/customTiles';
 import { flyStarTo, tapHaptic } from '../lib/delight';
 import { addTypedWords, addWord, removeLastWord, toSentence } from '../lib/message';
+import { greetingNow } from '../lib/greeting';
+import { loadJSON, saveJSON } from '../lib/storage';
 import { wordIndexAt } from '../lib/useSpeech';
 import { Wordmark } from '../components/Wordmark';
 
 interface BoardScreenProps {
+  /** The user's name, used in the daily greeting. */
+  yourName: string;
   savedPhrases: string[];
   customTiles: CustomTile[];
   speakOnTap: boolean;
@@ -30,6 +34,7 @@ interface BoardScreenProps {
 }
 
 export function BoardScreen({
+  yourName,
   savedPhrases,
   customTiles,
   speakOnTap,
@@ -46,6 +51,19 @@ export function BoardScreen({
   const [categoryId, setCategoryId] = useState<CategoryId>('needs');
   const [page, setPage] = useState(0);
   const [words, setWords] = useState<string[]>([]);
+  // Show the greeting as the empty-bar placeholder until the user interacts, but
+  // only once per day. Stored as an ISO date so comparing is just string equality.
+  const today = new Date().toISOString().slice(0, 10);
+  const alreadyGreetedToday = useRef<boolean>(
+    loadJSON<string>('last-greet-date', '', (v): v is string => typeof v === 'string') === today,
+  );
+  const [showGreeting, setShowGreeting] = useState(!alreadyGreetedToday.current);
+  const consumeGreeting = () => {
+    if (!showGreeting) return;
+    saveJSON('last-greet-date', today);
+    setShowGreeting(false);
+    alreadyGreetedToday.current = true;
+  };
   /** Text typed into the message bar that hasn't become words yet. */
   const [draft, setDraft] = useState('');
   const category = CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[1];
@@ -97,17 +115,20 @@ export function BoardScreen({
 
   const handleWord = (word: string) => {
     tapHaptic();
+    consumeGreeting();
     setWords(addWord(withDraft(words), word));
     setDraft('');
     if (speakOnTap) onSpeak(word);
   };
 
   const commitDraft = () => {
+    consumeGreeting();
     setWords(withDraft(words));
     setDraft('');
   };
 
   const speakMessage = (pending: string) => {
+    consumeGreeting();
     const all = pending.trim() ? addTypedWords(words, pending) : words;
     setWords(all);
     setDraft('');
@@ -152,13 +173,21 @@ export function BoardScreen({
         onSpeak={speakMessage}
         onStop={onStop}
         onDelete={() => setWords(removeLastWord)}
+        onClear={() => {
+          setWords([]);
+          setDraft('');
+        }}
         onSave={(from) => {
           onSavePhrase(sentence);
           flyStarTo(from, document.getElementById('tab-saved'));
         }}
         draft={draft}
-        onDraftChange={setDraft}
+        onDraftChange={(text) => {
+          if (text) consumeGreeting();
+          setDraft(text);
+        }}
         onCommitDraft={commitDraft}
+        emptyMessage={showGreeting ? `${greetingNow(yourName)} · tap words, or tap here to type` : undefined}
       />
 
       <CoreRow onWord={handleWord} />
