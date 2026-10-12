@@ -1,6 +1,7 @@
 import { ArrowLeft, Check, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { ContactForm } from '../components/ContactForm';
+import { QuietBubbleIllustration, SeedPacketIllustration, WateringCanIllustration } from '../components/illustrations';
 import { TILE_COLOR_CLASS } from '../data/colors';
 import { iconFor } from '../data/icons';
 import { LANGUAGES, type LanguageId } from '../data/strings';
@@ -25,6 +26,10 @@ interface SettingsScreenProps {
   onTestVoice: () => void;
   onRemovePhrase: (phrase: string) => void;
   onBack: () => void;
+  /** App update state from the service worker. */
+  updateReady: boolean;
+  offlineReady: boolean;
+  onApplyUpdate: () => void;
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -85,6 +90,7 @@ function TextSizePicker({ value, onChange, labels }: { value: TextSize; onChange
 export function SettingsScreen({
   settings, voices, speechSupported, savedPhrases, customTiles, contacts,
   onSaveContact, onRemoveContact, onAddTile, onEditTile, onUpdate, onTestVoice, onRemovePhrase, onBack,
+  updateReady, offlineReady, onApplyUpdate,
 }: SettingsScreenProps) {
   const { t } = useI18n();
   const [editingContact, setEditingContact] = useState<string | null>(null);
@@ -102,6 +108,27 @@ export function SettingsScreen({
         </button>
         <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-forest">{t('settings', 'title')}</h1>
       </header>
+
+      {(updateReady || offlineReady) && (
+        <Section title={t('settings', 'app-updates')}>
+          <div className="flex items-center gap-3">
+            <WateringCanIllustration className="size-20 shrink-0" />
+            {updateReady ? (
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold text-forest">{t('settings', 'update-ready')}</p>
+                <p className="text-sm text-muted">{t('settings', 'update-ready-hint')}</p>
+              </div>
+            ) : (
+              <p role="status" className="text-forest">{t('settings', 'offline-ready')}</p>
+            )}
+          </div>
+          {updateReady && (
+            <button type="button" onClick={onApplyUpdate} className="pressable h-12 rounded-tile bg-forest font-medium text-cream">
+              {t('settings', 'update-now')}
+            </button>
+          )}
+        </Section>
+      )}
 
       <Section title={t('settings', 'language')}>
         <p className="-mt-1 text-sm text-muted">{t('settings', 'language-hint')}</p>
@@ -229,7 +256,10 @@ export function SettingsScreen({
           {t('settings', 'add-tile')}
         </button>
         {customTiles.length === 0 ? (
-          <p className="text-sm text-muted">{t('settings', 'no-tiles')}</p>
+          <div className="flex items-center gap-3">
+            <SeedPacketIllustration className="size-20 shrink-0" />
+            <p className="text-sm text-muted">{t('settings', 'no-tiles')}</p>
+          </div>
         ) : (
           <ul className="flex flex-col gap-1.5">
             {customTiles.map((tile) => {
@@ -336,7 +366,10 @@ export function SettingsScreen({
             </button>
           </>
         ) : (
-          <p>{t('settings', 'no-speech')}</p>
+          <div className="flex items-center gap-3">
+            <QuietBubbleIllustration className="size-16 shrink-0" />
+            <p>{t('settings', 'no-speech')}</p>
+          </div>
         )}
       </Section>
 

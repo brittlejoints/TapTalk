@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useRegisterSW } from 'virtual:pwa-register/react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { STRINGS } from './data/strings';
 import { TILES_PER_PAGE } from './data/vocabulary';
@@ -23,6 +24,8 @@ export default function App() {
   const { settings, update } = useSettings();
   // Pass language to speech so the voice reads in the matching tongue.
   const speech = useSpeech(settings.voiceURI, settings.rate, settings.language);
+  // 'prompt' mode: a new version waits until the user taps Update, so a message is never wiped mid-sentence.
+  const sw = useRegisterSW();
   const custom = useCustomTiles();
   const emergency = useEmergencyContacts();
   const [editingTileId, setEditingTileId] = useState<string | null>(null);
@@ -71,6 +74,9 @@ export default function App() {
           setEditingTileId={setEditingTileId}
           savedPhrases={savedPhrases}
           setSavedPhrases={setSavedPhrases}
+          updateReady={sw.needRefresh[0]}
+          offlineReady={sw.offlineReady[0]}
+          onApplyUpdate={() => void sw.updateServiceWorker(true)}
         />
       </I18nProvider>
     </ErrorBoundary>
@@ -90,10 +96,13 @@ interface ShellProps {
   setEditingTileId: (id: string | null) => void;
   savedPhrases: string[];
   setSavedPhrases: React.Dispatch<React.SetStateAction<string[]>>;
+  updateReady: boolean;
+  offlineReady: boolean;
+  onApplyUpdate: () => void;
 }
 
 /** Inside I18nProvider so screens can translate. The one `onTestVoice` message is translated here. */
-function AppShell({ view, setView, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases }: ShellProps) {
+function AppShell({ view, setView, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate }: ShellProps) {
   const { t } = useI18n();
   const testVoiceMessage = useMemo(() => {
     // Keep the voice test tied to the greeting language so the user hears their chosen voice.
@@ -152,6 +161,9 @@ function AppShell({ view, setView, start, settings, update, speech, custom, emer
           onTestVoice={() => speech.speak(testVoiceMessage)}
           onRemovePhrase={(phrase) => setSavedPhrases((prev) => prev.filter((p) => p !== phrase))}
           onBack={() => setView('board')}
+          updateReady={updateReady}
+          offlineReady={offlineReady}
+          onApplyUpdate={onApplyUpdate}
         />
       )}
       {view === 'tile-editor' && (

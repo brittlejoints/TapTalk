@@ -29,7 +29,7 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Icons: `lucide-react` only. No emoji in UI chrome; emoji appear only as pictures users choose for custom tiles (`src/data/emoji.ts`, drawn with the device's emoji font via the `.emoji` class).
 - Custom tile pictures: icons by id (`src/data/icons.ts`, grouped in `ICON_GROUPS`; never rename or remove an id), emoji, or a resized photo. Keep every icon in exactly one group (tested).
 - Logo: `src/components/Wordmark.tsx`, a hand-drawn SVG (one 11-unit rounded stroke; the "l" is the icon's sound bars). Never replace it with live text, and keep its grid (see the component comment) if you edit it.
-- Illustrations: `src/components/illustrations/`. Each is a flat SVG on a `0 0 112 112` viewBox, fills with `--color-tile-*` tints, strokes with `--color-forest` at `strokeWidth="2"`–`2.5"`. Keep the botanical/garden vocabulary (sprout, pot, fern, bubbles). Growing parts use the shared `.grow-stem`, `.grow-leaf.left/.right`, `.fern-leaf`, `.sparkle` classes so they animate in once, only when `.playful` is on and reduced motion is off. Empty states on the board (`Pot`), the "My words" page (`Fern`), the no-contacts prompt (`TwoBubbles`) and the error screen (`TippedPot`) each pair one illustration with a one-sentence serif heading and a shorter sans hint.
+- Illustrations: `src/components/illustrations/`. Each is a flat SVG on a `0 0 112 112` viewBox, fills with `--color-tile-*` tints, strokes with `--color-forest` at `strokeWidth="2"`–`2.5"`. Keep the botanical/garden vocabulary (sprout, pot, fern, bubbles). Growing parts use the shared `.grow-stem`, `.grow-leaf.left/.right`, `.fern-leaf`, `.sparkle` classes so they animate in once, only when `.playful` is on and reduced motion is off. Empty states on the board (`Pot`), the "My words" page (`Fern`), the no-contacts prompt (`TwoBubbles`) the error screen (`TippedPot`), Settings' empty "Your tiles" (`SeedPacket`), the "no speech on this device" message (`QuietBubble`) and the app update or ready-offline notice (`WateringCan`) each pair one illustration with a one-sentence serif heading and a shorter sans hint.
 
 ## AAC rules
 
@@ -52,5 +52,5 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 ## Installable app (PWA)
 
 - Configured in `vite.config.ts` with `vite-plugin-pwa`. Icons live in `public/icons/` (source: `icon.svg`).
-- `registerType: 'prompt'` is deliberate: never auto-reload, because it would wipe a message mid-sentence.
+- `registerType: 'prompt'` is deliberate: never auto-reload, because it would wipe a message mid-sentence. `useRegisterSW` in `App.tsx` (so `injectRegister` is `false`) feeds an "App" section in Settings: "ready offline" once after first install, and "A fresh version is ready" with an Update now button the user taps. Never show update UI over the board.
 - Everything must work offline. Bundle new assets locally and keep them inside the precache `globPatterns`.

@@ -110,6 +110,11 @@ type StringTable = {
     'contact-limit': string;
     'saved-phrases': string;
     'phrase-hint': string;
+    'app-updates': string;
+    'update-ready': string;
+    'update-ready-hint': string;
+    'update-now': string;
+    'offline-ready': string;
   };
   greeting: { morning: string; afternoon: string; evening: string };
   error: { title: string; body: string; 'try-again': string; reload: string };
@@ -198,6 +203,11 @@ const en: StringTable = {
     'contact-limit': 'You can save up to 5 emergency contacts.',
     'saved-phrases': 'Saved phrases',
     'phrase-hint': 'Build a message on the board and tap the star to save it.',
+    'app-updates': 'App',
+    'update-ready': 'A fresh version is ready',
+    'update-ready-hint': 'Updating restarts Tap Talk and clears the message you are building. Update when you are ready.',
+    'update-now': 'Update now',
+    'offline-ready': 'Ready to use without internet. Tap Talk is saved on this device.',
   },
   greeting: { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening' },
   error: { title: 'Something went wrong.', body: 'Tap Talk ran into an error. Your words and settings are still saved on this device.', 'try-again': 'Try again', reload: 'Reload the app' },
@@ -286,6 +296,11 @@ const es: StringTable = {
     'contact-limit': 'Puedes guardar hasta 5 contactos de emergencia.',
     'saved-phrases': 'Frases guardadas',
     'phrase-hint': 'Arma un mensaje en el tablero y toca la estrella para guardarlo.',
+    'app-updates': 'App',
+    'update-ready': 'Hay una versión nueva',
+    'update-ready-hint': 'Al actualizar, Tap Talk se reinicia y se borra el mensaje que estás armando. Actualiza cuando estés listo.',
+    'update-now': 'Actualizar ahora',
+    'offline-ready': 'Listo para usar sin internet. Tap Talk está guardado en este dispositivo.',
   },
   greeting: { morning: 'Buenos días', afternoon: 'Buenas tardes', evening: 'Buenas noches' },
   error: { title: 'Algo salió mal.', body: 'Tap Talk tuvo un error. Tus palabras y ajustes siguen guardados en este dispositivo.', 'try-again': 'Intentar de nuevo', reload: 'Recargar la app' },

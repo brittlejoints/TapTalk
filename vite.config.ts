@@ -9,10 +9,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      // Updates download in the background and apply the next time the app
-      // opens. Never reload automatically: it would wipe a message mid-sentence.
+      // Updates download in the background; the user applies them from Settings.
+      // Never reload automatically: it would wipe a message mid-sentence.
       registerType: 'prompt',
-      injectRegister: 'script-defer',
+      injectRegister: false,
       includeAssets: ['icons/apple-touch-icon.png', 'icons/icon.svg'],
       manifest: {
         name: 'Tap Talk',
