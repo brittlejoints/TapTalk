@@ -76,6 +76,36 @@
   }
 }
 
+/*
+  Text size setting (medium / large / extra-large), applied on <html>.
+  Scales tile and message bar text; tiles stay in the same spots.
+  Specific selectors beat the Tailwind utility specificity (0,1,1 vs 0,0,1).
+*/
+html.size-large .text-tile {
+  font-size: 20px;
+}
+html.size-large .message-chip {
+  font-size: 23px;
+}
+html.size-large .phrase-tile-label {
+  font-size: 17px;
+}
+html.size-large .core-label {
+  font-size: 18px;
+}
+html.size-x-large .text-tile {
+  font-size: 23px;
+}
+html.size-x-large .message-chip {
+  font-size: 26px;
+}
+html.size-x-large .phrase-tile-label {
+  font-size: 19px;
+}
+html.size-x-large .core-label {
+  font-size: 20px;
+}
+
 /* User-chosen emoji on tiles use the device's color emoji font */
 .emoji {
   font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;

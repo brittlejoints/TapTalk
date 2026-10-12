@@ -2,6 +2,7 @@ import { ArrowLeft, ChevronRight, Sprout } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { Category, Word } from '../data/vocabulary';
 import type { Slot } from '../lib/boardPages';
+import { useI18n } from '../lib/i18n';
 import { Tile } from './Tile';
 
 export type NavSlot = Exclude<Slot<Word>, { kind: 'word' } | null>;
@@ -17,13 +18,29 @@ interface TileGridProps {
 }
 
 function NavTile({ slot, category, onNav }: { slot: NavSlot; category: Category; onNav: (slot: NavSlot) => void }) {
-  const name = category.label.toLowerCase();
+  const { t } = useI18n();
+  const categoryName = t('categories', category.id).toLowerCase();
   const content =
     slot.kind === 'mine'
-      ? { icon: <Sprout size={30} strokeWidth={1.6} aria-hidden="true" />, label: 'My words', sub: slot.count ? String(slot.count) : null, aria: `My ${name} words, ${slot.count} tiles` }
+      ? {
+          icon: <Sprout size={30} strokeWidth={1.6} aria-hidden="true" />,
+          label: t('message', 'my-words'),
+          sub: slot.count ? String(slot.count) : null,
+          aria: `${t('message', 'my-words')} · ${categoryName} · ${slot.count}`,
+        }
       : slot.kind === 'more'
-        ? { icon: <ChevronRight size={30} aria-hidden="true" />, label: 'More', sub: `${slot.page} of ${slot.pages}`, aria: `More of my ${name} words, page ${slot.page} of ${slot.pages}` }
-        : { icon: <ArrowLeft size={28} aria-hidden="true" />, label: 'Back', sub: null, aria: `Back to ${name}` };
+        ? {
+            icon: <ChevronRight size={30} aria-hidden="true" />,
+            label: t('message', 'more'),
+            sub: `${slot.page} / ${slot.pages}`,
+            aria: `${t('message', 'more')} · ${slot.page}/${slot.pages}`,
+          }
+        : {
+            icon: <ArrowLeft size={28} aria-hidden="true" />,
+            label: t('message', 'back'),
+            sub: null,
+            aria: `${t('message', 'back')} · ${categoryName}`,
+          };
 
   return (
     <button

@@ -1,34 +1,42 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 /**
  * Text-to-speech through the browser's built-in voices. It works offline and
  * the text never leaves the device.
  *
  * One utterance at a time (a new message replaces the old one), and the user
- * picks their own voice in Settings.
- *
- * Word boundary events (supported by most voices) drive the word-by-word
- * highlight in the message bar and the wordmark's talking bars.
+ * picks their own voice in Settings. When `language` is given, we score voices
+ * for the match and prefer ones for that language — otherwise the device would
+ * read Spanish words with an English accent.
  */
-export function useSpeech(voiceURI: string | null, rate: number) {
+export function useSpeech(voiceURI: string | null, rate: number, language?: string) {
   const supported = typeof window !== 'undefined' && 'speechSynthesis' in window;
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [speaking, setSpeaking] = useState(false);
-  /** The text currently being spoken, so callers can match it to what's on screen. */
   const [spokenText, setSpokenText] = useState<string | null>(null);
-  /** Character index of the word being spoken, or null between words/utterances. */
   const [charIndex, setCharIndex] = useState<number | null>(null);
-  /** Increments once per spoken word (and once at the start). */
   const [wordPulse, setWordPulse] = useState(0);
 
   useEffect(() => {
     if (!supported) return;
     const load = () => setVoices(window.speechSynthesis.getVoices());
     load();
-    // Chrome and Edge load voices asynchronously.
     window.speechSynthesis.addEventListener('voiceschanged', load);
     return () => window.speechSynthesis.removeEventListener('voiceschanged', load);
   }, [supported]);
+
+  /** Voices matching the current language come first; the user's picker shows the same filter. */
+  const matchingVoices = useMemo(() => {
+    if (!language) return voices;
+    const base = language.toLowerCase().split('-')[0];
+    const score = (v: SpeechSynthesisVoice) => {
+      const l = v.lang.toLowerCase();
+      if (l === language.toLowerCase()) return 2;
+      if (l.startsWith(base + '-') || l === base) return 1;
+      return 0;
+    };
+    return [...voices].sort((a, b) => score(b) - score(a));
+  }, [voices, language]);
 
   const speak = useCallback(
     (text: string) => {
@@ -36,10 +44,14 @@ export function useSpeech(voiceURI: string | null, rate: number) {
       const synth = window.speechSynthesis;
       synth.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      const voice = voices.find((v) => v.voiceURI === voiceURI);
+      // Prefer the user's chosen voice, but fall back to one that matches the UI language.
+      const chosen = voices.find((v) => v.voiceURI === voiceURI);
+      const voice = chosen ?? matchingVoices[0];
       if (voice) {
         utterance.voice = voice;
         utterance.lang = voice.lang;
+      } else if (language) {
+        utterance.lang = language;
       }
       utterance.rate = rate;
       const finish = () => {
@@ -62,7 +74,7 @@ export function useSpeech(voiceURI: string | null, rate: number) {
       utterance.onerror = finish;
       synth.speak(utterance);
     },
-    [supported, voices, voiceURI, rate],
+    [supported, voices, voiceURI, rate, language, matchingVoices],
   );
 
   const stop = useCallback(() => {
@@ -73,7 +85,7 @@ export function useSpeech(voiceURI: string | null, rate: number) {
     setCharIndex(null);
   }, [supported]);
 
-  return { supported, voices, speaking, spokenText, charIndex, wordPulse, speak, stop };
+  return { supported, voices, matchingVoices, speaking, spokenText, charIndex, wordPulse, speak, stop };
 }
 
 /** Which word of `words` (joined by spaces) contains character `charIndex`. */

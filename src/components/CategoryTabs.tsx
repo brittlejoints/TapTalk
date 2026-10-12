@@ -1,4 +1,5 @@
 import type { Category, CategoryId } from '../data/vocabulary';
+import { useI18n } from '../lib/i18n';
 
 interface CategoryTabsProps {
   categories: Category[];
@@ -8,6 +9,7 @@ interface CategoryTabsProps {
 
 /** Equal-width tabs that always fit the screen. Selection changes fill, never size. */
 export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProps) {
+  const { t } = useI18n();
   return (
     <div
       className="grid gap-0.5 rounded-full bg-hairline p-1"
@@ -15,8 +17,9 @@ export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProp
       role="tablist"
       aria-label="Word categories"
     >
-      {categories.map(({ id, label, icon: Icon }) => {
+      {categories.map(({ id, icon: Icon }) => {
         const selected = id === current;
+        const label = t('categories', id);
         return (
           <button
             key={id}
@@ -26,12 +29,12 @@ export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProp
             aria-selected={selected}
             aria-controls="tile-grid"
             onClick={() => onSelect(id)}
-            className={`flex h-[50px] flex-col items-center justify-center gap-px rounded-full text-xs font-semibold ${
+            className={`flex h-[50px] min-w-0 flex-col items-center justify-center gap-px overflow-hidden rounded-full text-xs font-semibold ${
               selected ? 'bg-forest text-cream' : 'text-forest'
             }`}
           >
             <Icon size={18} aria-hidden="true" />
-            {label}
+            <span className="max-w-full truncate px-1">{label}</span>
           </button>
         );
       })}

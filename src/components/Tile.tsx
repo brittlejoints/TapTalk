@@ -32,7 +32,7 @@ export function Tile({ label, color, icon: Icon, photo, emoji, variant = 'word',
       onPointerDown={startInk}
       className={`pressable tile-edge relative flex min-w-0 flex-col items-center justify-center gap-[7px] overflow-hidden rounded-tile p-[7px] text-center leading-tight text-forest ${
         TILE_COLOR_CLASS[color]
-      } ${phrase ? 'text-[15px] font-medium' : 'text-tile font-semibold'} ${className}`}
+      } ${phrase ? 'phrase-tile-label text-[15px] font-medium' : 'text-tile font-semibold'} ${className}`}
     >
       {photo ? (
         <img

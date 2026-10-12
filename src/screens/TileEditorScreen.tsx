@@ -1,4 +1,5 @@
 import { ArrowLeft, Check } from 'lucide-react';
+import { useI18n } from '../lib/i18n';
 import { useId, useState, type ReactNode } from 'react';
 import { Tile } from '../components/Tile';
 import { TILE_COLOR_CLASS, TILE_COLORS, type TileColorId } from '../data/colors';
@@ -37,6 +38,7 @@ const defaultColorFor = (category: CustomCategoryId): TileColorId =>
   CATEGORIES.find((c) => c.id === category)?.color ?? 'keylime';
 
 export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: TileEditorScreenProps) {
+  const { t } = useI18n();
   const isNew = tile === undefined;
   const [label, setLabel] = useState(tile?.label ?? '');
   const [category, setCategory] = useState<CustomCategoryId>(tile?.category ?? 'needs');
@@ -152,7 +154,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
                 className="sr-only"
               />
               <c.icon size={18} aria-hidden="true" />
-              {c.label}
+              {t('categories', c.id)}
             </label>
           ))}
         </div>

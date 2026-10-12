@@ -1,15 +1,16 @@
 import type { LucideIcon } from 'lucide-react';
-import type { TileColorId } from './colors';
 import {
-  Angry, Annoyed, Bandage, Bath, Bed, Coffee, Droplet, Flame, Frown, Ghost,
+  Angry, Annoyed, Bandage, Bath, Coffee, Droplet, Flame, Frown, Ghost,
   GraduationCap, Hand, Heart, HeartHandshake, HeartPulse, Laugh, LifeBuoy,
   Moon, Pill, RotateCw, Smile, Snowflake, Star, Stethoscope, Syringe,
   Thermometer, ThumbsUp, User, UserRound, Users, Utensils, Wind, Zap,
 } from 'lucide-react';
+import type { TileColorId } from './colors';
 
 export type CategoryId = 'saved' | 'needs' | 'feelings' | 'people' | 'medical';
 
 export interface Word {
+  /** The displayed label (translated), passed in by the board at render time. */
   label: string;
   icon?: LucideIcon;
   /** A data URL, for custom tiles with a photo. Shown instead of the icon. */
@@ -20,13 +21,19 @@ export interface Word {
   color?: TileColorId;
 }
 
+/** A translation key within a category section plus its icon. */
+export interface WordDef {
+  key: string;
+  icon: LucideIcon;
+}
+
 export interface Category {
   id: CategoryId;
-  label: string;
   icon: LucideIcon;
   /** Default tile color for this category (Fitzgerald-inspired where it fits). */
   color: TileColorId;
-  words: Word[];
+  /** Translation keys under strings.<id>. Empty for 'saved' (filled from the user's phrases). */
+  words: WordDef[];
 }
 
 /**
@@ -36,88 +43,65 @@ export interface Category {
 export const TILES_PER_PAGE = 9;
 
 export const CATEGORIES: Category[] = [
-  {
-    id: 'saved',
-    label: 'Saved',
-    icon: Star,
-    color: 'keylime',
-    words: [], // filled from the user's saved phrases
-  },
+  { id: 'saved', icon: Star, color: 'keylime', words: [] },
   {
     id: 'needs',
-    label: 'Needs',
     icon: Coffee,
     color: 'peach',
     words: [
-      { label: 'I want', icon: Hand },
-      { label: 'I need', icon: LifeBuoy },
-      { label: 'Water', icon: Droplet },
-      { label: 'Food', icon: Utensils },
-      { label: 'Bathroom', icon: Bath },
-      { label: 'Hot', icon: Flame },
-      { label: 'Cold', icon: Snowflake },
-      { label: 'Pain', icon: Zap },
+      { key: 'i-want', icon: Hand },
+      { key: 'i-need', icon: LifeBuoy },
+      { key: 'water', icon: Droplet },
+      { key: 'food', icon: Utensils },
+      { key: 'bathroom', icon: Bath },
+      { key: 'hot', icon: Flame },
+      { key: 'cold', icon: Snowflake },
+      { key: 'pain', icon: Zap },
     ],
   },
   {
     id: 'feelings',
-    label: 'Feelings',
     icon: Smile,
     color: 'mist',
     words: [
-      { label: 'Happy', icon: Smile },
-      { label: 'Sad', icon: Frown },
-      { label: 'Worried', icon: Annoyed },
-      { label: 'Angry', icon: Angry },
-      { label: 'Scared', icon: Ghost },
-      { label: 'Tired', icon: Moon },
-      { label: 'Excited', icon: Laugh },
-      { label: 'Okay', icon: ThumbsUp },
+      { key: 'happy', icon: Smile },
+      { key: 'sad', icon: Frown },
+      { key: 'worried', icon: Annoyed },
+      { key: 'angry', icon: Angry },
+      { key: 'scared', icon: Ghost },
+      { key: 'tired', icon: Moon },
+      { key: 'excited', icon: Laugh },
+      { key: 'okay', icon: ThumbsUp },
     ],
   },
   {
     id: 'people',
-    label: 'People',
     icon: Users,
     color: 'butter',
     words: [
-      { label: 'Me', icon: User },
-      { label: 'You', icon: UserRound },
-      { label: 'Mom', icon: Heart },
-      { label: 'Dad', icon: Heart },
-      { label: 'Friend', icon: Users },
-      { label: 'Teacher', icon: GraduationCap },
-      { label: 'Nurse', icon: Stethoscope },
-      { label: 'Caregiver', icon: HeartHandshake },
+      { key: 'me', icon: User },
+      { key: 'you', icon: UserRound },
+      { key: 'mom', icon: Heart },
+      { key: 'dad', icon: Heart },
+      { key: 'friend', icon: Users },
+      { key: 'teacher', icon: GraduationCap },
+      { key: 'nurse', icon: Stethoscope },
+      { key: 'caregiver', icon: HeartHandshake },
     ],
   },
   {
     id: 'medical',
-    label: 'Medical',
     icon: HeartPulse,
     color: 'lilac',
     words: [
-      { label: 'Medicine', icon: Pill },
-      { label: 'It hurts', icon: Zap },
-      { label: 'Sick', icon: Thermometer },
-      { label: 'Dizzy', icon: RotateCw },
-      { label: "Can't breathe", icon: Wind },
-      { label: 'Bandage', icon: Bandage },
-      { label: 'Shot', icon: Syringe },
-      { label: 'Rest', icon: Bed },
+      { key: 'medicine', icon: Pill },
+      { key: 'it-hurts', icon: Zap },
+      { key: 'sick', icon: Thermometer },
+      { key: 'dizzy', icon: RotateCw },
+      { key: 'cant-breathe', icon: Wind },
+      { key: 'bandage', icon: Bandage },
+      { key: 'shot', icon: Syringe },
+      { key: 'rest', icon: Pill },
     ],
   },
-];
-
-/** Starter phrases for the Saved page until the user saves their own. */
-export const DEFAULT_SAVED_PHRASES = [
-  'I need help',
-  'Thank you',
-  'All done',
-  'Please wait',
-  "I don't understand",
-  'Say it again',
-  'I love you',
-  'Not now',
-  'Good morning',
 ];

@@ -1,5 +1,6 @@
 import { CircleX, Delete, Square, Star, Volume2 } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
+import { useI18n } from '../lib/i18n';
 
 interface MessageBarProps {
   words: string[];
@@ -70,6 +71,7 @@ export function MessageBar({
   onCommitDraft,
   emptyMessage,
 }: MessageBarProps) {
+  const { t } = useI18n();
   const empty = words.length === 0;
   const inputId = useId();
   const input = useRef<HTMLInputElement>(null);
@@ -97,16 +99,15 @@ export function MessageBar({
 
   return (
     <div className="flex h-[74px] shrink-0 items-center gap-1 rounded-tile bg-keylime py-2 pr-2 pl-3.5">
-      {/* Tapping anywhere here focuses the text field natively, which iOS needs to open the keyboard. */}
       <label
         ref={scroller}
         htmlFor={inputId}
-        className="flex max-h-full min-w-0 flex-1 cursor-text flex-wrap content-start items-center overflow-y-auto overscroll-contain py-0.5 gap-x-1.5 gap-y-1 text-message leading-tight font-semibold text-forest">
+        className="flex max-h-full min-w-0 flex-1 cursor-text flex-wrap content-start items-center gap-x-1.5 gap-y-1 overflow-y-auto overscroll-contain py-0.5 leading-tight font-semibold text-forest">
         <span className="contents" aria-live="polite" aria-label={empty ? 'Message is empty' : `Message: ${words.join(' ')}`}>
           {words.map((word, i) => (
             <span
               key={i}
-              className={`chip-in rounded-full px-2.5 py-0.5 transition-colors duration-150 ${
+              className={`chip-in message-chip rounded-full px-2.5 py-0.5 text-[20px] transition-colors duration-150 ${
                 i === spokenIndex ? 'bg-forest text-cream' : 'bg-cream'
               }`}
             >
@@ -125,10 +126,7 @@ export function MessageBar({
             setTyping(true);
             caretToEnd(e.currentTarget);
           }}
-          // The browser places the caret where the tap lands, after focus. Imprecise taps
-          // shouldn't insert letters mid-word, so typing always continues at the end.
           onClick={(e) => caretToEnd(e.currentTarget)}
-          // The draft is kept on blur, so tapping Delete or Speak still sees it.
           onBlur={() => setTyping(false)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -138,12 +136,12 @@ export function MessageBar({
               input.current?.blur();
             }
           }}
-          placeholder={empty ? emptyMessage ?? 'Tap words, or tap here to type' : typing ? 'Type a word' : ''}
-          aria-label="Type words to add to the message"
+          placeholder={empty ? emptyMessage ?? t('message', 'placeholder') : typing ? t('message', 'type-a-word') : ''}
+          aria-label={t('message', 'type-a-word')}
           enterKeyHint="done"
           autoComplete="off"
           autoCapitalize="sentences"
-          className={`min-w-0 flex-1 bg-transparent py-0.5 text-message font-semibold text-forest outline-none placeholder:text-ui placeholder:font-normal placeholder:text-muted ${
+          className={`message-chip min-w-0 flex-1 bg-transparent py-0.5 text-[20px] font-semibold text-forest outline-none placeholder:text-[16px] placeholder:font-normal placeholder:text-muted ${
             empty || typing || draft ? 'basis-[8ch]' : 'basis-[2ch]'
           }`}
         />
@@ -151,11 +149,11 @@ export function MessageBar({
 
       {!empty &&
         (saved ? (
-          <span className="grid size-11 place-items-center text-forest" role="img" aria-label="This phrase is saved">
+          <span className="grid size-11 place-items-center text-forest" role="img" aria-label={t('message', 'is-saved')}>
             <Star size={22} fill="currentColor" aria-hidden="true" className={justSaved ? 'twinkle' : ''} />
           </span>
         ) : (
-          <button type="button" onClick={save} className="grid size-11 place-items-center rounded-md text-forest" aria-label="Save this phrase">
+          <button type="button" onClick={save} className="grid size-11 place-items-center rounded-md text-forest" aria-label={t('message', 'save-phrase')}>
             <Star size={22} aria-hidden="true" />
           </button>
         ))}
@@ -167,8 +165,8 @@ export function MessageBar({
             setJustSaved(false);
           }}
           className="grid size-11 place-items-center rounded-md text-muted"
-          aria-label="Clear the whole message"
-          title="Clear the message"
+          aria-label={t('message', 'clear')}
+          title={t('message', 'clear')}
         >
           <CircleX size={22} aria-hidden="true" />
         </button>
@@ -182,13 +180,13 @@ export function MessageBar({
         }}
         disabled={empty && !draft}
         className="grid h-13 w-11 place-items-center rounded-md text-forest disabled:opacity-40"
-        aria-label={draft ? 'Delete last letter' : 'Delete last word'}
+        aria-label={draft ? t('message', 'delete-last-letter') : t('message', 'delete-last-word')}
       >
         <Delete size={22} aria-hidden="true" />
       </button>
       <span className="relative">
         {speaking ? (
-          <button type="button" onClick={onStop} className="pressable grid size-14 place-items-center rounded-tile bg-forest text-cream" aria-label="Stop speaking">
+          <button type="button" onClick={onStop} className="pressable grid size-14 place-items-center rounded-tile bg-forest text-cream" aria-label={t('message', 'stop')}>
             <Square size={22} fill="currentColor" aria-hidden="true" />
           </button>
         ) : (
@@ -196,7 +194,7 @@ export function MessageBar({
             type="button"
             onClick={speak}
             className="pressable grid size-14 place-items-center rounded-tile bg-forest text-cream"
-            aria-label="Speak message"
+            aria-label={t('message', 'speak')}
           >
             <Volume2 size={26} aria-hidden="true" />
           </button>

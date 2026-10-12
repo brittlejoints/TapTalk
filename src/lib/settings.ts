@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
+import { DEFAULT_LANGUAGE, LANGUAGES, type LanguageId } from '../data/strings';
 import { loadJSON, saveJSON } from './storage';
+
+export type TextSize = 'medium' | 'large' | 'x-large';
+export const TEXT_SIZES: TextSize[] = ['medium', 'large', 'x-large'];
 
 export interface Settings {
   /** Speak each tile as soon as it is tapped, instead of building a message first. */
@@ -12,6 +16,10 @@ export interface Settings {
   yourName: string;
   /** Small celebratory animations. The OS Reduce Motion setting always overrides this. */
   playful: boolean;
+  /** UI language and the language the voice reads in. */
+  language: LanguageId;
+  /** Scales tile and message bar text. */
+  textSize: TextSize;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -21,7 +29,12 @@ export const DEFAULT_SETTINGS: Settings = {
   rate: 1,
   yourName: '',
   playful: true,
+  language: DEFAULT_LANGUAGE,
+  textSize: 'medium',
 };
+
+const languageIds = LANGUAGES.map((l) => l.id);
+const textSizes = TEXT_SIZES as readonly string[];
 
 /**
  * Keeps every valid saved value and fills anything missing or invalid with
@@ -36,6 +49,8 @@ export function normalizeSettings(raw: unknown): Settings {
     rate: typeof v.rate === 'number' && v.rate >= 0.5 && v.rate <= 2 ? v.rate : DEFAULT_SETTINGS.rate,
     yourName: typeof v.yourName === 'string' ? v.yourName.slice(0, 60) : DEFAULT_SETTINGS.yourName,
     playful: typeof v.playful === 'boolean' ? v.playful : DEFAULT_SETTINGS.playful,
+    language: typeof v.language === 'string' && languageIds.includes(v.language as LanguageId) ? (v.language as LanguageId) : DEFAULT_SETTINGS.language,
+    textSize: typeof v.textSize === 'string' && textSizes.includes(v.textSize) ? (v.textSize as TextSize) : DEFAULT_SETTINGS.textSize,
   };
 }
 

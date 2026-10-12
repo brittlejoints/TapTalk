@@ -1,12 +1,14 @@
-import { ArrowLeft, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Check, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { ContactForm } from '../components/ContactForm';
 import { TILE_COLOR_CLASS } from '../data/colors';
 import { iconFor } from '../data/icons';
+import { LANGUAGES, type LanguageId } from '../data/strings';
 import { CATEGORIES } from '../data/vocabulary';
 import { MAX_CONTACTS, type EmergencyContact } from '../lib/contacts';
 import type { CustomTile } from '../lib/customTiles';
-import type { Settings } from '../lib/settings';
+import { useI18n } from '../lib/i18n';
+import { TEXT_SIZES, type Settings, type TextSize } from '../lib/settings';
 
 interface SettingsScreenProps {
   settings: Settings;
@@ -35,18 +37,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 function Toggle({
-  id,
-  label,
-  hint,
-  checked,
-  onChange,
-}: {
-  id: string;
-  label: string;
-  hint: string;
-  checked: boolean;
-  onChange: (value: boolean) => void;
-}) {
+  id, label, hint, checked, onChange,
+}: { id: string; label: string; hint: string; checked: boolean; onChange: (value: boolean) => void }) {
   return (
     <label htmlFor={id} className="flex cursor-pointer items-center justify-between gap-[14px]">
       <span className="flex flex-col">
@@ -65,23 +57,36 @@ function Toggle({
   );
 }
 
+/** Three-option segmented control for text size. */
+function TextSizePicker({ value, onChange, labels }: { value: TextSize; onChange: (v: TextSize) => void; labels: Record<TextSize, string> }) {
+  const sampleSize: Record<TextSize, string> = { medium: 'text-[16px]', large: 'text-[20px]', 'x-large': 'text-[24px]' };
+  return (
+    <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Text size">
+      {TEXT_SIZES.map((size) => {
+        const selected = size === value;
+        return (
+          <button
+            key={size}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            onClick={() => onChange(size)}
+            className={`flex min-h-[72px] flex-col items-center justify-center gap-1 rounded-tile ${selected ? 'bg-forest text-cream' : 'bg-cream text-forest'}`}
+          >
+            <span className={`font-semibold ${sampleSize[size]}`}>Aa</span>
+            <span className="text-xs">{labels[size]}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function SettingsScreen({
-  settings,
-  voices,
-  speechSupported,
-  savedPhrases,
-  customTiles,
-  contacts,
-  onSaveContact,
-  onRemoveContact,
-  onAddTile,
-  onEditTile,
-  onUpdate,
-  onTestVoice,
-  onRemovePhrase,
-  onBack,
+  settings, voices, speechSupported, savedPhrases, customTiles, contacts,
+  onSaveContact, onRemoveContact, onAddTile, onEditTile, onUpdate, onTestVoice, onRemovePhrase, onBack,
 }: SettingsScreenProps) {
-  /** Which contact form is open: 'new', a contact id, or none. */
+  const { t } = useI18n();
   const [editingContact, setEditingContact] = useState<string | null>(null);
 
   return (
@@ -91,26 +96,57 @@ export function SettingsScreen({
           type="button"
           onClick={onBack}
           className="grid size-11 place-items-center rounded-full bg-hairline text-forest"
-          aria-label="Back to the board"
+          aria-label={t('settings', 'back')}
         >
           <ArrowLeft size={22} aria-hidden="true" />
         </button>
-        <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-forest">Settings</h1>
+        <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-forest">{t('settings', 'title')}</h1>
       </header>
 
-      <Section title="Emergency contacts">
-        <p className="-mt-1 text-sm text-charcoal">
-          When you tap Alert on the Help screen, your messages app opens with an alert to these people, ready to send.
-          Contacts are saved only on this device.
-        </p>
+      <Section title={t('settings', 'language')}>
+        <p className="-mt-1 text-sm text-muted">{t('settings', 'language-hint')}</p>
+        <div className="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label={t('settings', 'language')}>
+          {LANGUAGES.map((l) => {
+            const selected = l.id === settings.language;
+            return (
+              <button
+                key={l.id}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                onClick={() => onUpdate({ language: l.id as LanguageId })}
+                className={`flex min-h-[60px] items-center justify-between gap-2 rounded-tile px-4 ${selected ? 'bg-forest text-cream' : 'bg-cream text-forest'}`}
+              >
+                <span className="flex flex-col items-start">
+                  <span className="text-[17px] font-semibold">{l.nativeLabel}</span>
+                  {l.nativeLabel !== l.label && <span className="text-xs opacity-75">{l.label}</span>}
+                </span>
+                {selected && <Check size={18} aria-hidden="true" />}
+              </button>
+            );
+          })}
+        </div>
+      </Section>
+
+      <Section title={t('settings', 'text-size')}>
+        <p className="-mt-1 text-sm text-muted">{t('settings', 'text-size-hint')}</p>
+        <TextSizePicker
+          value={settings.textSize}
+          onChange={(textSize) => onUpdate({ textSize })}
+          labels={{ medium: t('settings', 'medium'), large: t('settings', 'large'), 'x-large': t('settings', 'extra-large') }}
+        />
+      </Section>
+
+      <Section title={t('settings', 'emergency-contacts')}>
+        <p className="-mt-1 text-sm text-charcoal">{t('settings', 'emergency-intro')}</p>
         <label htmlFor="your-name" className="flex flex-col gap-1">
-          <span className="font-semibold text-forest">Your name (shown in alerts)</span>
+          <span className="font-semibold text-forest">{t('settings', 'your-name')}</span>
           <input
             id="your-name"
             value={settings.yourName}
             maxLength={60}
             onChange={(e) => onUpdate({ yourName: e.target.value })}
-            placeholder="For example: Sam"
+            placeholder={t('settings', 'your-name-placeholder')}
             className="h-12 rounded-tile bg-cream px-3.5 text-[17px] text-charcoal placeholder:text-muted"
             autoComplete="off"
           />
@@ -141,7 +177,7 @@ export function SettingsScreen({
                     type="button"
                     onClick={() => setEditingContact(c.id)}
                     className="flex w-full items-center gap-3 rounded-tile bg-cream p-1.5 pr-3 text-left"
-                    aria-label={`Edit contact: ${c.name}`}
+                    aria-label={`${c.name}`}
                   >
                     <span className="grid size-11 shrink-0 place-items-center rounded-full bg-tile-mint text-forest">
                       <Phone size={18} aria-hidden="true" />
@@ -176,50 +212,48 @@ export function SettingsScreen({
             className="pressable inline-flex h-12 items-center justify-center gap-2 rounded-tile bg-forest font-medium text-cream"
           >
             <Plus size={20} aria-hidden="true" />
-            Add an emergency contact
+            {t('settings', 'add-contact')}
           </button>
         ) : (
-          <p className="text-sm text-muted">You can save up to {MAX_CONTACTS} emergency contacts.</p>
+          <p className="text-sm text-muted">{t('settings', 'contact-limit')}</p>
         )}
       </Section>
 
-      <Section title="Your tiles">
+      <Section title={t('settings', 'your-tiles')}>
         <button
           type="button"
           onClick={onAddTile}
           className="pressable inline-flex h-12 items-center justify-center gap-2 rounded-tile bg-forest font-medium text-cream"
         >
           <Plus size={20} aria-hidden="true" />
-          Add a tile
+          {t('settings', 'add-tile')}
         </button>
         {customTiles.length === 0 ? (
-          <p className="text-sm text-muted">
-            Add words that matter to you, like names, favorite foods or places, with a photo or an icon.
-          </p>
+          <p className="text-sm text-muted">{t('settings', 'no-tiles')}</p>
         ) : (
           <ul className="flex flex-col gap-1.5">
-            {customTiles.map((t) => {
-              const Icon = iconFor(t.icon);
-              const categoryLabel = CATEGORIES.find((c) => c.id === t.category)?.label;
+            {customTiles.map((tile) => {
+              const Icon = iconFor(tile.icon);
+              const categoryLabel = CATEGORIES.find((c) => c.id === tile.category) ? t('categories', tile.category) : '';
               return (
-                <li key={t.id}>
+                <li key={tile.id}>
                   <button
                     type="button"
-                    onClick={() => onEditTile(t.id)}
+                    onClick={() => onEditTile(tile.id)}
                     className="flex w-full items-center gap-3 rounded-tile bg-cream p-1.5 pr-3 text-left"
-                    aria-label={`Edit tile: ${t.label}, in ${categoryLabel}`}
+                    aria-label={`${tile.label}, ${categoryLabel}`}
                   >
-                    <span className={`tile-edge grid size-11 shrink-0 place-items-center overflow-hidden rounded-[10px] text-forest ${TILE_COLOR_CLASS[t.color]}`}>
-                      {t.photo ? (
-                        <img src={t.photo} alt="" className="size-full object-cover" />
-                      ) : t.emoji ? (
-                        <span className="emoji text-[22px] leading-none" aria-hidden="true">{t.emoji}</span>
+                    <span className={`tile-edge grid size-11 shrink-0 place-items-center overflow-hidden rounded-[10px] text-forest ${TILE_COLOR_CLASS[tile.color]}`}>
+                      {tile.photo ? (
+                        <img src={tile.photo} alt="" className="size-full object-cover" />
+                      ) : tile.emoji ? (
+                        <span className="emoji text-[22px] leading-none" aria-hidden="true">{tile.emoji}</span>
                       ) : (
                         <Icon size={20} aria-hidden="true" />
                       )}
                     </span>
                     <span className="flex min-w-0 flex-1 flex-col">
-                      <span className="truncate font-semibold text-forest">{t.label}</span>
+                      <span className="truncate font-semibold text-forest">{tile.label}</span>
                       <span className="text-sm text-muted">{categoryLabel}</span>
                     </span>
                     <ChevronRight size={18} className="text-muted" aria-hidden="true" />
@@ -231,48 +265,48 @@ export function SettingsScreen({
         )}
       </Section>
 
-      <Section title="Talking">
-        <Toggle
-          id="speak-on-tap"
-          label="Speak each tile when tapped"
-          hint="Says each word right away, as well as adding it to the message."
-          checked={settings.speakOnTap}
-          onChange={(speakOnTap) => onUpdate({ speakOnTap })}
-        />
-      </Section>
-
-      <Section title="Seeing">
+      <Section title={t('settings', 'seeing')}>
         <Toggle
           id="high-visibility"
-          label="High-visibility tiles"
-          hint="Adds a dark outline to every tile and button."
+          label={t('settings', 'high-visibility')}
+          hint={t('settings', 'high-visibility-hint')}
           checked={settings.highVisibility}
           onChange={(highVisibility) => onUpdate({ highVisibility })}
         />
       </Section>
 
-      <Section title="Feel">
+      <Section title={t('settings', 'talking')}>
+        <Toggle
+          id="speak-on-tap"
+          label={t('settings', 'speak-on-tap')}
+          hint={t('settings', 'speak-on-tap-hint')}
+          checked={settings.speakOnTap}
+          onChange={(speakOnTap) => onUpdate({ speakOnTap })}
+        />
+      </Section>
+
+      <Section title={t('settings', 'feel')}>
         <Toggle
           id="playful"
-          label="Playful touches"
-          hint="Small, quick animations when you tap, speak and save. Turn off for a calmer screen. Your device's Reduce Motion setting always turns them off."
+          label={t('settings', 'playful')}
+          hint={t('settings', 'playful-hint')}
           checked={settings.playful}
           onChange={(playful) => onUpdate({ playful })}
         />
       </Section>
 
-      <Section title="Voice">
+      <Section title={t('settings', 'voice')}>
         {speechSupported ? (
           <>
             <label htmlFor="voice" className="flex flex-col gap-1.5">
-              <span className="font-semibold text-forest">Voice</span>
+              <span className="font-semibold text-forest">{t('settings', 'voice')}</span>
               <select
                 id="voice"
                 value={settings.voiceURI ?? ''}
                 onChange={(e) => onUpdate({ voiceURI: e.target.value || null })}
                 className="h-12 rounded-tile bg-cream px-3 text-charcoal"
               >
-                <option value="">Device default</option>
+                <option value="">{t('settings', 'device-default')}</option>
                 {voices.map((v) => (
                   <option key={v.voiceURI} value={v.voiceURI}>
                     {v.name} ({v.lang})
@@ -281,7 +315,7 @@ export function SettingsScreen({
               </select>
             </label>
             <label htmlFor="rate" className="flex flex-col gap-1.5">
-              <span className="font-semibold text-forest">Speed: {settings.rate.toFixed(1)}×</span>
+              <span className="font-semibold text-forest">{t('settings', 'speed')}: {settings.rate.toFixed(1)}×</span>
               <input
                 id="rate"
                 type="range"
@@ -298,17 +332,17 @@ export function SettingsScreen({
               onClick={onTestVoice}
               className="pressable h-12 rounded-tile bg-forest font-medium text-cream"
             >
-              Test voice
+              {t('settings', 'test-voice')}
             </button>
           </>
         ) : (
-          <p>This browser can't speak out loud. Try Safari, Chrome or Edge.</p>
+          <p>{t('settings', 'no-speech')}</p>
         )}
       </Section>
 
-      <Section title="Saved phrases">
+      <Section title={t('settings', 'saved-phrases')}>
         {savedPhrases.length === 0 ? (
-          <p className="text-muted">Build a message on the board and tap the star to save it.</p>
+          <p className="text-muted">{t('settings', 'phrase-hint')}</p>
         ) : (
           <ul className="flex flex-col gap-1.5">
             {savedPhrases.map((phrase) => (
@@ -318,7 +352,7 @@ export function SettingsScreen({
                   type="button"
                   onClick={() => onRemovePhrase(phrase)}
                   className="grid size-11 shrink-0 place-items-center rounded-md text-muted"
-                  aria-label={`Remove saved phrase: ${phrase}`}
+                  aria-label={`${phrase}`}
                 >
                   <Trash2 size={18} aria-hidden="true" />
                 </button>

@@ -4,16 +4,16 @@ import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
 import { TileGrid, type NavSlot } from '../components/TileGrid';
+import { Wordmark } from '../components/Wordmark';
 import { iconFor } from '../data/icons';
-import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word } from '../data/vocabulary';
+import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word, type WordDef } from '../data/vocabulary';
 import { boardPage, type Slot } from '../lib/boardPages';
 import type { CustomTile } from '../lib/customTiles';
 import { flyStarTo, tapHaptic } from '../lib/delight';
+import { useI18n } from '../lib/i18n';
 import { addTypedWords, addWord, removeLastWord, toSentence } from '../lib/message';
-import { greetingNow } from '../lib/greeting';
 import { loadJSON, saveJSON } from '../lib/storage';
 import { wordIndexAt } from '../lib/useSpeech';
-import { Wordmark } from '../components/Wordmark';
 
 interface BoardScreenProps {
   /** The user's name, used in the daily greeting. */
@@ -48,11 +48,10 @@ export function BoardScreen({
   onHelp,
   onSettings,
 }: BoardScreenProps) {
+  const { t } = useI18n();
   const [categoryId, setCategoryId] = useState<CategoryId>('needs');
   const [page, setPage] = useState(0);
   const [words, setWords] = useState<string[]>([]);
-  // Show the greeting as the empty-bar placeholder until the user interacts, but
-  // only once per day. Stored as an ISO date so comparing is just string equality.
   const today = new Date().toISOString().slice(0, 10);
   const alreadyGreetedToday = useRef<boolean>(
     loadJSON<string>('last-greet-date', '', (v): v is string => typeof v === 'string') === today,
@@ -64,16 +63,22 @@ export function BoardScreen({
     setShowGreeting(false);
     alreadyGreetedToday.current = true;
   };
-  /** Text typed into the message bar that hasn't become words yet. */
   const [draft, setDraft] = useState('');
   const category = CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[1];
 
   const isSaved = category.id === 'saved';
-  const customWords: Word[] = customTiles
-    .filter((t) => t.category === category.id)
-    .map((t) => ({ label: t.label, icon: iconFor(t.icon), photo: t.photo, emoji: t.emoji, color: t.color }));
 
-  // Saved phrases fill all 9 slots. Other categories keep slot 9 for "My words".
+  /** Built-in words translated to the current language. The label becomes what gets spoken. */
+  const translatedWords = (cat: typeof category): Word[] =>
+    cat.words.map((w: WordDef) => ({
+      label: t(cat.id as 'needs' | 'feelings' | 'people' | 'medical', w.key as never),
+      icon: w.icon,
+    }));
+
+  const customWords: Word[] = customTiles
+    .filter((tile) => tile.category === category.id)
+    .map((tile) => ({ label: tile.label, icon: iconFor(tile.icon), photo: tile.photo, emoji: tile.emoji, color: tile.color }));
+
   const layout = isSaved
     ? {
         page: 0,
@@ -81,7 +86,7 @@ export function BoardScreen({
           savedPhrases[i] ? { kind: 'word', word: { label: savedPhrases[i], icon: MessageCircle } } : null,
         ),
       }
-    : boardPage(category.words, customWords, page);
+    : boardPage(translatedWords(category), customWords, page);
 
   const handleNav = (slot: NavSlot) => {
     if (slot.kind === 'mine') setPage(1);
@@ -93,14 +98,14 @@ export function BoardScreen({
     isSaved && savedPhrases.length === 0 ? (
       <>
         <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
-        <p className="font-display text-[28px] leading-tight font-light text-forest">Nothing saved yet</p>
-        <p className="max-w-[28ch] text-charcoal">Build a message, then tap the star to keep it here.</p>
+        <p className="font-display text-[28px] leading-tight font-light text-forest">{t('message', 'nothing-saved')}</p>
+        <p className="max-w-[28ch] text-charcoal">{t('message', 'nothing-saved-hint')}</p>
       </>
     ) : !isSaved && layout.page > 0 && customWords.length === 0 ? (
       <>
         <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
-        <p className="font-display text-[28px] leading-tight font-light text-forest">Your own words grow here</p>
-        <p className="max-w-[30ch] text-charcoal">Add names, places and favorites in Settings, under Your tiles.</p>
+        <p className="font-display text-[28px] leading-tight font-light text-forest">{t('message', 'own-words')}</p>
+        <p className="max-w-[30ch] text-charcoal">{t('message', 'own-words-hint')}</p>
       </>
     ) : undefined;
 
@@ -110,7 +115,6 @@ export function BoardScreen({
   };
   const sentence = toSentence(words);
 
-  /** Turns any typed draft into words first, so typing then tapping keeps the order. */
   const withDraft = (base: string[]) => (draft.trim() ? addTypedWords(base, draft) : base);
 
   const handleWord = (word: string) => {
@@ -135,9 +139,13 @@ export function BoardScreen({
     onSpeak(toSentence(all));
   };
 
-  // Highlight the word being spoken, but only when it's this message being read.
   const spokenIndex =
     speaking && spokenText === sentence && spokenCharIndex !== null ? wordIndexAt(words, spokenCharIndex) : -1;
+
+  const hour = new Date().getHours();
+  const greetingBase =
+    hour >= 5 && hour < 12 ? t('greeting', 'morning') : hour >= 12 && hour < 18 ? t('greeting', 'afternoon') : t('greeting', 'evening');
+  const greetingText = yourName.trim() ? `${greetingBase}, ${yourName.trim()}` : greetingBase;
 
   return (
     <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
@@ -152,13 +160,13 @@ export function BoardScreen({
             className="pressable inline-flex h-11 items-center gap-1.5 rounded-full bg-help px-4 font-semibold text-cream"
           >
             <Siren size={20} aria-hidden="true" />
-            Help
+            {t('help', 'title')}
           </button>
           <button
             type="button"
             onClick={onSettings}
             className="grid size-11 place-items-center rounded-md text-forest"
-            aria-label="Settings"
+            aria-label={t('settings', 'title')}
           >
             <SettingsIcon size={22} aria-hidden="true" />
           </button>
@@ -187,7 +195,7 @@ export function BoardScreen({
           setDraft(text);
         }}
         onCommitDraft={commitDraft}
-        emptyMessage={showGreeting ? `${greetingNow(yourName)} · tap words, or tap here to type` : undefined}
+        emptyMessage={showGreeting ? `${greetingText} · ${t('message', 'placeholder').toLowerCase()}` : undefined}
       />
 
       <CoreRow onWord={handleWord} />

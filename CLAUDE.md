@@ -44,6 +44,9 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Emergency alerts open the Messages app via an `sms:` link (`src/lib/alert.ts`); the user taps Send. Copy must say so and never claim an alert was sent.
 - Any crash renders `src/components/ErrorBoundary.tsx` instead of a blank screen; the whole app is wrapped in it.
 - Greeting (`src/lib/greeting.ts`): shows "Good morning/afternoon/evening" with the user's name on welcome, and once per day as the empty-bar placeholder on the board.
+- Translations live in `src/data/strings.ts` (one block per language) and are consumed through `useI18n()`. Built-in tiles use keys; user content (custom tiles, saved phrases) stays untouched when language changes. Add a language by copying the English block and translating every value — never rename or remove keys.
+- Text size: `settings.textSize` sets `size-large`/`size-x-large` on `<html>`. Tiles (`.text-tile`, `.phrase-tile-label`), the message bar (`.message-chip`) and the core row (`.core-label`) scale; the fixed 3x3 grid does not.
+- `useSpeech` takes a `language` and prefers a matching voice, so Spanish words are read with a Spanish voice.
 
 ## Installable app (PWA)
 

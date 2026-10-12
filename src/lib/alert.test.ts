@@ -53,7 +53,7 @@ describe('phone numbers', () => {
 describe('normalizeSettings', () => {
   it('keeps valid saved values and fills new fields with defaults', () => {
     const s = normalizeSettings({ speakOnTap: true, highVisibility: true, voiceURI: null, rate: 1.2 });
-    expect(s).toEqual({ speakOnTap: true, highVisibility: true, voiceURI: null, rate: 1.2, yourName: '', playful: true });
+    expect(s).toEqual({ speakOnTap: true, highVisibility: true, voiceURI: null, rate: 1.2, yourName: '', playful: true, language: 'en-US', textSize: 'medium' });
   });
 
   it('recovers from junk', () => {
