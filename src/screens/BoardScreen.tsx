@@ -1,10 +1,11 @@
-import { MessageCircle, Settings as SettingsIcon, Siren, Sprout } from 'lucide-react';
+import { MessageCircle, Settings as SettingsIcon, Siren } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
 import { TileGrid, type NavSlot } from '../components/TileGrid';
 import { Wordmark } from '../components/Wordmark';
+import { FernIllustration, PotIllustration } from '../components/illustrations';
 import { iconFor } from '../data/icons';
 import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word, type WordDef } from '../data/vocabulary';
 import { boardPage, type Slot } from '../lib/boardPages';
@@ -97,13 +98,13 @@ export function BoardScreen({
   const emptyMessage =
     isSaved && savedPhrases.length === 0 ? (
       <>
-        <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
+        <PotIllustration className="size-20" />
         <p className="font-display text-[28px] leading-tight font-light text-forest">{t('message', 'nothing-saved')}</p>
         <p className="max-w-[28ch] text-charcoal">{t('message', 'nothing-saved-hint')}</p>
       </>
     ) : !isSaved && layout.page > 0 && customWords.length === 0 ? (
       <>
-        <Sprout size={40} strokeWidth={1.4} className="text-forest" aria-hidden="true" />
+        <FernIllustration className="size-20" />
         <p className="font-display text-[28px] leading-tight font-light text-forest">{t('message', 'own-words')}</p>
         <p className="max-w-[30ch] text-charcoal">{t('message', 'own-words-hint')}</p>
       </>

@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { TippedPotIllustration } from './illustrations';
 
 /**
  * Catches any crash in the app and shows a friendly recovery screen instead
@@ -28,7 +29,8 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBound
   render() {
     if (!this.state.error) return this.props.children;
     return (
-      <main className="mx-auto flex min-h-full max-w-lg flex-col justify-center gap-[21px] px-6 py-10 text-center">
+      <main className="mx-auto flex min-h-full max-w-lg flex-col items-center justify-center gap-[14px] px-6 py-10 text-center">
+        <TippedPotIllustration className="size-28 text-forest" />
         <h1 className="font-display text-title leading-tight font-light text-forest">Something went wrong.</h1>
         <p className="text-charcoal">
           Tap Talk ran into an error. Your words and settings are still saved on this device.

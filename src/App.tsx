@@ -32,8 +32,9 @@ export default function App() {
   // Default saved phrases come from the chosen language. Changing language later
   // leaves the user's own saved list alone — they're their words.
   const [savedPhrases, setSavedPhrases] = useState<string[]>(() => {
-    const existing = loadJSON<string[]>('saved-phrases', [], isStringArray);
-    return existing.length > 0 ? existing : STRINGS[settings.language].savedPhrases;
+    // Seed only on first launch (key missing). An empty list means the user cleared it on purpose.
+    const seen = (() => { try { return localStorage.getItem('tap-talk:saved-phrases') !== null; } catch { return false; } })();
+    return seen ? loadJSON<string[]>('saved-phrases', [], isStringArray) : STRINGS[settings.language].savedPhrases;
   });
 
   useEffect(() => {

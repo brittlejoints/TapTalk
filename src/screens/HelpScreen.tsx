@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { buildAlertMessage, buildSmsUrl, detectPlatform, getLocation } from '../lib/alert';
+import { TwoBubblesIllustration } from '../components/illustrations';
 import type { EmergencyContact } from '../lib/contacts';
 
 type Urgency = 'critical' | 'urgent' | 'medical';
@@ -132,8 +133,9 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
           Alert my contacts
         </button>
       ) : (
-        <div className="flex shrink-0 items-center justify-between gap-3 rounded-tile bg-hairline p-[11px] pl-[14px]">
-          <p className="text-sm leading-snug text-charcoal">No emergency contacts yet.</p>
+        <div className="flex shrink-0 items-center gap-3 rounded-tile bg-keylime p-[11px] pl-[14px]">
+          <TwoBubblesIllustration className="size-14 shrink-0" />
+          <p className="min-w-0 flex-1 text-sm leading-snug text-charcoal">No emergency contacts yet.</p>
           <button
             type="button"
             onClick={onSetUpContacts}

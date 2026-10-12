@@ -1,5 +1,5 @@
 import { ArrowRight, Droplet, Hand, Utensils, Volume2 } from 'lucide-react';
-import { SproutIllustration } from '../components/SproutIllustration';
+import { SproutIllustration } from '../components/illustrations';
 import { Wordmark } from '../components/Wordmark';
 import { useI18n } from '../lib/i18n';
 
