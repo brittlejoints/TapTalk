@@ -1,11 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!--
+    Tap Talk app icon. The whole mark is drawn with the same rounded 42-unit
+    stroke as the wordmark; the three bars match the wordmark's "l" exactly
+    (proportions 64 : 112 : 44). Everything sits inside the central ~70% so
+    Android's circular/squircle masks never clip it.
+  -->
   <rect width="512" height="512" fill="#0f3e17"/>
-  <!-- Speech bubble kept inside the central 80% so maskable crops never cut it -->
-  <path d="M136 146h240a40 40 0 0 1 40 40v120a40 40 0 0 1-40 40H246l-70 56v-56h-40a40 40 0 0 1-40-40V186a40 40 0 0 1 40-40z" fill="#e1f4df"/>
-  <!-- Sound bars -->
-  <g fill="#0f3e17">
-    <rect x="186" y="214" width="22" height="64" rx="11"/>
-    <rect x="245" y="190" width="22" height="112" rx="11"/>
-    <rect x="304" y="224" width="22" height="44" rx="11"/>
+  <g fill="none" stroke="#e1f4df" stroke-width="42" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Speech bubble: rounded rectangle with a tail at the bottom-left -->
+    <path d="M166 134h180a46 46 0 0 1 46 46v116a46 46 0 0 1-46 46H228l-62 56v-56h-20a46 46 0 0 1-46-46V180a46 46 0 0 1 46-46Z"/>
+    <!-- Three bars, centered horizontally, aligned to the baseline at y=288 -->
+    <path d="M212 224v64"/>
+    <path d="M256 176v112"/>
+    <path d="M300 244v44"/>
   </g>
 </svg>
