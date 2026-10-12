@@ -47,6 +47,7 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Greeting (`src/lib/greeting.ts`): shows "Good morning/afternoon/evening" with the user's name on welcome, and once per day as the empty-bar placeholder on the board.
 - Translations live in `src/data/strings.ts` (one block per language) and are consumed through `useI18n()`. Built-in tiles use keys; user content (custom tiles, saved phrases) stays untouched when language changes. Add a language by copying the English block and translating every value — never rename or remove keys.
 - Text size: `settings.textSize` sets `size-large`/`size-x-large` on `<html>`. Tiles (`.text-tile`, `.phrase-tile-label`), the message bar (`.message-chip`) and the core row (`.core-label`) scale; the fixed 3x3 grid does not.
+- Quick words (the row under the message bar) live in `settings.coreWords` and are edited in Settings, never on the board. There are always exactly four (`src/lib/coreWords.ts` normalizes any saved value back to four), each a built-in id (`src/data/coreWords.ts`, never rename or remove an id) or a short custom word with a tile color. Keep a visible reset to Yes, No, Stop, More.
 - `useSpeech` takes a `language` and prefers a matching voice, so Spanish words are read with a Spanish voice.
 
 ## Installable app (PWA)

@@ -1,3 +1,5 @@
+import type { CoreWordId } from './coreWords';
+
 /**
  * Every string the UI shows, in every supported language.
  *
@@ -33,7 +35,7 @@ type StringTable = {
   feelings: { happy: string; sad: string; worried: string; angry: string; scared: string; tired: string; excited: string; okay: string };
   people: { me: string; you: string; mom: string; dad: string; friend: string; teacher: string; nurse: string; caregiver: string };
   medical: { medicine: string; 'it-hurts': string; sick: string; dizzy: string; 'cant-breathe': string; bandage: string; shot: string; rest: string };
-  core: { yes: string; no: string; stop: string; more: string };
+  core: Record<CoreWordId, string>;
   help: {
     title: string;
     'i-need-help': string;
@@ -110,6 +112,14 @@ type StringTable = {
     'contact-limit': string;
     'saved-phrases': string;
     'phrase-hint': string;
+    'quick-words': string;
+    'quick-words-hint': string;
+    'quick-word-slot': string;
+    'quick-word-own': string;
+    'quick-word-own-placeholder': string;
+    'quick-word-use': string;
+    'quick-word-color': string;
+    'quick-words-reset': string;
   };
   greeting: { morning: string; afternoon: string; evening: string };
   error: { title: string; body: string; 'try-again': string; reload: string };
@@ -121,7 +131,7 @@ const en: StringTable = {
   feelings: { happy: 'Happy', sad: 'Sad', worried: 'Worried', angry: 'Angry', scared: 'Scared', tired: 'Tired', excited: 'Excited', okay: 'Okay' },
   people: { me: 'Me', you: 'You', mom: 'Mom', dad: 'Dad', friend: 'Friend', teacher: 'Teacher', nurse: 'Nurse', caregiver: 'Caregiver' },
   medical: { medicine: 'Medicine', 'it-hurts': 'It hurts', sick: 'Sick', dizzy: 'Dizzy', 'cant-breathe': "Can't breathe", bandage: 'Bandage', shot: 'Shot', rest: 'Rest' },
-  core: { yes: 'Yes', no: 'No', stop: 'Stop', more: 'More' },
+  core: { yes: 'Yes', no: 'No', stop: 'Stop', more: 'More', wait: 'Wait', done: 'Done', please: 'Please', thanks: 'Thanks', help: 'Help me', again: 'Again', go: 'Go' },
   help: {
     title: 'Help',
     'i-need-help': 'I need help',
@@ -198,6 +208,14 @@ const en: StringTable = {
     'contact-limit': 'You can save up to 5 emergency contacts.',
     'saved-phrases': 'Saved phrases',
     'phrase-hint': 'Build a message on the board and tap the star to save it.',
+    'quick-words': 'Quick words',
+    'quick-words-hint': 'The four buttons under the message bar. There are always four, and they stay in the same place on every page.',
+    'quick-word-slot': 'Button {n}',
+    'quick-word-own': 'Or type your own word',
+    'quick-word-own-placeholder': 'Your word',
+    'quick-word-use': 'Use this word',
+    'quick-word-color': 'Color',
+    'quick-words-reset': 'Reset to Yes, No, Stop, More',
   },
   greeting: { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening' },
   error: { title: 'Something went wrong.', body: 'Tap Talk ran into an error. Your words and settings are still saved on this device.', 'try-again': 'Try again', reload: 'Reload the app' },
@@ -209,7 +227,7 @@ const es: StringTable = {
   feelings: { happy: 'Feliz', sad: 'Triste', worried: 'Preocupado', angry: 'Enojado', scared: 'Asustado', tired: 'Cansado', excited: 'Emocionado', okay: 'Bien' },
   people: { me: 'Yo', you: 'Tú', mom: 'Mamá', dad: 'Papá', friend: 'Amigo', teacher: 'Maestro', nurse: 'Enfermera', caregiver: 'Cuidador' },
   medical: { medicine: 'Medicina', 'it-hurts': 'Me duele', sick: 'Enfermo', dizzy: 'Mareado', 'cant-breathe': 'No puedo respirar', bandage: 'Vendaje', shot: 'Inyección', rest: 'Descanso' },
-  core: { yes: 'Sí', no: 'No', stop: 'Para', more: 'Más' },
+  core: { yes: 'Sí', no: 'No', stop: 'Para', more: 'Más', wait: 'Espera', done: 'Listo', please: 'Por favor', thanks: 'Gracias', help: 'Ayuda', again: 'Otra vez', go: 'Ir' },
   help: {
     title: 'Ayuda',
     'i-need-help': 'Necesito ayuda',
@@ -286,6 +304,14 @@ const es: StringTable = {
     'contact-limit': 'Puedes guardar hasta 5 contactos de emergencia.',
     'saved-phrases': 'Frases guardadas',
     'phrase-hint': 'Arma un mensaje en el tablero y toca la estrella para guardarlo.',
+    'quick-words': 'Palabras rápidas',
+    'quick-words-hint': 'Los cuatro botones debajo de la barra de mensaje. Siempre son cuatro y se quedan en el mismo lugar en cada página.',
+    'quick-word-slot': 'Botón {n}',
+    'quick-word-own': 'O escribe tu propia palabra',
+    'quick-word-own-placeholder': 'Tu palabra',
+    'quick-word-use': 'Usar esta palabra',
+    'quick-word-color': 'Color',
+    'quick-words-reset': 'Restablecer a Sí, No, Para, Más',
   },
   greeting: { morning: 'Buenos días', afternoon: 'Buenas tardes', evening: 'Buenas noches' },
   error: { title: 'Algo salió mal.', body: 'Tap Talk tuvo un error. Tus palabras y ajustes siguen guardados en este dispositivo.', 'try-again': 'Intentar de nuevo', reload: 'Recargar la app' },

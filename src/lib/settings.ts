@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DEFAULT_LANGUAGE, LANGUAGES, type LanguageId } from '../data/strings';
+import { DEFAULT_CORE_SLOTS, normalizeCoreSlots, type CoreSlots } from './coreWords';
 import { loadJSON, saveJSON } from './storage';
 
 export type TextSize = 'medium' | 'large' | 'x-large';
@@ -20,6 +21,8 @@ export interface Settings {
   language: LanguageId;
   /** Scales tile and message bar text. */
   textSize: TextSize;
+  /** The four quick words under the message bar. Always exactly four. */
+  coreWords: CoreSlots;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -31,6 +34,7 @@ export const DEFAULT_SETTINGS: Settings = {
   playful: true,
   language: DEFAULT_LANGUAGE,
   textSize: 'medium',
+  coreWords: DEFAULT_CORE_SLOTS,
 };
 
 const languageIds = LANGUAGES.map((l) => l.id);
@@ -51,6 +55,7 @@ export function normalizeSettings(raw: unknown): Settings {
     playful: typeof v.playful === 'boolean' ? v.playful : DEFAULT_SETTINGS.playful,
     language: typeof v.language === 'string' && languageIds.includes(v.language as LanguageId) ? (v.language as LanguageId) : DEFAULT_SETTINGS.language,
     textSize: typeof v.textSize === 'string' && textSizes.includes(v.textSize) ? (v.textSize as TextSize) : DEFAULT_SETTINGS.textSize,
+    coreWords: normalizeCoreSlots(v.coreWords),
   };
 }
 

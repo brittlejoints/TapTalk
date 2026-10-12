@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildAlertMessage, buildSmsUrl, detectPlatform } from './alert';
 import { normalizePhone, phoneError } from './contacts';
+import { DEFAULT_CORE_SLOTS } from './coreWords';
 import { normalizeSettings } from './settings';
 
 describe('buildAlertMessage', () => {
@@ -53,7 +54,7 @@ describe('phone numbers', () => {
 describe('normalizeSettings', () => {
   it('keeps valid saved values and fills new fields with defaults', () => {
     const s = normalizeSettings({ speakOnTap: true, highVisibility: true, voiceURI: null, rate: 1.2 });
-    expect(s).toEqual({ speakOnTap: true, highVisibility: true, voiceURI: null, rate: 1.2, yourName: '', playful: true, language: 'en-US', textSize: 'medium' });
+    expect(s).toEqual({ speakOnTap: true, highVisibility: true, voiceURI: null, rate: 1.2, yourName: '', playful: true, language: 'en-US', textSize: 'medium', coreWords: DEFAULT_CORE_SLOTS });
   });
 
   it('recovers from junk', () => {

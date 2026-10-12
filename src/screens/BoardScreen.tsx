@@ -10,6 +10,7 @@ import { iconFor } from '../data/icons';
 import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word, type WordDef } from '../data/vocabulary';
 import { boardPage, type Slot } from '../lib/boardPages';
 import type { CustomTile } from '../lib/customTiles';
+import type { CoreSlots } from '../lib/coreWords';
 import { flyStarTo, tapHaptic } from '../lib/delight';
 import { useI18n } from '../lib/i18n';
 import { addTypedWords, addWord, removeLastWord, toSentence } from '../lib/message';
@@ -20,6 +21,7 @@ interface BoardScreenProps {
   /** The user's name, used in the daily greeting. */
   yourName: string;
   savedPhrases: string[];
+  coreWords: CoreSlots;
   customTiles: CustomTile[];
   speakOnTap: boolean;
   speaking: boolean;
@@ -37,6 +39,7 @@ interface BoardScreenProps {
 export function BoardScreen({
   yourName,
   savedPhrases,
+  coreWords,
   customTiles,
   speakOnTap,
   speaking,
@@ -199,7 +202,7 @@ export function BoardScreen({
         emptyMessage={showGreeting ? `${greetingText} · ${t('message', 'placeholder').toLowerCase()}` : undefined}
       />
 
-      <CoreRow onWord={handleWord} />
+      <CoreRow slots={coreWords} onWord={handleWord} />
 
       <CategoryTabs categories={CATEGORIES} current={categoryId} onSelect={selectCategory} />
 

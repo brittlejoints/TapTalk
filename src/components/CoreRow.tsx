@@ -1,29 +1,27 @@
-import { Check, Hand, Plus, X, type LucideIcon } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { TILE_COLOR_CLASS } from '../data/colors';
+import { CORE_WORD_INFO } from '../data/coreWords';
+import type { CoreSlots } from '../lib/coreWords';
 import { useI18n } from '../lib/i18n';
 
-/** Core words stay in the same place on every page so users build motor memory. */
-const CORE_WORDS: { key: 'yes' | 'no' | 'stop' | 'more'; icon: LucideIcon; className: string }[] = [
-  { key: 'yes', icon: Check, className: 'bg-tile-mint' },
-  { key: 'no', icon: X, className: 'bg-tile-mist' },
-  { key: 'stop', icon: Hand, className: 'bg-tile-sand' },
-  { key: 'more', icon: Plus, className: 'bg-tile-sand' },
-];
-
-export function CoreRow({ onWord }: { onWord: (word: string) => void }) {
+/** Quick words stay in the same place on every page so users build motor memory. There are always four. */
+export function CoreRow({ slots, onWord }: { slots: CoreSlots; onWord: (word: string) => void }) {
   const { t } = useI18n();
   return (
     <div className="grid grid-cols-4 gap-[7px]" role="group" aria-label="Core words">
-      {CORE_WORDS.map(({ key, icon: Icon, className }) => {
-        const label = t('core', key);
+      {slots.map((slot, i) => {
+        const label = slot.kind === 'builtin' ? t('core', slot.id) : slot.label;
+        const Icon = slot.kind === 'builtin' ? CORE_WORD_INFO[slot.id].icon : MessageCircle;
+        const color = slot.kind === 'builtin' ? CORE_WORD_INFO[slot.id].color : slot.color;
         return (
           <button
-            key={key}
+            key={i}
             type="button"
             onClick={() => onWord(label)}
-            className={`pressable tile-edge core-label flex h-13 items-center justify-center gap-1.5 rounded-tile font-semibold text-[16px] text-forest ${className}`}
+            className={`pressable tile-edge core-label flex h-13 min-w-0 items-center justify-center gap-1.5 rounded-tile px-1 font-semibold text-[16px] text-forest ${TILE_COLOR_CLASS[color]}`}
           >
-            <Icon size={18} aria-hidden="true" className="hidden min-[360px]:block" />
-            {label}
+            <Icon size={18} aria-hidden="true" className="hidden shrink-0 min-[360px]:block" />
+            <span className="truncate">{label}</span>
           </button>
         );
       })}
