@@ -108,7 +108,6 @@ function AppShell({ view, setView, start, settings, update, speech, custom, emer
         <BoardScreen
           yourName={settings.yourName}
           savedPhrases={savedPhrases}
-          coreWords={settings.coreWords}
           customTiles={custom.tiles}
           speakOnTap={settings.speakOnTap}
           speaking={speech.speaking}

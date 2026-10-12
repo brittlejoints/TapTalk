@@ -1,7 +1,6 @@
 import { ArrowLeft, Check, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { ContactForm } from '../components/ContactForm';
-import { CoreWordsEditor } from '../components/CoreWordsEditor';
 import { TILE_COLOR_CLASS } from '../data/colors';
 import { iconFor } from '../data/icons';
 import { LANGUAGES, type LanguageId } from '../data/strings';
@@ -136,11 +135,6 @@ export function SettingsScreen({
           onChange={(textSize) => onUpdate({ textSize })}
           labels={{ medium: t('settings', 'medium'), large: t('settings', 'large'), 'x-large': t('settings', 'extra-large') }}
         />
-      </Section>
-
-      <Section title={t('settings', 'quick-words')}>
-        <p className="-mt-1 text-sm text-muted">{t('settings', 'quick-words-hint')}</p>
-        <CoreWordsEditor slots={settings.coreWords} onChange={(coreWords) => onUpdate({ coreWords })} />
       </Section>
 
       <Section title={t('settings', 'emergency-contacts')}>
