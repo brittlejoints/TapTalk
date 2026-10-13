@@ -82,9 +82,11 @@ export default function App() {
     return savedOk && tilesOk && contactsOk;
   };
 
+  // The guide opened again from Settings is a history entry, so finishing it steps back; first launch has none.
   const start = () => {
     saveJSON('onboarded', true);
-    setView('board');
+    if (window.history.state?.tt === 'welcome') window.history.back();
+    else setView('board');
   };
 
   // The size class on <html> is picked up by CSS text-size rules.
@@ -117,6 +119,7 @@ export default function App() {
           offlineReady={sw.offlineReady[0]}
           onApplyUpdate={() => void sw.updateServiceWorker(true)}
           onRestore={restore}
+          onReplayWelcome={() => open('welcome', { replace: true })}
         />
       </I18nProvider>
     </ErrorBoundary>
@@ -141,10 +144,11 @@ interface ShellProps {
   offlineReady: boolean;
   onApplyUpdate: () => void;
   onRestore: (data: BackupData) => boolean;
+  onReplayWelcome: () => void;
 }
 
 /** Inside I18nProvider so screens can translate. The one `onTestVoice` message is translated here. */
-function AppShell({ view, open, back, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate, onRestore }: ShellProps) {
+function AppShell({ view, open, back, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate, onRestore, onReplayWelcome }: ShellProps) {
   const { t } = useI18n();
   const testVoiceMessage = useMemo(() => {
     // Keep the voice test tied to the greeting language so the user hears their chosen voice.
@@ -212,6 +216,7 @@ function AppShell({ view, open, back, start, settings, update, speech, custom, e
           offlineReady={offlineReady}
           onApplyUpdate={onApplyUpdate}
           onRestore={onRestore}
+          onReplayWelcome={onReplayWelcome}
         />
       )}
       {view === 'tile-editor' && (

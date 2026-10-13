@@ -190,6 +190,23 @@ type StringTable = {
     'icon-label': string;
     'emoji-label': string;
   };
+  onboarding: {
+    'next': string;
+    'back': string;
+    'skip': string;
+    'step-of': string;
+    'guide-title': string;
+    'replay': string;
+    's2-eyebrow': string;
+    's2-title': string;
+    's2-body': string;
+    's3-eyebrow': string;
+    's3-title': string;
+    's3-body': string;
+    's4-eyebrow': string;
+    's4-title': string;
+    's4-body': string;
+  };
   backup: {
     'title': string;
     'hint': string;
@@ -388,6 +405,23 @@ const en: StringTable = {
     'icon-label': 'Icon',
     'emoji-label': 'Emoji',
   },
+  onboarding: {
+    'next': 'Next',
+    'back': 'Back',
+    'skip': 'Skip',
+    'step-of': 'Step {n} of {total}',
+    'guide-title': 'Welcome guide',
+    'replay': 'Show the welcome guide again',
+    's2-eyebrow': 'Tap and speak',
+    's2-title': 'Tap words, then tap the speaker.',
+    's2-body': 'Tap a tile to add it to your message. Then tap the big green button and Tap Talk says it out loud. You can type words too.',
+    's3-eyebrow': 'Help',
+    's3-title': 'Help is always one tap away.',
+    's3-body': 'The Help button speaks emergency phrases right away. It can also open a message to your emergency contacts. You tap Send yourself; Tap Talk never sends anything.',
+    's4-eyebrow': 'Make it yours',
+    's4-title': 'Add your own words.',
+    's4-body': 'In Settings you can add tiles with a photo, icon or emoji, switch between English and Spanish, make the text bigger, and save a backup.',
+  },
   backup: {
     'title': 'Backup',
     'hint': 'Save everything you have set up (tiles, contacts, saved phrases and settings) to a file, or restore it on this or another device. The file is not encrypted and contains phone numbers, so keep it somewhere private.',
@@ -585,6 +619,23 @@ const es: StringTable = {
     'photo-unreadable': 'No se pudo abrir esa foto. Prueba con un JPEG o PNG.',
     'icon-label': 'Ícono',
     'emoji-label': 'Emoji',
+  },
+  onboarding: {
+    'next': 'Siguiente',
+    'back': 'Atrás',
+    'skip': 'Omitir',
+    'step-of': 'Paso {n} de {total}',
+    'guide-title': 'Guía de bienvenida',
+    'replay': 'Ver la guía de bienvenida otra vez',
+    's2-eyebrow': 'Toca y habla',
+    's2-title': 'Toca palabras y luego toca el altavoz.',
+    's2-body': 'Toca un mosaico para agregarlo a tu mensaje. Luego toca el botón verde grande y Tap Talk lo dice en voz alta. También puedes escribir palabras.',
+    's3-eyebrow': 'Ayuda',
+    's3-title': 'La ayuda está siempre a un toque.',
+    's3-body': 'El botón Ayuda dice frases de emergencia al instante. También puede abrir un mensaje para tus contactos de emergencia. Tú tocas Enviar; Tap Talk nunca envía nada.',
+    's4-eyebrow': 'Hazla tuya',
+    's4-title': 'Agrega tus propias palabras.',
+    's4-body': 'En Ajustes puedes agregar mosaicos con una foto, un ícono o un emoji, cambiar entre inglés y español, hacer el texto más grande y guardar una copia de seguridad.',
   },
   backup: {
     'title': 'Copia de seguridad',

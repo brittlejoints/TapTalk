@@ -33,6 +33,7 @@ interface SettingsScreenProps {
   offlineReady: boolean;
   onApplyUpdate: () => void;
   onRestore: (data: BackupData) => boolean;
+  onReplayWelcome: () => void;
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -93,7 +94,7 @@ function TextSizePicker({ value, onChange, labels, groupLabel }: { value: TextSi
 export function SettingsScreen({
   settings, voices, speechSupported, savedPhrases, customTiles, contacts,
   onSaveContact, onRemoveContact, onAddTile, onEditTile, onUpdate, onTestVoice, onRemovePhrase, onBack,
-  updateReady, offlineReady, onApplyUpdate, onRestore,
+  updateReady, offlineReady, onApplyUpdate, onRestore, onReplayWelcome,
 }: SettingsScreenProps) {
   const { t } = useI18n();
   const [editingContact, setEditingContact] = useState<string | null>(null);
@@ -375,6 +376,12 @@ export function SettingsScreen({
             <p>{t('settings', 'no-speech')}</p>
           </div>
         )}
+      </Section>
+
+      <Section title={t('onboarding', 'guide-title')}>
+        <button type="button" onClick={onReplayWelcome} className="inline-flex h-12 items-center justify-center rounded-tile bg-cream font-medium text-forest">
+          {t('onboarding', 'replay')}
+        </button>
       </Section>
 
       <Section title={t('backup', 'title')}>
