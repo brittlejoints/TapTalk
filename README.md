@@ -1,6 +1,6 @@
 # Tap Talk
 
-A calm, accessible AAC app: tap words to build a message, and Tap Talk says it out loud. It works offline, and speech uses the device's own voices, so nothing you say leaves the device.
+A calm, accessible AAC app: tap words to build a message, and Tap Talk says it out loud. It works offline and has no accounts or tracking. Speech uses your browser's voices, which on most phones run on the device (see [Privacy](PRIVACY.md) for online voices).
 
 ## Run it
 
@@ -33,3 +33,11 @@ Design rules and conventions live in [CLAUDE.md](CLAUDE.md).
 ## Publishing (GitHub Pages)
 
 Every push to `main` builds the app, runs the tests, and publishes it (`.github/workflows/deploy.yml`). One-time setup: in the repo, open **Settings, Pages, Build and deployment** and set **Source** to **GitHub Actions**. After that the site updates by itself, usually within a minute of a merge. The build uses relative paths (`base: './'` in `vite.config.ts`), so it works from the `/TapTalk/` folder and would also work on a custom domain.
+
+## License, privacy and terms
+
+- [MIT License](LICENSE): the code is open source.
+- [Privacy](PRIVACY.md): Tap Talk collects nothing; everything stays on the device.
+- [Terms of use](TERMS.md): including that Tap Talk is not an emergency service.
+
+Third-party software: React (MIT), Lucide icons (ISC), Tailwind CSS (MIT), and the fonts Cormorant Garamond and Inter (SIL Open Font License 1.1).

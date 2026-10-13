@@ -60,6 +60,10 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - The welcome pill shows a tiny sun, sunrise or moon (`DayGlyph`) chosen by `periodFor()` in `src/lib/greeting.ts`; use that helper instead of re-deriving morning/afternoon/evening.
 - `useSpeech` takes a `language` and prefers a matching voice, so Spanish words are read with a Spanish voice.
 
+## Privacy and legal
+
+- `PRIVACY.md` makes promises about what the app does: no network requests, no analytics, data only in `localStorage`, location only when the person chooses it for an alert. Keep it true. Before adding any network request, third-party script, new stored data or new permission, update `PRIVACY.md` (and its date) in the same change. `TERMS.md` says Tap Talk is not an emergency service; never word any screen as if it were.
+
 ## Installable app (PWA)
 
 - Configured in `vite.config.ts` with `vite-plugin-pwa`. Icons live in `public/icons/` (source: `icon.svg`).
