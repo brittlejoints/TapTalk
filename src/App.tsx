@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { STRINGS } from './data/strings';
@@ -150,6 +150,8 @@ interface ShellProps {
 /** Inside I18nProvider so screens can translate. The one `onTestVoice` message is translated here. */
 function AppShell({ view, open, back, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate, onRestore, onReplayWelcome }: ShellProps) {
   const { t } = useI18n();
+  const boardMounted = useRef(false);
+  if (view === 'board') boardMounted.current = true;
   const testVoiceMessage = useMemo(() => {
     // Keep the voice test tied to the greeting language so the user hears their chosen voice.
     const hour = new Date().getHours();
@@ -159,7 +161,9 @@ function AppShell({ view, open, back, start, settings, update, speech, custom, e
   return (
     <div className={`h-full ${settings.highVisibility ? 'high-visibility' : ''} ${settings.playful ? 'playful' : ''}`}>
       {view === 'welcome' && <WelcomeScreen onStart={start} />}
-      {view === 'board' && (
+      {/* Once shown, the board stays mounted (hidden) so a message in progress, the chosen category and page survive a visit to Help, Settings or the editor. */}
+      {boardMounted.current && (
+        <div hidden={view !== 'board'} className="h-full">
         <BoardScreen
           yourName={settings.yourName}
           savedPhrases={savedPhrases}
@@ -180,6 +184,7 @@ function AppShell({ view, open, back, start, settings, update, speech, custom, e
           onHelp={() => open('help')}
           onSettings={() => open('settings')}
         />
+        </div>
       )}
       {view === 'help' && (
         <HelpScreen
