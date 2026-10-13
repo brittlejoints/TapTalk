@@ -1,4 +1,4 @@
-import { CircleX, Delete, Square, Star, Volume2 } from 'lucide-react';
+import { CircleX, Delete, Ellipsis, Square, Star, Volume2 } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type MouseEvent } from 'react';
 import { useI18n } from '../lib/i18n';
 
@@ -79,6 +79,8 @@ export function MessageBar({
   // Changing the key replays the bloom each time a message is spoken.
   const [bloomKey, setBloomKey] = useState(0);
   const [justSaved, setJustSaved] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const bar = useRef<HTMLDivElement>(null);
   const scroller = useRef<HTMLLabelElement>(null);
 
   // The bar has a fixed height so tiles never move as a message grows; keep the newest word in view.
@@ -86,6 +88,25 @@ export function MessageBar({
     const el = scroller.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [words.length, draft]);
+
+  // The narrow-screen tray closes on Escape, on a tap outside, and when the message empties.
+  useEffect(() => {
+    if (!moreOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMoreOpen(false);
+    const onDown = (e: PointerEvent) => {
+      if (!bar.current?.contains(e.target as Node)) setMoreOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onDown);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onDown);
+    };
+  }, [moreOpen]);
+
+  useEffect(() => {
+    if (empty) setMoreOpen(false);
+  }, [empty]);
 
   const speak = () => {
     onSpeak(draft);
@@ -98,7 +119,7 @@ export function MessageBar({
   };
 
   return (
-    <div className="flex h-[74px] shrink-0 items-center gap-1 rounded-tile bg-keylime py-2 pr-2 pl-3.5">
+    <div ref={bar} className="relative flex h-[74px] shrink-0 items-center gap-1 rounded-tile bg-keylime py-2 pr-2 pl-3.5">
       <label
         ref={scroller}
         htmlFor={inputId}
@@ -142,18 +163,18 @@ export function MessageBar({
           autoComplete="off"
           autoCapitalize="sentences"
           className={`message-chip min-w-0 flex-1 bg-transparent py-0.5 text-[20px] font-semibold text-forest outline-none placeholder:text-[16px] placeholder:font-normal placeholder:text-muted ${
-            empty || typing || draft ? 'basis-[8ch]' : 'basis-[2ch]'
+            empty || typing || draft ? 'basis-[8ch]' : 'basis-1'
           }`}
         />
       </label>
 
       {!empty &&
         (saved ? (
-          <span className="grid size-11 place-items-center text-forest" role="img" aria-label={t('message', 'is-saved')}>
+          <span className="grid size-11 place-items-center text-forest max-[359px]:hidden" role="img" aria-label={t('message', 'is-saved')}>
             <Star size={22} fill="currentColor" aria-hidden="true" className={justSaved ? 'twinkle' : ''} />
           </span>
         ) : (
-          <button type="button" onClick={save} className="grid size-11 place-items-center rounded-md text-forest" aria-label={t('message', 'save-phrase')}>
+          <button type="button" onClick={save} className="grid size-11 place-items-center rounded-md text-forest max-[359px]:hidden" aria-label={t('message', 'save-phrase')}>
             <Star size={22} aria-hidden="true" />
           </button>
         ))}
@@ -164,12 +185,61 @@ export function MessageBar({
             onClear();
             setJustSaved(false);
           }}
-          className="grid size-11 place-items-center rounded-md text-muted"
+          className="grid size-11 place-items-center rounded-md text-muted max-[359px]:hidden"
           aria-label={t('message', 'clear')}
           title={t('message', 'clear')}
         >
           <CircleX size={22} aria-hidden="true" />
         </button>
+      )}
+      {!empty && (
+        <button
+          type="button"
+          onClick={() => setMoreOpen((o) => !o)}
+          aria-expanded={moreOpen}
+          aria-haspopup="true"
+          aria-controls={`${inputId}-more`}
+          aria-label={t('message', 'more-actions')}
+          className="hidden size-11 place-items-center rounded-md text-forest max-[359px]:grid"
+        >
+          <Ellipsis size={22} aria-hidden="true" />
+        </button>
+      )}
+      {moreOpen && !empty && (
+        <div id={`${inputId}-more`} className="absolute top-full right-0 z-10 mt-1 flex flex-col gap-1 rounded-tile bg-cream p-1.5 min-[360px]:hidden">
+          {saved ? (
+            <span className="flex h-12 items-center gap-2 px-3 font-semibold text-forest" role="img" aria-label={t('message', 'is-saved')}>
+              <Star size={20} fill="currentColor" aria-hidden="true" />
+              {t('message', 'is-saved')}
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                save(e);
+                setMoreOpen(false);
+              }}
+              className="flex h-12 items-center gap-2 rounded-md bg-keylime px-3 font-semibold whitespace-nowrap text-forest"
+            >
+              <Star size={20} aria-hidden="true" />
+              {t('message', 'save-phrase')}
+            </button>
+          )}
+          {words.length >= 2 && (
+            <button
+              type="button"
+              onClick={() => {
+                onClear();
+                setJustSaved(false);
+                setMoreOpen(false);
+              }}
+              className="flex h-12 items-center gap-2 rounded-md bg-keylime px-3 font-semibold whitespace-nowrap text-forest"
+            >
+              <CircleX size={20} aria-hidden="true" />
+              {t('message', 'clear')}
+            </button>
+          )}
+        </div>
       )}
       <button
         type="button"

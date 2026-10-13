@@ -29,6 +29,8 @@ export function detectLanguage(nav: Pick<Navigator, 'language' | 'languages'> = 
 
 type StringTable = {
   categories: { saved: string; needs: string; feelings: string; people: string; medical: string };
+  /** Short names for the narrow category tabs. Full names stay everywhere else. */
+  tabs: { saved: string; needs: string; feelings: string; people: string; medical: string };
   needs: { 'i-want': string; 'i-need': string; water: string; food: string; bathroom: string; hot: string; cold: string; pain: string };
   feelings: { happy: string; sad: string; worried: string; angry: string; scared: string; tired: string; excited: string; okay: string };
   people: { me: string; you: string; mom: string; dad: string; friend: string; teacher: string; nurse: string; caregiver: string };
@@ -63,6 +65,7 @@ type StringTable = {
     'delete-last-word': string;
     'delete-last-letter': string;
     'save-phrase': string;
+    'more-actions': string;
     'is-saved': string;
     clear: string;
     'nothing-saved': string;
@@ -122,6 +125,7 @@ type StringTable = {
 
 const en: StringTable = {
   categories: { saved: 'Saved', needs: 'Needs', feelings: 'Feelings', people: 'People', medical: 'Medical' },
+  tabs: { saved: 'Saved', needs: 'Needs', feelings: 'Feelings', people: 'People', medical: 'Medical' },
   needs: { 'i-want': 'I want', 'i-need': 'I need', water: 'Water', food: 'Food', bathroom: 'Bathroom', hot: 'Hot', cold: 'Cold', pain: 'Pain' },
   feelings: { happy: 'Happy', sad: 'Sad', worried: 'Worried', angry: 'Angry', scared: 'Scared', tired: 'Tired', excited: 'Excited', okay: 'Okay' },
   people: { me: 'Me', you: 'You', mom: 'Mom', dad: 'Dad', friend: 'Friend', teacher: 'Teacher', nurse: 'Nurse', caregiver: 'Caregiver' },
@@ -156,6 +160,7 @@ const en: StringTable = {
     'delete-last-word': 'Delete last word',
     'delete-last-letter': 'Delete last letter',
     'save-phrase': 'Save this phrase',
+    'more-actions': 'More actions',
     'is-saved': 'This phrase is saved',
     clear: 'Clear the whole message',
     'nothing-saved': 'Nothing saved yet',
@@ -215,6 +220,7 @@ const en: StringTable = {
 
 const es: StringTable = {
   categories: { saved: 'Guardadas', needs: 'Necesidades', feelings: 'Sentimientos', people: 'Personas', medical: 'Médico' },
+  tabs: { saved: 'Frases', needs: 'Cosas', feelings: 'Siento', people: 'Personas', medical: 'Médico' },
   needs: { 'i-want': 'Quiero', 'i-need': 'Necesito', water: 'Agua', food: 'Comida', bathroom: 'Baño', hot: 'Calor', cold: 'Frío', pain: 'Dolor' },
   feelings: { happy: 'Feliz', sad: 'Triste', worried: 'Preocupado', angry: 'Enojado', scared: 'Asustado', tired: 'Cansado', excited: 'Emocionado', okay: 'Bien' },
   people: { me: 'Yo', you: 'Tú', mom: 'Mamá', dad: 'Papá', friend: 'Amigo', teacher: 'Maestro', nurse: 'Enfermera', caregiver: 'Cuidador' },
@@ -249,6 +255,7 @@ const es: StringTable = {
     'delete-last-word': 'Borrar la última palabra',
     'delete-last-letter': 'Borrar la última letra',
     'save-phrase': 'Guardar esta frase',
+    'more-actions': 'Más acciones',
     'is-saved': 'Esta frase está guardada',
     clear: 'Borrar todo el mensaje',
     'nothing-saved': 'Aún no has guardado nada',

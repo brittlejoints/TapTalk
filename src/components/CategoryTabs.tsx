@@ -20,7 +20,8 @@ export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProp
     >
       {categories.map(({ id, icon: Icon }) => {
         const selected = id === current;
-        const label = t('categories', id);
+        const fullName = t('categories', id);
+        const label = t('tabs', id);
         return (
           <button
             key={id}
@@ -28,6 +29,7 @@ export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProp
             role="tab"
             id={`tab-${id}`}
             aria-selected={selected}
+            aria-label={fullName}
             aria-controls="tile-grid"
             onClick={() => onSelect(id)}
             className={`flex h-[50px] min-w-0 flex-col items-center justify-center gap-px overflow-hidden rounded-full text-xs font-semibold ${
