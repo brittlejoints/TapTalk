@@ -55,6 +55,19 @@ type StringTable = {
     'copy-alert': string;
     copied: string;
     note: string;
+    'you-said': string;
+    'tap-a-phrase': string;
+    close: string;
+    'confirm-title': string;
+    'confirm-body': string;
+    'include-location': string;
+    cancel: string;
+    'open-messages': string;
+    'locating-title': string;
+    'locating-body': string;
+    'skip-location': string;
+    'opened-body': string;
+    done: string;
   };
   savedPhrases: string[];
   message: {
@@ -66,6 +79,10 @@ type StringTable = {
     'delete-last-letter': string;
     'save-phrase': string;
     'more-actions': string;
+    'message-empty': string;
+    'message-prefix': string;
+    'message-full': string;
+    'saved-full': string;
     'is-saved': string;
     clear: string;
     'nothing-saved': string;
@@ -150,6 +167,19 @@ const en: StringTable = {
     'copy-alert': 'Copy alert text',
     copied: 'Copied. Paste it into any message.',
     note: 'In a life-threatening emergency, call 911.',
+    'you-said': 'You said',
+    'tap-a-phrase': 'Tap a phrase to say it',
+    close: 'Close help and return to the board',
+    'confirm-title': 'Alert your contacts?',
+    'confirm-body': 'Your messages app will open with an emergency message to {names}. You’ll tap Send there.',
+    'include-location': 'Include my location',
+    cancel: 'Cancel',
+    'open-messages': 'Open Messages',
+    'locating-title': 'Finding your location…',
+    'locating-body': 'This can take a few seconds. Your phone may ask for permission.',
+    'skip-location': 'Send without location',
+    'opened-body': 'Your messages app should be open with the alert ready. It isn’t sent until you tap Send there.',
+    done: 'Done',
   },
   savedPhrases: ['I need help', 'Thank you', 'All done', 'Please wait', "I don't understand", 'Say it again', 'I love you', 'Not now', 'Good morning'],
   message: {
@@ -161,6 +191,10 @@ const en: StringTable = {
     'delete-last-letter': 'Delete last letter',
     'save-phrase': 'Save this phrase',
     'more-actions': 'More actions',
+    'message-empty': 'Message is empty',
+    'message-prefix': 'Message',
+    'message-full': 'Message is full. Speak it, or delete a word.',
+    'saved-full': 'Saved is full. Remove one in Settings first.',
     'is-saved': 'This phrase is saved',
     clear: 'Clear the whole message',
     'nothing-saved': 'Nothing saved yet',
@@ -245,6 +279,19 @@ const es: StringTable = {
     'copy-alert': 'Copiar el mensaje',
     copied: 'Copiado. Pégalo en cualquier mensaje.',
     note: 'En una emergencia que amenaza la vida, llama al 911.',
+    'you-said': 'Dijiste',
+    'tap-a-phrase': 'Toca una frase para decirla',
+    close: 'Cerrar la ayuda y volver al tablero',
+    'confirm-title': '¿Alertar a tus contactos?',
+    'confirm-body': 'Se abrirá tu app de mensajes con un mensaje de emergencia para {names}. Tú tocarás Enviar allí.',
+    'include-location': 'Incluir mi ubicación',
+    cancel: 'Cancelar',
+    'open-messages': 'Abrir Mensajes',
+    'locating-title': 'Buscando tu ubicación…',
+    'locating-body': 'Puede tardar unos segundos. Tu teléfono puede pedirte permiso.',
+    'skip-location': 'Enviar sin ubicación',
+    'opened-body': 'Tu app de mensajes debería estar abierta con la alerta lista. No se envía hasta que toques Enviar allí.',
+    done: 'Listo',
   },
   savedPhrases: ['Necesito ayuda', 'Gracias', 'Terminé', 'Espera por favor', 'No entiendo', 'Repite por favor', 'Te quiero', 'Ahora no', 'Buenos días'],
   message: {
@@ -256,6 +303,10 @@ const es: StringTable = {
     'delete-last-letter': 'Borrar la última letra',
     'save-phrase': 'Guardar esta frase',
     'more-actions': 'Más acciones',
+    'message-empty': 'El mensaje está vacío',
+    'message-prefix': 'Mensaje',
+    'message-full': 'El mensaje está lleno. Dilo, o borra una palabra.',
+    'saved-full': 'Guardadas está lleno. Quita una en Ajustes primero.',
     'is-saved': 'Esta frase está guardada',
     clear: 'Borrar todo el mensaje',
     'nothing-saved': 'Aún no has guardado nada',

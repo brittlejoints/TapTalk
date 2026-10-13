@@ -6,19 +6,20 @@ import { useEffect, useRef, useState } from 'react';
 import { buildAlertMessage, buildSmsUrl, detectPlatform, getLocation } from '../lib/alert';
 import { FitText } from '../components/FitText';
 import { TwoBubblesIllustration } from '../components/illustrations';
+import { useI18n } from '../lib/i18n';
 import type { EmergencyContact } from '../lib/contacts';
 
 type Urgency = 'critical' | 'urgent' | 'medical';
 
-const HELP_PHRASES: { label: string; icon: LucideIcon; urgency: Urgency }[] = [
-  { label: 'I need help', icon: LifeBuoy, urgency: 'critical' },
-  { label: 'Call 911 for me', icon: Phone, urgency: 'critical' },
-  { label: "Can't breathe", icon: Wind, urgency: 'critical' },
-  { label: 'Chest pain', icon: Activity, urgency: 'critical' },
-  { label: 'It hurts', icon: Zap, urgency: 'urgent' },
-  { label: 'Dizzy', icon: RotateCw, urgency: 'urgent' },
-  { label: 'Medicine', icon: Pill, urgency: 'medical' },
-  { label: 'Doctor', icon: Stethoscope, urgency: 'medical' },
+const HELP_PHRASES: { key: 'i-need-help' | 'call-911' | 'cant-breathe' | 'chest-pain' | 'it-hurts' | 'dizzy' | 'medicine' | 'doctor'; icon: LucideIcon; urgency: Urgency }[] = [
+  { key: 'i-need-help', icon: LifeBuoy, urgency: 'critical' },
+  { key: 'call-911', icon: Phone, urgency: 'critical' },
+  { key: 'cant-breathe', icon: Wind, urgency: 'critical' },
+  { key: 'chest-pain', icon: Activity, urgency: 'critical' },
+  { key: 'it-hurts', icon: Zap, urgency: 'urgent' },
+  { key: 'dizzy', icon: RotateCw, urgency: 'urgent' },
+  { key: 'medicine', icon: Pill, urgency: 'medical' },
+  { key: 'doctor', icon: Stethoscope, urgency: 'medical' },
 ];
 
 const URGENCY_CLASS: Record<Urgency, string> = {
@@ -39,6 +40,7 @@ interface HelpScreenProps {
 
 /** The only screen where red is allowed. Every tile speaks immediately: no message building in an emergency. */
 export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContacts }: HelpScreenProps) {
+  const { t } = useI18n();
   const [lastSaid, setLastSaid] = useState<string | null>(null);
   const [step, setStep] = useState<AlertStep>('closed');
   const [includeLocation, setIncludeLocation] = useState(true);
@@ -92,28 +94,30 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
   const names = contacts.map((c) => c.name).join(', ');
 
   return (
-    <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
+    <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-2 short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex items-center justify-between">
-        <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-help-ink">Help</h1>
+        <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-help-ink short:text-[28px]">{t('help', 'title')}</h1>
         <button
           type="button"
           onClick={onClose}
           className="grid size-11 place-items-center rounded-full bg-hairline text-forest"
-          aria-label="Close help and return to the board"
+          aria-label={t('help', 'close')}
         >
           <X size={22} aria-hidden="true" />
         </button>
       </header>
 
       <div className="flex min-h-[52px] items-baseline gap-[9px] rounded-tile bg-keylime p-[14px]" aria-live="polite">
-        <span className="eyebrow text-muted">You said</span>
-        <b className="text-message text-forest">{lastSaid ?? 'Tap a phrase to say it'}</b>
+        <span className="eyebrow text-muted short:hidden">{t('help', 'you-said')}</span>
+        <b className="text-message text-forest short:text-base">{lastSaid ?? t('help', 'tap-a-phrase')}</b>
       </div>
 
-      <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-[7px]">
-        {HELP_PHRASES.map(({ label, icon: Icon, urgency }) => (
+      <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-[7px] short:col-start-2 short:row-span-5 short:row-start-1">
+        {HELP_PHRASES.map(({ key, icon: Icon, urgency }) => {
+          const label = t('help', key);
+          return (
           <button
-            key={label}
+            key={key}
             type="button"
             onClick={() => say(label)}
             className={`pressable flex flex-col items-center justify-center gap-1.5 rounded-tile p-[7px] text-center [@media(max-height:640px)]:flex-row [@media(max-height:640px)]:gap-2 text-tile leading-tight font-semibold ${URGENCY_CLASS[urgency]}`}
@@ -121,7 +125,8 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
             <Icon size={26} aria-hidden="true" className="shrink-0 [@media(max-height:640px)]:size-5" />
             <FitText className="max-w-full min-w-0 overflow-hidden">{label}</FitText>
           </button>
-        ))}
+          );
+        })}
       </div>
 
       {contacts.length > 0 ? (
@@ -131,22 +136,22 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
           className="pressable flex h-14 shrink-0 items-center justify-center gap-[9px] rounded-tile bg-help text-[17px] font-semibold text-cream"
         >
           <Send size={18} aria-hidden="true" />
-          Alert my contacts
+          {t('help', 'alert-contacts')}
         </button>
       ) : (
-        <div className="flex shrink-0 items-center gap-3 rounded-tile bg-keylime p-[11px] pl-[14px]">
-          <TwoBubblesIllustration className="size-14 shrink-0" />
-          <p className="min-w-0 flex-1 text-sm leading-snug text-charcoal">No emergency contacts yet.</p>
+        <div className="flex shrink-0 items-center gap-3 rounded-tile bg-keylime p-[11px] pl-[14px] short:flex-col short:items-stretch short:gap-2">
+          <TwoBubblesIllustration className="size-14 shrink-0 max-[359px]:hidden short:hidden" />
+          <p className="min-w-0 flex-1 text-sm leading-snug text-charcoal">{t('help', 'no-contacts')}</p>
           <button
             type="button"
             onClick={onSetUpContacts}
             className="h-11 shrink-0 rounded-tile bg-forest px-4 text-sm font-medium text-cream"
           >
-            Add contacts
+            {t('help', 'add-contacts')}
           </button>
         </div>
       )}
-      <p className="shrink-0 text-center text-[13px] text-muted">In a life-threatening emergency, call 911.</p>
+      <p className="shrink-0 text-center text-[13px] text-muted">{t('help', 'note')}</p>
 
       {step !== 'closed' && (
         <div className="fixed inset-0 z-10 flex items-end justify-center bg-charcoal/40" onClick={() => step !== 'locating' && setStep('closed')}>
@@ -155,21 +160,22 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
             aria-modal="true"
             aria-labelledby="alert-title"
             onClick={(e) => e.stopPropagation()}
-            className="flex w-full max-w-2xl flex-col gap-[14px] rounded-t-[22px] bg-cream px-[21px] pt-[21px] pb-[max(21px,env(safe-area-inset-bottom))]"
+            className="flex max-h-full w-full max-w-2xl flex-col gap-[14px] overflow-y-auto rounded-t-[22px] bg-cream px-[21px] pt-[21px] pb-[max(21px,env(safe-area-inset-bottom))]"
           >
             {step === 'confirm' && (
               <>
                 <h2 id="alert-title" className="font-display text-[34px] leading-tight font-light text-help-ink">
-                  Alert your contacts?
+                  {t('help', 'confirm-title')}
                 </h2>
                 <p>
-                  Your messages app will open with an emergency message to <b className="text-forest">{names}</b>. You’ll
-                  tap Send there.
+                  {t('help', 'confirm-body')
+                    .split('{names}')
+                    .flatMap((part, i, all) => (i < all.length - 1 ? [part, <b key={i} className="text-forest">{names}</b>] : [part]))}
                 </p>
                 <label htmlFor="include-location" className="flex cursor-pointer items-center justify-between gap-3 rounded-tile bg-keylime p-[14px]">
                   <span className="flex items-center gap-2 font-semibold text-forest">
                     <MapPin size={20} aria-hidden="true" />
-                    Include my location
+                    {t('help', 'include-location')}
                   </span>
                   <input
                     id="include-location"
@@ -182,7 +188,7 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <button type="button" onClick={() => setStep('closed')} className="h-14 rounded-tile bg-hairline font-medium text-forest" autoFocus>
-                    Cancel
+                    {t('help', 'cancel')}
                   </button>
                   <button
                     type="button"
@@ -190,7 +196,7 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
                     className="pressable flex h-14 items-center justify-center gap-2 rounded-tile bg-help font-semibold text-cream"
                   >
                     <MessageSquare size={18} aria-hidden="true" />
-                    Open Messages
+                    {t('help', 'open-messages')}
                   </button>
                 </div>
               </>
@@ -199,11 +205,11 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
             {step === 'locating' && (
               <>
                 <h2 id="alert-title" className="font-display text-[34px] leading-tight font-light text-help-ink" aria-live="polite">
-                  Finding your location…
+                  {t('help', 'locating-title')}
                 </h2>
-                <p>This can take a few seconds. Your phone may ask for permission.</p>
+                <p>{t('help', 'locating-body')}</p>
                 <button type="button" onClick={skipLocation} className="h-14 rounded-tile bg-forest font-medium text-cream" autoFocus>
-                  Send without location
+                  {t('help', 'skip-location')}
                 </button>
               </>
             )}
@@ -211,13 +217,13 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
             {step === 'opened' && (
               <>
                 <h2 id="alert-title" className="font-display text-[34px] leading-tight font-light text-forest">
-                  Tap Send in Messages
+                  {t('help', 'tap-send')}
                 </h2>
                 <p role="status">
-                  Your messages app should be open with the alert ready. It isn’t sent until you tap Send there.
+                  {t('help', 'opened-body')}
                 </p>
                 <div className="flex flex-col gap-2 rounded-tile bg-keylime p-[14px]">
-                  <span className="eyebrow text-forest">If Messages didn’t open</span>
+                  <span className="eyebrow text-forest">{t('help', 'messages-didnt-open')}</span>
                   <div className="grid grid-cols-2 gap-2">
                     {contacts.map((c) => (
                       <a
@@ -226,17 +232,17 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
                         className="pressable flex h-12 min-w-0 items-center justify-center gap-2 rounded-tile bg-forest px-2 font-medium text-cream"
                       >
                         <Phone size={18} aria-hidden="true" className="shrink-0" />
-                        <span className="truncate">Call {c.name}</span>
+                        <span className="truncate">{t('help', 'call-contact')} {c.name}</span>
                       </a>
                     ))}
                   </div>
                   <button type="button" onClick={() => void copyAlert()} className="flex h-12 items-center justify-center gap-2 rounded-tile bg-cream font-medium text-forest">
                     <Copy size={18} aria-hidden="true" />
-                    {copied ? 'Copied. Paste it into any message.' : 'Copy alert text'}
+                    {copied ? t('help', 'copied') : t('help', 'copy-alert')}
                   </button>
                 </div>
                 <button type="button" onClick={() => setStep('closed')} className="h-12 rounded-tile bg-hairline font-medium text-forest" autoFocus>
-                  Done
+                  {t('help', 'done')}
                 </button>
               </>
             )}

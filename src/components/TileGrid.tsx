@@ -66,7 +66,7 @@ export function TileGrid({ category, slots, variant = 'word', emptyMessage, onTi
       id="tile-grid"
       role="tabpanel"
       aria-labelledby={`tab-${category.id}`}
-      className="grid min-h-0 flex-1 grid-cols-3 grid-rows-3 gap-[7px]"
+      className="grid min-h-0 flex-1 grid-cols-3 grid-rows-3 gap-[7px] short:col-start-2 short:row-span-5 short:row-start-1"
     >
       {emptyMessage ? (
         <>

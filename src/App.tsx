@@ -125,7 +125,12 @@ function AppShell({ view, setView, start, settings, update, speech, custom, emer
           wordPulse={speech.wordPulse}
           onSpeak={speech.speak}
           onStop={speech.stop}
-          onSavePhrase={(phrase) => setSavedPhrases((prev) => savePhrase(prev, phrase, TILES_PER_PAGE))}
+          onSavePhrase={(phrase) => {
+            const next = savePhrase(savedPhrases, phrase, TILES_PER_PAGE);
+            const saved = next.some((p) => p.toLowerCase() === phrase.trim().toLowerCase());
+            if (saved) setSavedPhrases(next);
+            return saved;
+          }}
           onHelp={() => setView('help')}
           onSettings={() => setView('settings')}
         />

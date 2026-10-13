@@ -1,5 +1,5 @@
 import { MessageCircle, Settings as SettingsIcon, Siren } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
@@ -29,7 +29,8 @@ interface BoardScreenProps {
   wordPulse: number;
   onSpeak: (text: string) => void;
   onStop: () => void;
-  onSavePhrase: (phrase: string) => void;
+  /** Returns false when the phrase could not be saved (the Saved page is full). */
+  onSavePhrase: (phrase: string) => boolean;
   onHelp: () => void;
   onSettings: () => void;
 }
@@ -65,6 +66,15 @@ export function BoardScreen({
     alreadyGreetedToday.current = true;
   };
   const [draft, setDraft] = useState('');
+  const [notice, setNotice] = useState<string | null>(null);
+  const noticeTimer = useRef<number>();
+  const flash = (text: string) => {
+    setNotice(text);
+    window.clearTimeout(noticeTimer.current);
+    noticeTimer.current = window.setTimeout(() => setNotice(null), 3500);
+  };
+  useEffect(() => () => window.clearTimeout(noticeTimer.current), []);
+  const countWords = (text: string) => text.split(/\s+/).filter(Boolean).length;
   const category = CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[1];
 
   const isSaved = category.id === 'saved';
@@ -121,20 +131,26 @@ export function BoardScreen({
   const handleWord = (word: string) => {
     tapHaptic();
     consumeGreeting();
-    setWords(addWord(withDraft(words), word));
+    const next = addWord(withDraft(words), word);
+    // A word that doesn't fit is never dropped silently.
+    if (next.length - words.length < countWords(draft) + 1) flash(t('message', 'message-full'));
+    setWords(next);
     setDraft('');
     if (speakOnTap) onSpeak(word);
   };
 
   const commitDraft = () => {
     consumeGreeting();
-    setWords(withDraft(words));
+    const next = withDraft(words);
+    if (next.length - words.length < countWords(draft)) flash(t('message', 'message-full'));
+    setWords(next);
     setDraft('');
   };
 
   const speakMessage = (pending: string) => {
     consumeGreeting();
     const all = pending.trim() ? addTypedWords(words, pending) : words;
+    if (all.length - words.length < countWords(pending)) flash(t('message', 'message-full'));
     setWords(all);
     setDraft('');
     onSpeak(toSentence(all));
@@ -149,16 +165,16 @@ export function BoardScreen({
   const greetingText = yourName.trim() ? `${greetingBase}, ${yourName.trim()}` : greetingBase;
 
   return (
-    <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
+    <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
         <h1 className="text-forest">
-          <Wordmark className="h-[30px] w-auto" talkPulse={speaking ? wordPulse : 0} />
+          <Wordmark className="h-[30px] w-auto short:h-6" talkPulse={speaking ? wordPulse : 0} />
         </h1>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={onHelp}
-            className="pressable inline-flex h-11 items-center gap-1.5 rounded-full bg-help px-4 font-semibold text-cream"
+            className="pressable inline-flex h-11 items-center gap-1.5 rounded-full bg-help px-4 short:px-3 font-semibold text-cream"
           >
             <Siren size={20} aria-hidden="true" />
             {t('help', 'title')}
@@ -187,9 +203,12 @@ export function BoardScreen({
           setDraft('');
         }}
         onSave={(from) => {
-          onSavePhrase(sentence);
-          flyStarTo(from, document.getElementById('tab-saved'));
+          const saved = onSavePhrase(sentence);
+          if (saved) flyStarTo(from, document.getElementById('tab-saved'));
+          else flash(t('message', 'saved-full'));
+          return saved;
         }}
+        notice={notice ?? undefined}
         draft={draft}
         onDraftChange={(text) => {
           if (text) consumeGreeting();

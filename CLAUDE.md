@@ -50,6 +50,9 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Long words must never be cut off: tile, Help-tile and tab labels use `FitText`, which shrinks the font (never below its floor) until the whole word fits. Do not rely on `break-words` or ellipsis for tile labels. Anything tappable is at least 44px in both directions, including chips in pickers.
 - Category tabs show `tabs` strings (short names, e.g. Spanish "Frases", "Cosas", "Siento"); the full `categories` name is the tab's aria-label and is used everywhere else. Every language needs a `tabs` block, each name short enough to fit a fifth of 320px.
 - Message bar in compact mode (under 360px wide, or extra-large text; the `compact:` variant in `index.css`): Save and Clear fold into a "More actions" tray (`MessageBar.tsx`) so the words keep room; Delete and Speak stay one tap. Otherwise Save and Clear stay inline.
+- Nothing is dropped silently. A word that doesn't fit the 12-word message, or a new phrase when Saved holds 9, is refused with a short on-screen notice (`notice` on `MessageBar`) and a screen-reader status. `savePhrase` never pushes an old phrase out.
+- Every user-visible string on the board, Help and Settings comes from `src/data/strings.ts` in both languages, including the whole Help screen. Known gaps (still English): the tile editor, picture picker, contact form and crash screen.
+- Short screens (a phone on its side, under 500px tall) use the `short:` variant: the board and Help move the tiles to a right-hand column, and the message bar goes compact. Tiles must stay at least 44px tall there; check 568x320 and 667x375.
 - The welcome pill shows a tiny sun, sunrise or moon (`DayGlyph`) chosen by `periodFor()` in `src/lib/greeting.ts`; use that helper instead of re-deriving morning/afternoon/evening.
 - `useSpeech` takes a `language` and prefers a matching voice, so Spanish words are read with a Spanish voice.
 

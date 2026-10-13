@@ -16,12 +16,16 @@ export function toSentence(words: string[]): string {
   return words.join(' ');
 }
 
-/** Adds a phrase to the front of the saved list, without duplicates (case-insensitive). */
+/**
+ * Adds a phrase to the front of the saved list, without duplicates (case-insensitive).
+ * A new phrase is refused when the list is full rather than silently pushing an old one out.
+ */
 export function savePhrase(saved: string[], phrase: string, limit: number): string[] {
   const trimmed = phrase.trim();
   if (!trimmed) return saved;
   const withoutDuplicate = saved.filter((p) => p.toLowerCase() !== trimmed.toLowerCase());
-  return [trimmed, ...withoutDuplicate].slice(0, limit);
+  if (withoutDuplicate.length >= limit) return saved;
+  return [trimmed, ...withoutDuplicate];
 }
 
 /** Adds typed text as separate words (one chip each), stopping at the limit. */

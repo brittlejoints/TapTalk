@@ -9,6 +9,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
  * for the match and prefer ones for that language — otherwise the device would
  * read Spanish words with an English accent.
  */
+let activeUtterance: SpeechSynthesisUtterance | null = null;
+
 export function useSpeech(voiceURI: string | null, rate: number, language?: string) {
   const supported = typeof window !== 'undefined' && 'speechSynthesis' in window;
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -55,6 +57,7 @@ export function useSpeech(voiceURI: string | null, rate: number, language?: stri
       }
       utterance.rate = rate;
       const finish = () => {
+        if (activeUtterance === utterance) activeUtterance = null;
         setSpeaking(false);
         setSpokenText(null);
         setCharIndex(null);
@@ -72,6 +75,8 @@ export function useSpeech(voiceURI: string | null, rate: number, language?: stri
       };
       utterance.onend = finish;
       utterance.onerror = finish;
+      // Chrome can drop an utterance's end event if nothing references it, leaving the app stuck on "speaking".
+      activeUtterance = utterance;
       synth.speak(utterance);
     },
     [supported, voices, voiceURI, rate, language, matchingVoices],

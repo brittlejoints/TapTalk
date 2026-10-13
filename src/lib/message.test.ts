@@ -26,8 +26,12 @@ describe('savePhrase', () => {
     expect(savePhrase(['Thank you', 'All done'], 'all done', 9)).toEqual(['all done', 'Thank you']);
   });
 
-  it('respects the limit', () => {
-    expect(savePhrase(['a', 'b', 'c'], 'd', 3)).toEqual(['d', 'a', 'b']);
+  it('refuses a new phrase when full instead of dropping an old one', () => {
+    expect(savePhrase(['a', 'b', 'c'], 'd', 3)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('still lets a full list re-save an existing phrase', () => {
+    expect(savePhrase(['a', 'b', 'c'], 'C', 3)).toEqual(['C', 'a', 'b']);
   });
 });
 

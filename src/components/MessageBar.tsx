@@ -16,7 +16,7 @@ interface MessageBarProps {
   /** Clears every word and any draft. */
   onClear: () => void;
   /** Receives the star button, so the board can fly a star from it to the Saved tab. */
-  onSave: (from: HTMLElement) => void;
+  onSave: (from: HTMLElement) => boolean;
   /** Text typed into the bar but not yet added as words (owned by the board). */
   draft: string;
   onDraftChange: (text: string) => void;
@@ -24,6 +24,8 @@ interface MessageBarProps {
   onCommitDraft: () => void;
   /** Shown in place of the typing placeholder when the message is empty (e.g. a greeting). */
   emptyMessage?: string;
+  /** A short, temporary note shown over the words, e.g. "Message is full". */
+  notice?: string;
 }
 
 /** Leaves that drift up from the speak button (hidden by CSS unless playful touches are on). */
@@ -70,6 +72,7 @@ export function MessageBar({
   onDraftChange,
   onCommitDraft,
   emptyMessage,
+  notice,
 }: MessageBarProps) {
   const { t } = useI18n();
   const empty = words.length === 0;
@@ -114,8 +117,7 @@ export function MessageBar({
   };
 
   const save = (e: MouseEvent<HTMLButtonElement>) => {
-    onSave(e.currentTarget);
-    setJustSaved(true);
+    if (onSave(e.currentTarget)) setJustSaved(true);
   };
 
   return (
@@ -124,7 +126,7 @@ export function MessageBar({
         ref={scroller}
         htmlFor={inputId}
         className="flex max-h-full min-h-11 min-w-0 flex-1 cursor-text flex-wrap content-start items-center gap-x-1.5 gap-y-1 overflow-y-auto overscroll-contain py-0.5 leading-tight font-semibold text-forest">
-        <span className="contents" aria-live="polite" aria-label={empty ? 'Message is empty' : `Message: ${words.join(' ')}`}>
+        <span className="contents">
           {words.map((word, i) => (
             <span
               key={i}
@@ -167,6 +169,15 @@ export function MessageBar({
           }`}
         />
       </label>
+
+      <span className="sr-only" role="status">
+        {empty ? t('message', 'message-empty') : `${t('message', 'message-prefix')}: ${words.join(' ')}`}
+      </span>
+      {notice && (
+        <span role="status" className="pointer-events-none absolute top-1/2 right-[72px] left-2 z-10 -translate-y-1/2 rounded-tile bg-forest px-3 py-2 text-center text-sm leading-tight font-semibold text-cream">
+          {notice}
+        </span>
+      )}
 
       {!empty &&
         (saved ? (
