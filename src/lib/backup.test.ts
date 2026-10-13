@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { backupFileName, buildBackup, parseBackup, type BackupData } from './backup';
+import { MAX_BACKUP_BYTES, backupFileName, backupSizeProblem, buildBackup, parseBackup, type BackupData } from './backup';
 import { DEFAULT_SETTINGS } from './settings';
 
 const { voiceURI: _voice, ...settings } = { ...DEFAULT_SETTINGS, yourName: 'Sam', language: 'es-ES' as const };
@@ -12,6 +12,12 @@ const data: BackupData = {
 };
 
 describe('backup', () => {
+  it('refuses files bigger than any real backup, before reading them', () => {
+    expect(backupSizeProblem(MAX_BACKUP_BYTES + 1)).toBe('too-big');
+    expect(backupSizeProblem(MAX_BACKUP_BYTES)).toBeNull();
+    expect(backupSizeProblem(new TextEncoder().encode(buildBackup(data)).length)).toBeNull();
+  });
+
   it('round-trips everything', () => {
     const parsed = parseBackup(buildBackup(data));
     expect(parsed).toEqual({ ok: true, data });
