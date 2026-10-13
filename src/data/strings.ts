@@ -207,6 +207,14 @@ type StringTable = {
     's4-title': string;
     's4-body': string;
   };
+  about: {
+    title: string;
+    body: string;
+    privacy: string;
+    terms: string;
+    license: string;
+    source: string;
+  };
   backup: {
     'title': string;
     'hint': string;
@@ -422,6 +430,14 @@ const en: StringTable = {
     's4-title': 'Add your own words.',
     's4-body': 'In Settings you can add tiles with a photo, icon or emoji, switch between English and Spanish, make the text bigger, and save a backup.',
   },
+  about: {
+    title: 'About Tap Talk',
+    body: 'Free and open source. No accounts and no tracking: everything you add stays on this device.',
+    privacy: 'Privacy',
+    terms: 'Terms of use',
+    license: 'License',
+    source: 'Source code',
+  },
   backup: {
     'title': 'Backup',
     'hint': 'Save everything you have set up (tiles, contacts, saved phrases and settings) to a file, or restore it on this or another device. The file is not encrypted and contains phone numbers, so keep it somewhere private.',
@@ -636,6 +652,14 @@ const es: StringTable = {
     's4-eyebrow': 'Hazla tuya',
     's4-title': 'Agrega tus propias palabras.',
     's4-body': 'En Ajustes puedes agregar mosaicos con una foto, un ícono o un emoji, cambiar entre inglés y español, hacer el texto más grande y guardar una copia de seguridad.',
+  },
+  about: {
+    title: 'Acerca de Tap Talk',
+    body: 'Gratis y de código abierto. Sin cuentas y sin rastreo: todo lo que agregas se queda en este dispositivo.',
+    privacy: 'Privacidad',
+    terms: 'Términos de uso',
+    license: 'Licencia',
+    source: 'Código fuente',
   },
   backup: {
     'title': 'Copia de seguridad',

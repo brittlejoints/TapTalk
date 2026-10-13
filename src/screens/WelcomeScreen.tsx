@@ -43,9 +43,9 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
   // Remounting the picture on each step lets its leaves grow in once (only with playful touches on).
   const picture: ReactNode = [
     <MockBoard key="board" />,
-    <TapSpeakIllustration key="tap" className="mx-auto size-40" />,
-    <LifeRingIllustration key="ring" className="mx-auto size-40" />,
-    <SeedPacketIllustration key="seed" className="mx-auto size-40" />,
+    <TapSpeakIllustration key="tap" className="size-40 min-[390px]:size-44" />,
+    <LifeRingIllustration key="ring" className="size-40 min-[390px]:size-44" />,
+    <SeedPacketIllustration key="seed" className="size-40 min-[390px]:size-44" />,
   ][step];
 
   return (
@@ -80,7 +80,7 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
         <p>{copy.body}</p>
       </section>
 
-      <div className="rounded-tile bg-slate p-[21px]" aria-hidden="true">
+      <div className="flex flex-1 items-center justify-center rounded-tile bg-slate p-[21px]" aria-hidden="true">
         {picture}
       </div>
 
@@ -122,7 +122,7 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
 function MockBoard() {
   const { t } = useI18n();
   return (
-    <div className="flex flex-col gap-[9px] rounded-[10px] bg-cream p-[14px]">
+    <div className="flex w-full flex-col gap-[9px] rounded-[10px] bg-cream p-[14px]">
       <div className="flex items-center justify-between rounded-[9px] bg-keylime px-[11px] py-[9px] text-[15px] font-semibold text-forest">
         {`${t('needs', 'i-want')} ${t('needs', 'water').toLowerCase()}`}
         <span className="grid size-[30px] place-items-center rounded-lg bg-forest text-cream">
