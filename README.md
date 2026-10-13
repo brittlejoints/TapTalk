@@ -26,6 +26,10 @@ Tap Talk is a web app you can add to your home screen. Once installed, it works 
 - **iPhone or iPad (Safari):** tap Share, then **Add to Home Screen**.
 - **Android (Chrome):** tap the menu, then **Install app** (or **Add to Home screen**).
 
-The app needs to be served over HTTPS to install (for example, from GitHub Pages, Netlify or Vercel). Updates download in the background. When one is ready, Settings shows an **Update now** button; nothing reloads on its own, so an update never wipes a message in progress.
+The app needs to be served over HTTPS to install. It is published on GitHub Pages at https://brittlejoints.github.io/TapTalk/ (see below). Updates download in the background. When one is ready, Settings shows an **Update now** button; nothing reloads on its own, so an update never wipes a message in progress.
 
 Design rules and conventions live in [CLAUDE.md](CLAUDE.md).
+
+## Publishing (GitHub Pages)
+
+Every push to `main` builds the app, runs the tests, and publishes it (`.github/workflows/deploy.yml`). One-time setup: in the repo, open **Settings, Pages, Build and deployment** and set **Source** to **GitHub Actions**. After that the site updates by itself, usually within a minute of a merge. The build uses relative paths (`base: './'` in `vite.config.ts`), so it works from the `/TapTalk/` folder and would also work on a custom domain.

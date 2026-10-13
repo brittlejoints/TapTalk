@@ -64,4 +64,5 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 
 - Configured in `vite.config.ts` with `vite-plugin-pwa`. Icons live in `public/icons/` (source: `icon.svg`).
 - `registerType: 'prompt'` is deliberate: never auto-reload, because it would wipe a message mid-sentence. `useRegisterSW` in `App.tsx` (so `injectRegister` is `false`) feeds an "App" section in Settings: "ready offline" once after first install, and "A fresh version is ready" with an Update now button the user taps. Never show update UI over the board.
+- Published on GitHub Pages by `.github/workflows/deploy.yml` on every push to `main` (build, tests, then deploy). `vite.config.ts` uses `base: './'` so the app works from a subfolder like `/TapTalk/`; keep every asset path relative and never hard-code a leading `/`. Check a change under a subfolder before merging: the app, its manifest, service worker scope and offline reload must all stay inside it.
 - Everything must work offline. Bundle new assets locally and keep them inside the precache `globPatterns`.

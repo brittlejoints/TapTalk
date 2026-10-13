@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  // Relative paths, so the app works from any folder (GitHub Pages serves it at /TapTalk/).
+  base: './',
   plugins: [
     react(),
     tailwindcss(),
