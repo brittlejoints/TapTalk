@@ -4,6 +4,7 @@ import { CategoryTabs } from '../components/CategoryTabs';
 import { CoreRow } from '../components/CoreRow';
 import { MessageBar } from '../components/MessageBar';
 import { TileGrid, type NavSlot } from '../components/TileGrid';
+import { AppIcon } from '../components/LogoMark';
 import { Wordmark } from '../components/Wordmark';
 import { FernIllustration, PotIllustration } from '../components/illustrations';
 import { iconFor } from '../data/icons';
@@ -170,7 +171,8 @@ export function BoardScreen({
   return (
     <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
-        <h1 className="text-forest">
+        <h1 className="flex items-center gap-2 text-forest">
+          <AppIcon className="hidden size-8 min-[390px]:block short:hidden" />
           <Wordmark className="h-[30px] w-auto short:h-6" talkPulse={speaking ? wordPulse : 0} wave={logoWave} />
         </h1>
         <div className="flex items-center gap-1">
