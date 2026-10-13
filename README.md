@@ -11,13 +11,13 @@ npm run dev
 
 Then open the URL it prints. Other commands: `npm run build` (type-checks, then builds), `npm test`.
 
-Your words, settings and contacts are stored only on the device. There are no accounts and no analytics.
+Your words, settings and contacts are stored only on the device. There are no accounts and no analytics. To move to a new device or recover after clearing the browser, use **Settings → Backup** to save a file and restore it later. The file is plain JSON and includes phone numbers, so keep it private.
 
 ## What's here
 
 - **Talk board:** message bar (tap or type words), core words (Yes, No, Stop, More), five categories, and a fixed 3×3 tile grid that never scrolls or moves. It also works with a phone on its side.
 - **Help:** emergency phrases that speak with one tap, and an alert that opens Messages ready to send to your emergency contacts, with your location. You always tap Send yourself; Tap Talk never sends anything.
-- **Settings:** language (English and Spanish) and text size, emergency contacts, custom tiles (icon, emoji or photo), speak on tap, high-visibility tiles, playful touches, voice and speed, saved phrases, and app updates.
+- **Settings:** language (English and Spanish) and text size, emergency contacts, custom tiles (icon, emoji or photo), speak on tap, high-visibility tiles, playful touches, voice and speed, saved phrases, backup and restore, and app updates.
 
 ## Install it on a phone or tablet
 

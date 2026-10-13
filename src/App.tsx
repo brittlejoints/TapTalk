@@ -6,6 +6,7 @@ import { TILES_PER_PAGE } from './data/vocabulary';
 import { useEmergencyContacts } from './lib/contacts';
 import { useCustomTiles } from './lib/customTiles';
 import { I18nProvider, useI18n } from './lib/i18n';
+import type { BackupData } from './lib/backup';
 import { savePhrase } from './lib/message';
 import { useSettings } from './lib/settings';
 import { isStringArray, loadJSON, saveJSON } from './lib/storage';
@@ -71,6 +72,16 @@ export default function App() {
     return () => window.removeEventListener('popstate', onPop);
   }, []);
 
+  // Replaces everything on this device from a backup. The device's own voice choice is kept.
+  const restore = (data: BackupData): boolean => {
+    const savedOk = saveJSON('saved-phrases', data.savedPhrases);
+    const tilesOk = custom.replaceTiles(data.customTiles);
+    const contactsOk = emergency.replaceContacts(data.contacts);
+    if (savedOk) setSavedPhrases(data.savedPhrases);
+    update({ ...data.settings });
+    return savedOk && tilesOk && contactsOk;
+  };
+
   const start = () => {
     saveJSON('onboarded', true);
     setView('board');
@@ -105,6 +116,7 @@ export default function App() {
           updateReady={sw.needRefresh[0]}
           offlineReady={sw.offlineReady[0]}
           onApplyUpdate={() => void sw.updateServiceWorker(true)}
+          onRestore={restore}
         />
       </I18nProvider>
     </ErrorBoundary>
@@ -128,10 +140,11 @@ interface ShellProps {
   updateReady: boolean;
   offlineReady: boolean;
   onApplyUpdate: () => void;
+  onRestore: (data: BackupData) => boolean;
 }
 
 /** Inside I18nProvider so screens can translate. The one `onTestVoice` message is translated here. */
-function AppShell({ view, open, back, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate }: ShellProps) {
+function AppShell({ view, open, back, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate, onRestore }: ShellProps) {
   const { t } = useI18n();
   const testVoiceMessage = useMemo(() => {
     // Keep the voice test tied to the greeting language so the user hears their chosen voice.
@@ -198,6 +211,7 @@ function AppShell({ view, open, back, start, settings, update, speech, custom, e
           updateReady={updateReady}
           offlineReady={offlineReady}
           onApplyUpdate={onApplyUpdate}
+          onRestore={onRestore}
         />
       )}
       {view === 'tile-editor' && (

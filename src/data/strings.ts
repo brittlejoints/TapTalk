@@ -190,6 +190,21 @@ type StringTable = {
     'icon-label': string;
     'emoji-label': string;
   };
+  backup: {
+    'title': string;
+    'hint': string;
+    'export': string;
+    'import': string;
+    'exported': string;
+    'not-backup': string;
+    'too-new': string;
+    'confirm-title': string;
+    'confirm-body': string;
+    'replace': string;
+    'cancel': string;
+    'restored': string;
+    'err-storage': string;
+  };
   contact: {
     'name': string;
     'name-placeholder': string;
@@ -373,6 +388,21 @@ const en: StringTable = {
     'icon-label': 'Icon',
     'emoji-label': 'Emoji',
   },
+  backup: {
+    'title': 'Backup',
+    'hint': 'Save everything you have set up (tiles, contacts, saved phrases and settings) to a file, or restore it on this or another device. The file is not encrypted and contains phone numbers, so keep it somewhere private.',
+    'export': 'Save a backup file',
+    'import': 'Restore from a backup file',
+    'exported': 'Your browser should now be saving {file}. Check your Downloads.',
+    'not-backup': 'That file isn’t a Tap Talk backup.',
+    'too-new': 'That backup is from a newer version of Tap Talk. Update the app first.',
+    'confirm-title': 'Replace what’s on this device?',
+    'confirm-body': 'This backup has {tiles} custom tiles, {contacts} emergency contacts and {phrases} saved phrases. They will replace the ones on this device.',
+    'replace': 'Replace',
+    'cancel': 'Cancel',
+    'restored': 'Backup restored.',
+    'err-storage': 'Couldn’t restore everything: this device’s storage is full.',
+  },
   contact: {
     'name': 'Name',
     'name-placeholder': 'For example: Mom',
@@ -555,6 +585,21 @@ const es: StringTable = {
     'photo-unreadable': 'No se pudo abrir esa foto. Prueba con un JPEG o PNG.',
     'icon-label': 'Ícono',
     'emoji-label': 'Emoji',
+  },
+  backup: {
+    'title': 'Copia de seguridad',
+    'hint': 'Guarda todo lo que has configurado (mosaicos, contactos, frases guardadas y ajustes) en un archivo, o restáuralo en este u otro dispositivo. El archivo no está cifrado y contiene números de teléfono, así que guárdalo en un lugar privado.',
+    'export': 'Guardar un archivo de copia',
+    'import': 'Restaurar desde un archivo de copia',
+    'exported': 'Tu navegador debería estar guardando {file}. Revisa tus Descargas.',
+    'not-backup': 'Ese archivo no es una copia de seguridad de Tap Talk.',
+    'too-new': 'Esa copia es de una versión más nueva de Tap Talk. Actualiza la app primero.',
+    'confirm-title': '¿Reemplazar lo que hay en este dispositivo?',
+    'confirm-body': 'Esta copia tiene {tiles} mosaicos, {contacts} contactos de emergencia y {phrases} frases guardadas. Reemplazarán los de este dispositivo.',
+    'replace': 'Reemplazar',
+    'cancel': 'Cancelar',
+    'restored': 'Copia restaurada.',
+    'err-storage': 'No se pudo restaurar todo: el almacenamiento de este dispositivo está lleno.',
   },
   contact: {
     'name': 'Nombre',

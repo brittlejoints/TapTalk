@@ -47,9 +47,14 @@ function isContact(value: unknown): value is EmergencyContact {
   );
 }
 
+/** Keeps every valid contact (at most MAX_CONTACTS). */
+export function parseContacts(raw: unknown): EmergencyContact[] {
+  return Array.isArray(raw) ? raw.filter(isContact).slice(0, MAX_CONTACTS) : [];
+}
+
 export function useEmergencyContacts() {
   const [contacts, setContacts] = useState<EmergencyContact[]>(() =>
-    loadJSON<unknown[]>('emergency-contacts', [], Array.isArray).filter(isContact).slice(0, MAX_CONTACTS),
+    parseContacts(loadJSON<unknown[]>('emergency-contacts', [], Array.isArray)),
   );
 
   const persist = (next: EmergencyContact[]): boolean => {
@@ -65,5 +70,7 @@ export function useEmergencyContacts() {
 
   const removeContact = (id: string) => persist(contacts.filter((c) => c.id !== id));
 
-  return { contacts, saveContact, removeContact };
+  const replaceContacts = (next: EmergencyContact[]): boolean => persist(next);
+
+  return { contacts, saveContact, removeContact, replaceContacts };
 }

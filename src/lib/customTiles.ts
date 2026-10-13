@@ -39,9 +39,12 @@ function isCustomTile(value: unknown): value is CustomTile {
 }
 
 /** Keeps every valid tile, so one bad entry never wipes out the rest. */
+export function parseCustomTiles(raw: unknown): CustomTile[] {
+  return Array.isArray(raw) ? raw.filter(isCustomTile) : [];
+}
+
 function loadTiles(): CustomTile[] {
-  const raw = loadJSON<unknown[]>('custom-tiles', [], Array.isArray);
-  return raw.filter(isCustomTile);
+  return parseCustomTiles(loadJSON<unknown[]>('custom-tiles', [], Array.isArray));
 }
 
 export function useCustomTiles() {
@@ -62,5 +65,12 @@ export function useCustomTiles() {
     setTiles(next);
   };
 
-  return { tiles, saveTile, removeTile };
+  /** Replaces every tile (used when restoring a backup). Returns false if storage is full. */
+  const replaceTiles = (next: CustomTile[]): boolean => {
+    if (!saveJSON('custom-tiles', next)) return false;
+    setTiles(next);
+    return true;
+  };
+
+  return { tiles, saveTile, removeTile, replaceTiles };
 }

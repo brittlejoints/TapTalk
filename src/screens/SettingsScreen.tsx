@@ -1,11 +1,13 @@
 import { ArrowLeft, Check, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
+import { BackupSection } from '../components/BackupSection';
 import { ContactForm } from '../components/ContactForm';
 import { QuietBubbleIllustration, SeedPacketIllustration, WateringCanIllustration } from '../components/illustrations';
 import { TILE_COLOR_CLASS } from '../data/colors';
 import { iconFor } from '../data/icons';
 import { LANGUAGES, type LanguageId } from '../data/strings';
 import { CATEGORIES } from '../data/vocabulary';
+import type { BackupData } from '../lib/backup';
 import { MAX_CONTACTS, type EmergencyContact } from '../lib/contacts';
 import type { CustomTile } from '../lib/customTiles';
 import { useI18n } from '../lib/i18n';
@@ -30,6 +32,7 @@ interface SettingsScreenProps {
   updateReady: boolean;
   offlineReady: boolean;
   onApplyUpdate: () => void;
+  onRestore: (data: BackupData) => boolean;
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
@@ -90,7 +93,7 @@ function TextSizePicker({ value, onChange, labels, groupLabel }: { value: TextSi
 export function SettingsScreen({
   settings, voices, speechSupported, savedPhrases, customTiles, contacts,
   onSaveContact, onRemoveContact, onAddTile, onEditTile, onUpdate, onTestVoice, onRemovePhrase, onBack,
-  updateReady, offlineReady, onApplyUpdate,
+  updateReady, offlineReady, onApplyUpdate, onRestore,
 }: SettingsScreenProps) {
   const { t } = useI18n();
   const [editingContact, setEditingContact] = useState<string | null>(null);
@@ -372,6 +375,18 @@ export function SettingsScreen({
             <p>{t('settings', 'no-speech')}</p>
           </div>
         )}
+      </Section>
+
+      <Section title={t('backup', 'title')}>
+        <BackupSection
+          current={{
+            settings: (({ voiceURI: _voice, ...rest }) => rest)(settings),
+            customTiles,
+            savedPhrases,
+            contacts,
+          }}
+          onRestore={onRestore}
+        />
       </Section>
 
       <Section title={t('settings', 'saved-phrases')}>
