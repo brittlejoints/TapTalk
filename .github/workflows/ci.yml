@@ -1,0 +1,27 @@
+name: CI
+
+# Runs the same checks you run locally: type-check + build, then the unit tests.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A newer push to the same branch cancels the older, now-pointless run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # "build" runs the TypeScript check first, then builds the app and its service worker.
+      - run: npm run build
+      - run: npm test
