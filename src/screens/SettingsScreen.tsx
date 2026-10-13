@@ -2,6 +2,8 @@ import { ArrowLeft, Check, ChevronRight, Phone, Plus, Trash2 } from 'lucide-reac
 import { useState, type ReactNode } from 'react';
 import { BackupSection } from '../components/BackupSection';
 import { ContactForm } from '../components/ContactForm';
+import { AppIcon } from '../components/LogoMark';
+import { Wordmark } from '../components/Wordmark';
 import { QuietBubbleIllustration, SeedPacketIllustration, WateringCanIllustration } from '../components/illustrations';
 import { TILE_COLOR_CLASS } from '../data/colors';
 import { iconFor } from '../data/icons';
@@ -416,6 +418,41 @@ export function SettingsScreen({
             ))}
           </ul>
         )}
+      </Section>
+
+      <Section title={t('about', 'title')}>
+        <div className="flex items-center gap-3">
+          <AppIcon className="size-14 shrink-0" />
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <Wordmark className="h-6 w-auto self-start text-forest" />
+            <p className="text-sm text-muted">{t('about', 'body')}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          {([
+            ['privacy', 'PRIVACY.md'],
+            ['terms', 'TERMS.md'],
+            ['license', 'LICENSE'],
+          ] as const).map(([key, file]) => (
+            <a
+              key={key}
+              href={`https://github.com/brittlejoints/TapTalk/blob/main/${file}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-11 items-center justify-center rounded-tile bg-cream px-3 text-center font-medium text-forest"
+            >
+              {t('about', key)}
+            </a>
+          ))}
+          <a
+            href="https://github.com/brittlejoints/TapTalk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex min-h-11 items-center justify-center rounded-tile bg-cream px-3 text-center font-medium text-forest"
+          >
+            {t('about', 'source')}
+          </a>
+        </div>
       </Section>
     </main>
   );

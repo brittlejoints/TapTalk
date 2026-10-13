@@ -35,6 +35,10 @@ The Help screen can open your Messages app with an alert ready for your emergenc
 
 The backup button in Settings creates a file with everything listed above, including phone numbers. The file is plain text and is yours. Keep it somewhere private, and delete it when you no longer need it. Tap Talk does not upload it anywhere.
 
+## Links in the app
+
+The About section in Settings has links to this page, the terms, the license and the source code on GitHub. They open in your browser only when you tap them. Tap Talk itself makes no request when you do.
+
 ## Where the app is served from
 
 Tap Talk is published on GitHub Pages. When you open the site, GitHub may keep standard records such as your IP address, as described in [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement). Tap Talk does not receive or use those records. After the first visit the app is stored on your device and opens without a connection.

@@ -1,5 +1,7 @@
+import { MARK_STROKE, MarkPaths } from '../LogoMark';
+
 /**
- * A sprout growing out of a speech bubble: words growing into a voice.
+ * A sprout growing out of the Tap Talk app icon: words growing into a voice.
  * It grows in once on the welcome screen (only with playful touches on), then stays still.
  */
 export function SproutIllustration({ className = '' }: { className?: string }) {
@@ -23,18 +25,17 @@ export function SproutIllustration({ className = '' }: { className?: string }) {
         strokeWidth="2"
         strokeLinejoin="round"
       />
-      {/* Speech bubble with sound bars */}
-      <path
-        d="M30 52h52a14 14 0 0 1 14 14v18a14 14 0 0 1-14 14H52l-16 11V98h-6a14 14 0 0 1-14-14V66a14 14 0 0 1 14-14Z"
-        fill="var(--color-cream)"
-        stroke="var(--color-forest)"
-        strokeWidth="2.5"
+      {/* The app icon: the mark, scaled into a forest tile */}
+      <rect x="28" y="52" width="56" height="56" rx="14" fill="var(--color-forest)" />
+      <g
+        transform="translate(27.2 48.9) scale(0.117)"
+        fill="none"
+        stroke="var(--color-keylime)"
+        strokeWidth={MARK_STROKE}
+        strokeLinecap="round"
         strokeLinejoin="round"
-      />
-      <g fill="var(--color-forest)">
-        <rect x="42" y="68" width="5" height="14" rx="2.5" />
-        <rect x="53.5" y="63" width="5" height="24" rx="2.5" />
-        <rect x="65" y="70" width="5" height="10" rx="2.5" />
+      >
+        <MarkPaths />
       </g>
       {/* Sparkles */}
       <path className="sparkle" d="M92 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5Z" fill="var(--color-forest)" />

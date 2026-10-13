@@ -85,6 +85,18 @@
     cursor: pointer;
   }
 
+  /* Boot screen: the app icon on cream while the script loads. It disappears the moment the app renders into #root. */
+  #root:empty {
+    display: grid;
+    place-items: center;
+  }
+  #root:empty::before {
+    content: '';
+    width: 88px;
+    height: 88px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230f3e17'/%3E%3Cg fill='none' stroke='%23e1f4df' stroke-width='32' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M166 134h180a46 46 0 0 1 46 46v116a46 46 0 0 1-46 46H228l-62 56v-56h-20a46 46 0 0 1-46-46V180a46 46 0 0 1 46-46Z'/%3E%3Cpath d='M200 246v42'/%3E%3Cpath d='M256 190v98'/%3E%3Cpath d='M312 269v19'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
   /* Rings only for keyboard and switch users, never after a tap */
   :focus-visible {
     outline: 2px solid var(--color-forest);
