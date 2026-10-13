@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { useState, type PointerEvent } from 'react';
 import { TILE_COLOR_CLASS, type TileColorId } from '../data/colors';
+import { FitText } from './FitText';
 
 interface TileProps {
   label: string;
@@ -47,7 +48,7 @@ export function Tile({ label, color, icon: Icon, photo, emoji, variant = 'word',
       ) : (
         Icon && <Icon size={phrase ? 20 : 32} strokeWidth={1.6} aria-hidden="true" className="shrink-0" />
       )}
-      <span className="line-clamp-2 break-words">{label}</span>
+      <FitText className="line-clamp-2 max-w-full min-w-0">{label}</FitText>
       {ink && <span key={ink.id} className="ink" style={{ left: ink.x, top: ink.y }} aria-hidden="true" />}
     </button>
   );

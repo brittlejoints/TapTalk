@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { greetingFor } from './greeting';
+import { periodFor, greetingFor } from './greeting';
 
 describe('greetingFor', () => {
   it('says good morning from 5am to noon', () => {
@@ -24,5 +24,13 @@ describe('greetingFor', () => {
     expect(greetingFor(9, '  Sam  ')).toBe('Good morning, Sam');
     expect(greetingFor(9, '')).toBe('Good morning');
     expect(greetingFor(9, '   ')).toBe('Good morning');
+  });
+});
+
+describe('periodFor', () => {
+  it('splits the day at 5, 12 and 18', () => {
+    expect([4, 5, 11, 12, 17, 18, 23, 0].map(periodFor)).toEqual([
+      'evening', 'morning', 'morning', 'afternoon', 'afternoon', 'evening', 'evening', 'evening',
+    ]);
   });
 });

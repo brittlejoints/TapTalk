@@ -1,5 +1,6 @@
 import type { Category, CategoryId } from '../data/vocabulary';
 import { useI18n } from '../lib/i18n';
+import { FitText } from './FitText';
 
 interface CategoryTabsProps {
   categories: Category[];
@@ -34,7 +35,7 @@ export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProp
             }`}
           >
             <Icon size={18} aria-hidden="true" />
-            <span className="max-w-full truncate px-1">{label}</span>
+            <FitText minSize={11} className="max-w-full truncate px-0.5 max-[359px]:tracking-tight">{label}</FitText>
           </button>
         );
       })}

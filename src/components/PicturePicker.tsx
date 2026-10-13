@@ -42,7 +42,7 @@ function GroupChips({
           type="button"
           aria-pressed={g.id === current}
           onClick={() => onSelect(g.id)}
-          className={`flex h-10 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-sm font-semibold whitespace-nowrap ${
+          className={`flex h-11 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-sm font-semibold whitespace-nowrap ${
             g.id === current ? 'bg-forest text-cream' : 'bg-cream text-forest'
           }`}
         >
@@ -105,7 +105,7 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
               onModeChange(m.id);
               setQuery('');
             }}
-            className={`h-10 rounded-full text-sm font-semibold ${mode === m.id ? 'bg-forest text-cream' : 'text-forest'}`}
+            className={`h-11 rounded-full text-sm font-semibold ${mode === m.id ? 'bg-forest text-cream' : 'text-forest'}`}
           >
             {m.label}
           </button>
@@ -125,7 +125,7 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
             autoComplete="off"
           />
           {query && (
-            <button type="button" onClick={() => setQuery('')} className="grid size-8 place-items-center rounded-full" aria-label="Clear search">
+            <button type="button" onClick={() => setQuery('')} className="grid size-11 place-items-center rounded-full" aria-label="Clear search">
               <X size={16} aria-hidden="true" />
             </button>
           )}

@@ -47,6 +47,8 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Greeting (`src/lib/greeting.ts`): shows "Good morning/afternoon/evening" with the user's name on welcome, and once per day as the empty-bar placeholder on the board.
 - Translations live in `src/data/strings.ts` (one block per language) and are consumed through `useI18n()`. Built-in tiles use keys; user content (custom tiles, saved phrases) stays untouched when language changes. Add a language by copying the English block and translating every value — never rename or remove keys.
 - Text size: `settings.textSize` sets `size-large`/`size-x-large` on `<html>`. Tiles (`.text-tile`, `.phrase-tile-label`), the message bar (`.message-chip`) and the core row (`.core-label`) scale; the fixed 3x3 grid does not.
+- Long words must never be cut off: tile, Help-tile and tab labels use `FitText`, which shrinks the font (never below its floor) until the whole word fits. Do not rely on `break-words` or ellipsis for tile labels. Anything tappable is at least 44px in both directions, including chips in pickers.
+- The welcome pill shows a tiny sun, sunrise or moon (`DayGlyph`) chosen by `periodFor()` in `src/lib/greeting.ts`; use that helper instead of re-deriving morning/afternoon/evening.
 - `useSpeech` takes a `language` and prefers a matching voice, so Spanish words are read with a Spanish voice.
 
 ## Installable app (PWA)

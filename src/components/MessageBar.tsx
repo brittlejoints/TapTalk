@@ -102,7 +102,7 @@ export function MessageBar({
       <label
         ref={scroller}
         htmlFor={inputId}
-        className="flex max-h-full min-w-0 flex-1 cursor-text flex-wrap content-start items-center gap-x-1.5 gap-y-1 overflow-y-auto overscroll-contain py-0.5 leading-tight font-semibold text-forest">
+        className="flex max-h-full min-h-11 min-w-0 flex-1 cursor-text flex-wrap content-start items-center gap-x-1.5 gap-y-1 overflow-y-auto overscroll-contain py-0.5 leading-tight font-semibold text-forest">
         <span className="contents" aria-live="polite" aria-label={empty ? 'Message is empty' : `Message: ${words.join(' ')}`}>
           {words.map((word, i) => (
             <span

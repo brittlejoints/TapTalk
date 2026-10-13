@@ -1,18 +1,20 @@
 import { ArrowRight, Droplet, Hand, Utensils, Volume2 } from 'lucide-react';
-import { SproutIllustration } from '../components/illustrations';
+import { DayGlyphIllustration, SproutIllustration } from '../components/illustrations';
 import { Wordmark } from '../components/Wordmark';
+import { periodFor } from '../lib/greeting';
 import { useI18n } from '../lib/i18n';
 
 export function WelcomeScreen({ onStart }: { onStart: () => void }) {
   const { t } = useI18n();
-  const hour = new Date().getHours();
-  const greeting = hour >= 5 && hour < 12 ? t('greeting', 'morning') : hour >= 12 && hour < 18 ? t('greeting', 'afternoon') : t('greeting', 'evening');
+  const period = periodFor(new Date().getHours());
+  const greeting = t('greeting', period);
 
   return (
     <main className="mx-auto flex min-h-full max-w-lg flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(21px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
         <Wordmark className="h-[30px] w-auto text-forest" />
-        <span className="rounded-full bg-keylime px-3 py-1.5 text-[13px] text-forest" aria-live="polite">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-keylime py-1.5 pr-3 pl-2 text-[13px] text-forest" aria-live="polite">
+          <DayGlyphIllustration period={period} className="size-5 shrink-0" />
           {greeting}
         </span>
       </header>

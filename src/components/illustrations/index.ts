@@ -1,4 +1,5 @@
 /** All custom illustrations. Flat SVGs that use the Greenhouse palette tokens. */
+export { DayGlyphIllustration } from './DayGlyph';
 export { FernIllustration } from './Fern';
 export { PotIllustration } from './Pot';
 export { QuietBubbleIllustration } from './QuietBubble';

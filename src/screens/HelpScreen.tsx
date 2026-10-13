@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { buildAlertMessage, buildSmsUrl, detectPlatform, getLocation } from '../lib/alert';
+import { FitText } from '../components/FitText';
 import { TwoBubblesIllustration } from '../components/illustrations';
 import type { EmergencyContact } from '../lib/contacts';
 
@@ -115,10 +116,10 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
             key={label}
             type="button"
             onClick={() => say(label)}
-            className={`pressable flex flex-col items-center justify-center gap-1.5 rounded-tile p-[7px] text-center text-tile leading-tight font-semibold ${URGENCY_CLASS[urgency]}`}
+            className={`pressable flex flex-col items-center justify-center gap-1.5 rounded-tile p-[7px] text-center [@media(max-height:640px)]:flex-row [@media(max-height:640px)]:gap-2 text-tile leading-tight font-semibold ${URGENCY_CLASS[urgency]}`}
           >
-            <Icon size={26} aria-hidden="true" />
-            {label}
+            <Icon size={26} aria-hidden="true" className="shrink-0 [@media(max-height:640px)]:size-5" />
+            <FitText className="max-w-full min-w-0 overflow-hidden">{label}</FitText>
           </button>
         ))}
       </div>
