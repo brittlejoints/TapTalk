@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildAlertMessage, buildSmsUrl, detectPlatform } from './alert';
-import { normalizePhone, phoneError } from './contacts';
+import { normalizePhone, phoneProblem } from './contacts';
 import { normalizeSettings } from './settings';
 
 describe('buildAlertMessage', () => {
@@ -44,9 +44,9 @@ describe('phone numbers', () => {
   });
 
   it('rejects numbers that are empty, too short or too long', () => {
-    expect(phoneError('')).toMatch(/Add a phone/);
-    expect(phoneError('12345')).toMatch(/7 to 15/);
-    expect(phoneError('555 010 2345')).toBeNull();
+    expect(phoneProblem('')).toBe('missing');
+    expect(phoneProblem('12345')).toBe('length');
+    expect(phoneProblem('555 010 2345')).toBeNull();
   });
 });
 

@@ -44,6 +44,33 @@ export default function App() {
     saveJSON('saved-phrases', savedPhrases);
   }, [savedPhrases]);
 
+  // Help, Settings and the tile editor are history entries, so the phone's Back button or swipe
+  // returns to the previous screen instead of leaving the app.
+  const open = (next: View, opts?: { replace?: boolean }) => {
+    try {
+      if (opts?.replace) window.history.replaceState({ tt: next }, '');
+      else window.history.pushState({ tt: next }, '');
+    } catch {
+      // History can be unavailable; the screen still changes.
+    }
+    setView(next);
+  };
+  const back = () => {
+    if (window.history.state?.tt) window.history.back();
+    else setView('board');
+  };
+
+  useEffect(() => {
+    try {
+      window.history.replaceState({}, '');
+    } catch {
+      // ignore
+    }
+    const onPop = (e: PopStateEvent) => setView(e.state?.tt ?? 'board');
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
   const start = () => {
     saveJSON('onboarded', true);
     setView('board');
@@ -63,7 +90,8 @@ export default function App() {
       <I18nProvider lang={settings.language}>
         <AppShell
           view={view}
-          setView={setView}
+          open={open}
+          back={back}
           start={start}
           settings={settings}
           update={update}
@@ -85,7 +113,8 @@ export default function App() {
 
 interface ShellProps {
   view: View;
-  setView: (v: View) => void;
+  open: (v: View, opts?: { replace?: boolean }) => void;
+  back: () => void;
   start: () => void;
   settings: ReturnType<typeof useSettings>['settings'];
   update: ReturnType<typeof useSettings>['update'];
@@ -102,7 +131,7 @@ interface ShellProps {
 }
 
 /** Inside I18nProvider so screens can translate. The one `onTestVoice` message is translated here. */
-function AppShell({ view, setView, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate }: ShellProps) {
+function AppShell({ view, open, back, start, settings, update, speech, custom, emergency, editingTileId, setEditingTileId, savedPhrases, setSavedPhrases, updateReady, offlineReady, onApplyUpdate }: ShellProps) {
   const { t } = useI18n();
   const testVoiceMessage = useMemo(() => {
     // Keep the voice test tied to the greeting language so the user hears their chosen voice.
@@ -131,8 +160,8 @@ function AppShell({ view, setView, start, settings, update, speech, custom, emer
             if (saved) setSavedPhrases(next);
             return saved;
           }}
-          onHelp={() => setView('help')}
-          onSettings={() => setView('settings')}
+          onHelp={() => open('help')}
+          onSettings={() => open('settings')}
         />
       )}
       {view === 'help' && (
@@ -140,8 +169,8 @@ function AppShell({ view, setView, start, settings, update, speech, custom, emer
           contacts={emergency.contacts}
           yourName={settings.yourName}
           onSpeak={speech.speak}
-          onClose={() => setView('board')}
-          onSetUpContacts={() => setView('settings')}
+          onClose={back}
+          onSetUpContacts={() => open('settings', { replace: true })}
         />
       )}
       {view === 'settings' && (
@@ -156,16 +185,16 @@ function AppShell({ view, setView, start, settings, update, speech, custom, emer
           onRemoveContact={emergency.removeContact}
           onAddTile={() => {
             setEditingTileId(null);
-            setView('tile-editor');
+            open('tile-editor');
           }}
           onEditTile={(id) => {
             setEditingTileId(id);
-            setView('tile-editor');
+            open('tile-editor');
           }}
           onUpdate={update}
           onTestVoice={() => speech.speak(testVoiceMessage)}
           onRemovePhrase={(phrase) => setSavedPhrases((prev) => prev.filter((p) => p !== phrase))}
-          onBack={() => setView('board')}
+          onBack={back}
           updateReady={updateReady}
           offlineReady={offlineReady}
           onApplyUpdate={onApplyUpdate}
@@ -178,7 +207,7 @@ function AppShell({ view, setView, start, settings, update, speech, custom, emer
           onSave={custom.saveTile}
           onDelete={custom.removeTile}
           onSpeak={speech.speak}
-          onClose={() => setView('settings')}
+          onClose={back}
         />
       )}
     </div>

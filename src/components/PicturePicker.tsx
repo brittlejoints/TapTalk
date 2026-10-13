@@ -2,6 +2,7 @@ import { ImagePlus, Search, X } from 'lucide-react';
 import { useId, useMemo, useRef, useState } from 'react';
 import { EMOJI_GROUPS, firstEmoji } from '../data/emoji';
 import { ICON_GROUPS, TILE_ICONS, type TileIconId } from '../data/icons';
+import { useI18n } from '../lib/i18n';
 import { resizePhoto } from '../lib/image';
 
 export type PictureMode = 'icon' | 'emoji' | 'photo';
@@ -18,24 +19,27 @@ interface PicturePickerProps {
   onError: (message: string) => void;
 }
 
-const MODES: { id: PictureMode; label: string }[] = [
-  { id: 'icon', label: 'Icon' },
-  { id: 'emoji', label: 'Emoji' },
-  { id: 'photo', label: 'Photo' },
-];
+const MODES: PictureMode[] = ['icon', 'emoji', 'photo'];
+const PHOTO_ERRORS: Record<string, 'photo-not-image' | 'photo-no-canvas' | 'photo-unreadable'> = {
+  'not-image': 'photo-not-image',
+  'no-canvas': 'photo-no-canvas',
+  unreadable: 'photo-unreadable',
+};
 
 /** Horizontally scrolling category chips. */
 function GroupChips({
   groups,
   current,
   onSelect,
+  label,
 }: {
   groups: { id: string; label: string; sample?: string }[];
   current: string;
   onSelect: (id: string) => void;
+  label: string;
 }) {
   return (
-    <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1" role="group" aria-label="Categories">
+    <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1" role="group" aria-label={label}>
       {groups.map((g) => (
         <button
           key={g.id}
@@ -62,6 +66,7 @@ const cellClass = (selected: boolean) =>
   `grid aspect-square min-h-11 place-items-center rounded-[10px] ${selected ? 'bg-forest text-cream ring-2 ring-forest ring-offset-2 ring-offset-keylime' : 'bg-cream text-forest'}`;
 
 export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, onEmoji, onPhoto, onError }: PicturePickerProps) {
+  const { t } = useI18n();
   const [iconGroup, setIconGroup] = useState(ICON_GROUPS[0].id);
   const [emojiGroup, setEmojiGroup] = useState(EMOJI_GROUPS[0].id);
   const [query, setQuery] = useState('');
@@ -87,27 +92,28 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
     try {
       onPhoto(await resizePhoto(file));
     } catch (e) {
-      onError(e instanceof Error ? e.message : 'That photo couldn’t be used.');
+      const key = e instanceof Error ? PHOTO_ERRORS[e.message] : undefined;
+      onError(t('editor', key ?? 'photo-failed'));
     }
   };
 
   return (
     <div className="flex flex-col gap-[14px]">
       {/* Mode switch */}
-      <div className="grid grid-cols-3 gap-0.5 rounded-full bg-cream p-1" role="radiogroup" aria-label="Picture type">
+      <div className="grid grid-cols-3 gap-0.5 rounded-full bg-cream p-1" role="radiogroup" aria-label={t('editor', 'picture-type')}>
         {MODES.map((m) => (
           <button
-            key={m.id}
+            key={m}
             type="button"
             role="radio"
-            aria-checked={mode === m.id}
+            aria-checked={mode === m}
             onClick={() => {
-              onModeChange(m.id);
+              onModeChange(m);
               setQuery('');
             }}
-            className={`h-11 rounded-full text-sm font-semibold ${mode === m.id ? 'bg-forest text-cream' : 'text-forest'}`}
+            className={`h-11 rounded-full text-sm font-semibold ${mode === m ? 'bg-forest text-cream' : 'text-forest'}`}
           >
-            {m.label}
+            {t('editor', m)}
           </button>
         ))}
       </div>
@@ -120,12 +126,12 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={mode === 'icon' ? 'Search icons, like “dog”' : 'Search emoji, like “pizza”'}
+            placeholder={mode === 'icon' ? t('editor', 'search-icons') : t('editor', 'search-emoji')}
             className="min-w-0 flex-1 bg-transparent text-[16px] text-charcoal outline-none placeholder:text-muted"
             autoComplete="off"
           />
           {query && (
-            <button type="button" onClick={() => setQuery('')} className="grid size-11 place-items-center rounded-full" aria-label="Clear search">
+            <button type="button" onClick={() => setQuery('')} className="grid size-11 place-items-center rounded-full" aria-label={t('editor', 'clear-search')}>
               <X size={16} aria-hidden="true" />
             </button>
           )}
@@ -134,8 +140,15 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
 
       {mode === 'icon' && (
         <>
-          {!q && <GroupChips groups={ICON_GROUPS} current={iconGroup} onSelect={setIconGroup} />}
-          <div className="grid grid-cols-6 gap-1.5" role="radiogroup" aria-label="Icon">
+          {!q && (
+            <GroupChips
+              groups={ICON_GROUPS.map((g) => ({ id: g.id, label: t('iconGroups', g.id as 'people') }))}
+              current={iconGroup}
+              onSelect={setIconGroup}
+              label={t('editor', 'groups')}
+            />
+          )}
+          <div className="grid grid-cols-6 gap-1.5" role="radiogroup" aria-label={t('editor', 'icon-label')}>
             {iconIds.map((id) => {
               const Icon = TILE_ICONS[id].icon;
               return (
@@ -145,7 +158,7 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
               );
             })}
           </div>
-          {q && iconIds.length === 0 && <p className="text-sm text-muted">No icons match “{query}”. Try Emoji, or a different word.</p>}
+          {q && iconIds.length === 0 && <p className="text-sm text-muted">{t('editor', 'no-icons').replace('{query}', query)}</p>}
         </>
       )}
 
@@ -153,12 +166,13 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
         <>
           {!q && (
             <GroupChips
-              groups={EMOJI_GROUPS.map((g) => ({ id: g.id, label: g.label, sample: g.items[0][0] }))}
+              groups={EMOJI_GROUPS.map((g) => ({ id: g.id, label: t('emojiGroups', g.id as 'feelings'), sample: g.items[0][0] }))}
               current={emojiGroup}
               onSelect={setEmojiGroup}
+              label={t('editor', 'groups')}
             />
           )}
-          <div className="grid grid-cols-6 gap-1.5" role="radiogroup" aria-label="Emoji">
+          <div className="grid grid-cols-6 gap-1.5" role="radiogroup" aria-label={t('editor', 'emoji-label')}>
             {emojiItems.map(([e, name]) => (
               <button key={e} type="button" role="radio" aria-checked={emoji === e} aria-label={name.split(' ')[0]} onClick={() => onEmoji(e)} className={cellClass(emoji === e)}>
                 <span className="emoji text-[26px] leading-none" aria-hidden="true">
@@ -167,10 +181,10 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
               </button>
             ))}
           </div>
-          {q && emojiItems.length === 0 && <p className="text-sm text-muted">No emoji match “{query}”. You can type any emoji below.</p>}
+          {q && emojiItems.length === 0 && <p className="text-sm text-muted">{t('editor', 'no-emoji').replace('{query}', query)}</p>}
 
           <label htmlFor={typeId} className="flex flex-col gap-1">
-            <span className="text-sm font-semibold text-forest">Or type any emoji from your keyboard</span>
+            <span className="text-sm font-semibold text-forest">{t('editor', 'type-emoji')}</span>
             <input
               id={typeId}
               type="text"
@@ -179,9 +193,9 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
                 const found = firstEmoji(e.target.value);
                 setTypedEmoji(found ?? '');
                 if (found) onEmoji(found);
-                else if (e.target.value) onError('That isn’t an emoji. Switch to your emoji keyboard and pick one.');
+                else if (e.target.value) onError(t('editor', 'not-emoji'));
               }}
-              placeholder="Tap here, then open the emoji keyboard"
+              placeholder={t('editor', 'type-emoji-placeholder')}
               className="h-12 rounded-tile bg-cream px-3.5 text-[22px] text-charcoal placeholder:text-[15px] placeholder:text-muted"
               autoComplete="off"
             />
@@ -191,16 +205,16 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
 
       {mode === 'photo' && (
         <>
-          <p className="-mt-1 text-sm text-muted">A real photo is often the easiest to recognize: a person, a pet, a favorite cup.</p>
+          <p className="-mt-1 text-sm text-muted">{t('editor', 'photo-hint')}</p>
           {photo ? (
             <div className="flex items-center gap-3">
-              <img src={photo} alt="Chosen photo" className="size-16 rounded-[10px] object-cover" />
+              <img src={photo} alt={t('editor', 'chosen-photo')} className="size-16 rounded-[10px] object-cover" />
               <button type="button" onClick={() => fileInput.current?.click()} className="h-11 rounded-full bg-cream px-4 font-medium text-forest">
-                Change
+                {t('editor', 'change')}
               </button>
               <button type="button" onClick={() => onPhoto(undefined)} className="inline-flex h-11 items-center gap-1.5 rounded-full bg-cream px-4 font-medium text-forest">
                 <X size={18} aria-hidden="true" />
-                Remove
+                {t('editor', 'remove')}
               </button>
             </div>
           ) : (
@@ -210,7 +224,7 @@ export function PicturePicker({ mode, icon, emoji, photo, onModeChange, onIcon, 
               className="pressable inline-flex h-12 items-center justify-center gap-2 rounded-tile bg-forest font-medium text-cream"
             >
               <ImagePlus size={20} aria-hidden="true" />
-              Add a photo
+              {t('editor', 'add-photo')}
             </button>
           )}
           <input

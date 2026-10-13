@@ -80,6 +80,8 @@ type StringTable = {
     'save-phrase': string;
     'more-actions': string;
     'message-empty': string;
+    'core-words': string;
+    'word-categories': string;
     'message-prefix': string;
     'message-full': string;
     'saved-full': string;
@@ -138,6 +140,75 @@ type StringTable = {
   };
   greeting: { morning: string; afternoon: string; evening: string };
   error: { title: string; body: string; 'try-again': string; reload: string };
+  colors: { keylime: string; mint: string; sea: string; mist: string; lilac: string; butter: string; peach: string; sand: string };
+  iconGroups: { people: string; food: string; home: string; play: string; places: string; nature: string; health: string };
+  emojiGroups: { feelings: string; people: string; food: string; daily: string; play: string; nature: string; places: string; symbols: string };
+  editor: {
+    'new-tile': string;
+    'edit-tile': string;
+    'cancel-back': string;
+    'your-word': string;
+    'preview': string;
+    'word-label': string;
+    'word-placeholder': string;
+    'category': string;
+    'color': string;
+    'picture': string;
+    'add-tile': string;
+    'save-changes': string;
+    'delete-confirm-label': string;
+    'delete-question': string;
+    'keep-it': string;
+    'delete': string;
+    'delete-tile': string;
+    'err-word': string;
+    'err-photo': string;
+    'err-emoji': string;
+    'err-storage': string;
+    'picture-type': string;
+    'icon': string;
+    'emoji': string;
+    'photo': string;
+    'groups': string;
+    'search-icons': string;
+    'search-emoji': string;
+    'clear-search': string;
+    'no-icons': string;
+    'no-emoji': string;
+    'type-emoji': string;
+    'type-emoji-placeholder': string;
+    'not-emoji': string;
+    'photo-hint': string;
+    'chosen-photo': string;
+    'change': string;
+    'remove': string;
+    'add-photo': string;
+    'photo-failed': string;
+    'photo-not-image': string;
+    'photo-no-canvas': string;
+    'photo-unreadable': string;
+    'icon-label': string;
+    'emoji-label': string;
+  };
+  contact: {
+    'name': string;
+    'name-placeholder': string;
+    'phone': string;
+    'phone-placeholder': string;
+    'relationship': string;
+    'relationship-placeholder': string;
+    'err-name': string;
+    'err-phone-missing': string;
+    'err-phone-length': string;
+    'err-storage': string;
+    'cancel': string;
+    'save': string;
+    'confirm-remove-label': string;
+    'remove-question': string;
+    'keep': string;
+    'remove': string;
+    'remove-contact': string;
+  };
 };
 
 const en: StringTable = {
@@ -192,6 +263,8 @@ const en: StringTable = {
     'save-phrase': 'Save this phrase',
     'more-actions': 'More actions',
     'message-empty': 'Message is empty',
+    'core-words': 'Core words',
+    'word-categories': 'Word categories',
     'message-prefix': 'Message',
     'message-full': 'Message is full. Speak it, or delete a word.',
     'saved-full': 'Saved is full. Remove one in Settings first.',
@@ -250,6 +323,75 @@ const en: StringTable = {
   },
   greeting: { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening' },
   error: { title: 'Something went wrong.', body: 'Tap Talk ran into an error. Your words and settings are still saved on this device.', 'try-again': 'Try again', reload: 'Reload the app' },
+  colors: { keylime: 'Keylime', mint: 'Mint', sea: 'Sea glass', mist: 'Mist', lilac: 'Lilac', butter: 'Butter', peach: 'Peach', sand: 'Sand' },
+  iconGroups: { people: 'People', food: 'Food & drink', home: 'Home', play: 'Play', places: 'Places', nature: 'Nature', health: 'Health' },
+  emojiGroups: { feelings: 'Feelings', people: 'People', food: 'Food & drink', daily: 'Daily life', play: 'Play', nature: 'Nature', places: 'Places', symbols: 'Symbols' },
+  editor: {
+    'new-tile': 'New tile',
+    'edit-tile': 'Edit tile',
+    'cancel-back': 'Cancel and go back',
+    'your-word': 'Your word',
+    'preview': 'Preview · tap to hear it',
+    'word-label': 'Word or phrase',
+    'word-placeholder': 'For example: Grandma, Swing, Apple juice',
+    'category': 'Category',
+    'color': 'Color',
+    'picture': 'Picture',
+    'add-tile': 'Add tile to the board',
+    'save-changes': 'Save changes',
+    'delete-confirm-label': 'Confirm delete',
+    'delete-question': 'Delete “{label}”? This can’t be undone.',
+    'keep-it': 'Keep it',
+    'delete': 'Delete',
+    'delete-tile': 'Delete this tile',
+    'err-word': 'Add a word or phrase for this tile.',
+    'err-photo': 'Add a photo, or switch to Icon or Emoji.',
+    'err-emoji': 'Pick an emoji, or switch to Icon or Photo.',
+    'err-storage': 'Couldn’t save: this device’s storage is full. Remove a photo or delete some tiles, then try again.',
+    'picture-type': 'Picture type',
+    'icon': 'Icon',
+    'emoji': 'Emoji',
+    'photo': 'Photo',
+    'groups': 'Categories',
+    'search-icons': 'Search icons, like “dog”',
+    'search-emoji': 'Search emoji, like “pizza”',
+    'clear-search': 'Clear search',
+    'no-icons': 'No icons match “{query}”. Try Emoji, or a different word.',
+    'no-emoji': 'No emoji match “{query}”. You can type any emoji below.',
+    'type-emoji': 'Or type any emoji from your keyboard',
+    'type-emoji-placeholder': 'Tap here, then open the emoji keyboard',
+    'not-emoji': 'That isn’t an emoji. Switch to your emoji keyboard and pick one.',
+    'photo-hint': 'A real photo is often the easiest to recognize: a person, a pet, a favorite cup.',
+    'chosen-photo': 'Chosen photo',
+    'change': 'Change',
+    'remove': 'Remove',
+    'add-photo': 'Add a photo',
+    'photo-failed': 'That photo couldn’t be used.',
+    'photo-not-image': 'That file isn’t an image.',
+    'photo-no-canvas': 'This browser can’t process photos.',
+    'photo-unreadable': 'That photo couldn’t be opened. Try a JPEG or PNG.',
+    'icon-label': 'Icon',
+    'emoji-label': 'Emoji',
+  },
+  contact: {
+    'name': 'Name',
+    'name-placeholder': 'For example: Mom',
+    'phone': 'Mobile number',
+    'phone-placeholder': 'Include the country code if abroad',
+    'relationship': 'Relationship (optional)',
+    'relationship-placeholder': 'Parent, caregiver, neighbor…',
+    'err-name': 'Add a name.',
+    'err-phone-missing': 'Add a phone number.',
+    'err-phone-length': 'Check the phone number. It should have 7 to 15 digits.',
+    'err-storage': 'Couldn’t save: this device’s storage is full.',
+    'cancel': 'Cancel',
+    'save': 'Save contact',
+    'confirm-remove-label': 'Confirm remove',
+    'remove-question': 'Remove {name} from emergency contacts?',
+    'keep': 'Keep',
+    'remove': 'Remove',
+    'remove-contact': 'Remove this contact',
+  },
 };
 
 const es: StringTable = {
@@ -304,6 +446,8 @@ const es: StringTable = {
     'save-phrase': 'Guardar esta frase',
     'more-actions': 'Más acciones',
     'message-empty': 'El mensaje está vacío',
+    'core-words': 'Palabras básicas',
+    'word-categories': 'Categorías de palabras',
     'message-prefix': 'Mensaje',
     'message-full': 'El mensaje está lleno. Dilo, o borra una palabra.',
     'saved-full': 'Guardadas está lleno. Quita una en Ajustes primero.',
@@ -362,6 +506,75 @@ const es: StringTable = {
   },
   greeting: { morning: 'Buenos días', afternoon: 'Buenas tardes', evening: 'Buenas noches' },
   error: { title: 'Algo salió mal.', body: 'Tap Talk tuvo un error. Tus palabras y ajustes siguen guardados en este dispositivo.', 'try-again': 'Intentar de nuevo', reload: 'Recargar la app' },
+  colors: { keylime: 'Lima', mint: 'Menta', sea: 'Cristal marino', mist: 'Niebla', lilac: 'Lila', butter: 'Mantequilla', peach: 'Melocotón', sand: 'Arena' },
+  iconGroups: { people: 'Personas', food: 'Comida y bebida', home: 'Casa', play: 'Juego', places: 'Lugares', nature: 'Naturaleza', health: 'Salud' },
+  emojiGroups: { feelings: 'Sentimientos', people: 'Personas', food: 'Comida y bebida', daily: 'Vida diaria', play: 'Juego', nature: 'Naturaleza', places: 'Lugares', symbols: 'Símbolos' },
+  editor: {
+    'new-tile': 'Nuevo mosaico',
+    'edit-tile': 'Editar mosaico',
+    'cancel-back': 'Cancelar y volver',
+    'your-word': 'Tu palabra',
+    'preview': 'Vista previa · toca para oírlo',
+    'word-label': 'Palabra o frase',
+    'word-placeholder': 'Por ejemplo: Abuela, Columpio, Jugo de manzana',
+    'category': 'Categoría',
+    'color': 'Color',
+    'picture': 'Imagen',
+    'add-tile': 'Agregar mosaico al tablero',
+    'save-changes': 'Guardar cambios',
+    'delete-confirm-label': 'Confirmar eliminación',
+    'delete-question': '¿Eliminar “{label}”? No se puede deshacer.',
+    'keep-it': 'Conservarlo',
+    'delete': 'Eliminar',
+    'delete-tile': 'Eliminar este mosaico',
+    'err-word': 'Agrega una palabra o frase para este mosaico.',
+    'err-photo': 'Agrega una foto, o cambia a Ícono o Emoji.',
+    'err-emoji': 'Elige un emoji, o cambia a Ícono o Foto.',
+    'err-storage': 'No se pudo guardar: el almacenamiento de este dispositivo está lleno. Quita una foto o elimina algunos mosaicos e inténtalo de nuevo.',
+    'picture-type': 'Tipo de imagen',
+    'icon': 'Ícono',
+    'emoji': 'Emoji',
+    'photo': 'Foto',
+    'groups': 'Categorías',
+    'search-icons': 'Buscar íconos en inglés, como “dog”',
+    'search-emoji': 'Buscar emoji en inglés, como “pizza”',
+    'clear-search': 'Borrar la búsqueda',
+    'no-icons': 'Ningún ícono coincide con “{query}”. Prueba con Emoji, o con otra palabra.',
+    'no-emoji': 'Ningún emoji coincide con “{query}”. Puedes escribir cualquier emoji abajo.',
+    'type-emoji': 'O escribe cualquier emoji con tu teclado',
+    'type-emoji-placeholder': 'Toca aquí y abre el teclado de emoji',
+    'not-emoji': 'Eso no es un emoji. Cambia al teclado de emoji y elige uno.',
+    'photo-hint': 'Una foto real suele ser lo más fácil de reconocer: una persona, una mascota, una taza favorita.',
+    'chosen-photo': 'Foto elegida',
+    'change': 'Cambiar',
+    'remove': 'Quitar',
+    'add-photo': 'Agregar una foto',
+    'photo-failed': 'No se pudo usar esa foto.',
+    'photo-not-image': 'Ese archivo no es una imagen.',
+    'photo-no-canvas': 'Este navegador no puede procesar fotos.',
+    'photo-unreadable': 'No se pudo abrir esa foto. Prueba con un JPEG o PNG.',
+    'icon-label': 'Ícono',
+    'emoji-label': 'Emoji',
+  },
+  contact: {
+    'name': 'Nombre',
+    'name-placeholder': 'Por ejemplo: Mamá',
+    'phone': 'Número de móvil',
+    'phone-placeholder': 'Incluye el código de país si estás fuera',
+    'relationship': 'Parentesco (opcional)',
+    'relationship-placeholder': 'Padre, cuidador, vecino…',
+    'err-name': 'Agrega un nombre.',
+    'err-phone-missing': 'Agrega un número de teléfono.',
+    'err-phone-length': 'Revisa el número de teléfono. Debe tener de 7 a 15 dígitos.',
+    'err-storage': 'No se pudo guardar: el almacenamiento de este dispositivo está lleno.',
+    'cancel': 'Cancelar',
+    'save': 'Guardar contacto',
+    'confirm-remove-label': 'Confirmar que se quita',
+    'remove-question': '¿Quitar a {name} de los contactos de emergencia?',
+    'keep': 'Conservar',
+    'remove': 'Quitar',
+    'remove-contact': 'Quitar este contacto',
+  },
 };
 
 export const STRINGS: Record<LanguageId, StringTable> = { 'en-US': en, 'es-ES': es };

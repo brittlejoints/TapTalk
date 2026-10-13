@@ -16,7 +16,7 @@ export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProp
       className="grid gap-0.5 rounded-full bg-hairline p-1"
       style={{ gridTemplateColumns: `repeat(${categories.length}, minmax(0, 1fr))` }}
       role="tablist"
-      aria-label="Word categories"
+      aria-label={t('message', 'word-categories')}
     >
       {categories.map(({ id, icon: Icon }) => {
         const selected = id === current;

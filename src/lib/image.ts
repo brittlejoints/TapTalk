@@ -5,7 +5,7 @@
 export function resizePhoto(file: File, maxSize = 320): Promise<string> {
   return new Promise((resolve, reject) => {
     if (!file.type.startsWith('image/')) {
-      reject(new Error('That file isn’t an image.'));
+      reject(new Error('not-image'));
       return;
     }
     const url = URL.createObjectURL(file);
@@ -18,7 +18,7 @@ export function resizePhoto(file: File, maxSize = 320): Promise<string> {
       canvas.height = Math.round(img.height * scale);
       const ctx = canvas.getContext('2d');
       if (!ctx) {
-        reject(new Error('This browser can’t process photos.'));
+        reject(new Error('no-canvas'));
         return;
       }
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -26,7 +26,7 @@ export function resizePhoto(file: File, maxSize = 320): Promise<string> {
     };
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error('That photo couldn’t be opened. Try a JPEG or PNG.'));
+      reject(new Error('unreadable'));
     };
     img.src = url;
   });

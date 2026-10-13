@@ -24,11 +24,13 @@ export function normalizePhone(input: string): string {
   return trimmed.startsWith('+') ? `+${digits}` : digits;
 }
 
-/** Returns an error message, or null when the phone number looks usable. */
-export function phoneError(input: string): string | null {
+export type PhoneProblem = 'missing' | 'length';
+
+/** What is wrong with a phone number, or null when it looks usable. The screen translates the problem. */
+export function phoneProblem(input: string): PhoneProblem | null {
   const digits = normalizePhone(input).replace('+', '');
-  if (!digits) return 'Add a phone number.';
-  if (digits.length < 7 || digits.length > 15) return 'Check the phone number. It should have 7 to 15 digits.';
+  if (!digits) return 'missing';
+  if (digits.length < 7 || digits.length > 15) return 'length';
   return null;
 }
 
@@ -40,7 +42,7 @@ function isContact(value: unknown): value is EmergencyContact {
     typeof c.name === 'string' &&
     c.name.trim().length > 0 &&
     typeof c.phone === 'string' &&
-    phoneError(c.phone) === null &&
+    phoneProblem(c.phone) === null &&
     typeof c.relationship === 'string'
   );
 }

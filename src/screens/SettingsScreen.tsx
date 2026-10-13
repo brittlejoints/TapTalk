@@ -63,10 +63,10 @@ function Toggle({
 }
 
 /** Three-option segmented control for text size. */
-function TextSizePicker({ value, onChange, labels }: { value: TextSize; onChange: (v: TextSize) => void; labels: Record<TextSize, string> }) {
+function TextSizePicker({ value, onChange, labels, groupLabel }: { value: TextSize; onChange: (v: TextSize) => void; labels: Record<TextSize, string>; groupLabel: string }) {
   const sampleSize: Record<TextSize, string> = { medium: 'text-[16px]', large: 'text-[20px]', 'x-large': 'text-[24px]' };
   return (
-    <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label="Text size">
+    <div className="grid grid-cols-3 gap-1.5" role="radiogroup" aria-label={groupLabel}>
       {TEXT_SIZES.map((size) => {
         const selected = size === value;
         return (
@@ -160,6 +160,7 @@ export function SettingsScreen({
         <TextSizePicker
           value={settings.textSize}
           onChange={(textSize) => onUpdate({ textSize })}
+          groupLabel={t('settings', 'text-size')}
           labels={{ medium: t('settings', 'medium'), large: t('settings', 'large'), 'x-large': t('settings', 'extra-large') }}
         />
       </Section>

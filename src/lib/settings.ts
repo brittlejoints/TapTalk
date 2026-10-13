@@ -56,6 +56,11 @@ export function normalizeSettings(raw: unknown): Settings {
 
 const anyValue = (_: unknown): _ is unknown => true;
 
+/** The saved language, readable without React (the crash screen renders outside the provider). */
+export function savedLanguage(): LanguageId {
+  return normalizeSettings(loadJSON<unknown>('settings', null, anyValue)).language;
+}
+
 export function useSettings() {
   const [settings, setSettings] = useState<Settings>(() =>
     normalizeSettings(loadJSON<unknown>('settings', null, anyValue)),

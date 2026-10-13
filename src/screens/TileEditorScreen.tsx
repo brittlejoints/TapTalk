@@ -62,15 +62,15 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
 
   const save = () => {
     if (!trimmed) {
-      setError('Add a word or phrase for this tile.');
+      setError(t('editor', 'err-word'));
       return;
     }
     if (pictureMode === 'photo' && !photo) {
-      setError('Add a photo, or switch to Icon or Emoji.');
+      setError(t('editor', 'err-photo'));
       return;
     }
     if (pictureMode === 'emoji' && !emoji) {
-      setError('Pick an emoji, or switch to Icon or Photo.');
+      setError(t('editor', 'err-emoji'));
       return;
     }
     const saved = onSave({
@@ -84,7 +84,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
       ...(pictureMode === 'emoji' && emoji ? { emoji } : {}),
     });
     if (saved) onClose();
-    else setError('Couldn’t save: this device’s storage is full. Remove a photo or delete some tiles, then try again.');
+    else setError(t('editor', 'err-storage'));
   };
 
   return (
@@ -94,19 +94,19 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
           type="button"
           onClick={onClose}
           className="grid size-11 place-items-center rounded-full bg-hairline text-forest"
-          aria-label="Cancel and go back"
+          aria-label={t('editor', 'cancel-back')}
         >
           <ArrowLeft size={22} aria-hidden="true" />
         </button>
         <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-forest">
-          {isNew ? 'New tile' : 'Edit tile'}
+          {isNew ? t('editor', 'new-tile') : t('editor', 'edit-tile')}
         </h1>
       </header>
 
       {/* Live preview, at board size. Tap it to hear how it sounds. */}
       <div className="flex flex-col items-center gap-2 rounded-tile bg-slate p-[21px]">
         <Tile
-          label={trimmed || 'Your word'}
+          label={trimmed || t('editor', 'your-word')}
           color={color}
           icon={iconFor(icon)}
           photo={pictureMode === 'photo' ? photo : undefined}
@@ -114,12 +114,12 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
           onClick={() => trimmed && onSpeak(trimmed)}
           className="h-[130px] w-[110px]"
         />
-        <span className="text-sm text-forest">Preview · tap to hear it</span>
+        <span className="text-sm text-forest">{t('editor', 'preview')}</span>
       </div>
 
       <div className="flex flex-col gap-1.5 rounded-tile bg-keylime p-[21px]">
         <label htmlFor={labelId} className="eyebrow text-forest">
-          Word or phrase
+          {t('editor', 'word-label')}
         </label>
         <input
           id={labelId}
@@ -127,7 +127,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
           value={label}
           maxLength={MAX_LABEL_LENGTH}
           onChange={(e) => setLabel(e.target.value)}
-          placeholder="For example: Grandma, Swing, Apple juice"
+          placeholder={t('editor', 'word-placeholder')}
           className="h-12 rounded-tile bg-cream px-3.5 text-[17px] text-charcoal placeholder:text-muted"
           autoComplete="off"
         />
@@ -136,7 +136,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
         </span>
       </div>
 
-      <Field legend="Category">
+      <Field legend={t('editor', 'category')}>
         <div className="grid grid-cols-2 gap-[7px]">
           {CATEGORY_OPTIONS.map((c) => (
             <label
@@ -160,7 +160,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
         </div>
       </Field>
 
-      <Field legend="Color">
+      <Field legend={t('editor', 'color')}>
         <div className="grid grid-cols-4 gap-[11px]">
           {TILE_COLORS.map((c) => (
             <label key={c.id} className="flex cursor-pointer flex-col items-center gap-1 text-xs text-forest">
@@ -182,13 +182,13 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
               >
                 {color === c.id && <Check size={20} aria-hidden="true" />}
               </span>
-              {c.label}
+              {t('colors', c.id)}
             </label>
           ))}
         </div>
       </Field>
 
-      <Field legend="Picture">
+      <Field legend={t('editor', 'picture')}>
         <PicturePicker
           mode={pictureMode}
           icon={icon}
@@ -222,20 +222,20 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
         onClick={save}
         className="pressable h-14 rounded-tile bg-forest text-[17px] font-medium text-cream hover:bg-forest-deep"
       >
-        {isNew ? 'Add tile to the board' : 'Save changes'}
+        {isNew ? t('editor', 'add-tile') : t('editor', 'save-changes')}
       </button>
 
       {!isNew &&
         (confirmingDelete ? (
-          <div role="group" aria-label="Confirm delete" className="flex flex-col gap-2 rounded-tile bg-hairline p-[14px]">
-            <p className="font-medium text-charcoal">Delete “{tile.label}”? This can’t be undone.</p>
+          <div role="group" aria-label={t('editor', 'delete-confirm-label')} className="flex flex-col gap-2 rounded-tile bg-hairline p-[14px]">
+            <p className="font-medium text-charcoal">{t('editor', 'delete-question').replace('{label}', tile.label)}</p>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setConfirmingDelete(false)}
                 className="h-12 rounded-tile bg-cream font-medium text-forest"
               >
-                Keep it
+                {t('editor', 'keep-it')}
               </button>
               <button
                 type="button"
@@ -245,7 +245,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
                 }}
                 className="h-12 rounded-tile bg-charcoal font-medium text-cream"
               >
-                Delete
+                {t('editor', 'delete')}
               </button>
             </div>
           </div>
@@ -255,7 +255,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
             onClick={() => setConfirmingDelete(true)}
             className="h-12 font-medium text-forest underline underline-offset-4"
           >
-            Delete this tile
+            {t('editor', 'delete-tile')}
           </button>
         ))}
     </main>

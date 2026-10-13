@@ -12,7 +12,7 @@ const CORE_WORDS: { key: 'yes' | 'no' | 'stop' | 'more'; icon: LucideIcon; class
 export function CoreRow({ onWord }: { onWord: (word: string) => void }) {
   const { t } = useI18n();
   return (
-    <div className="grid grid-cols-4 gap-[7px]" role="group" aria-label="Core words">
+    <div className="grid grid-cols-4 gap-[7px]" role="group" aria-label={t('message', 'core-words')}>
       {CORE_WORDS.map(({ key, icon: Icon, className }) => {
         const label = t('core', key);
         return (
