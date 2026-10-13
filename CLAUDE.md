@@ -52,6 +52,7 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - Message bar in compact mode (under 360px wide, or extra-large text; the `compact:` variant in `index.css`): Save and Clear fold into a "More actions" tray (`MessageBar.tsx`) so the words keep room; Delete and Speak stay one tap. Otherwise Save and Clear stay inline.
 - Help, Settings and the tile editor are history entries (`open()` and `back()` in `App.tsx`), so the phone's Back button or swipe goes back one screen instead of leaving the app. Use `open()` to go to a screen and `back()` to leave it; only the board is the root.
 - Backup (`src/lib/backup.ts`, `BackupSection.tsx`): one versioned JSON file with settings (minus the device voice), custom tiles, saved phrases and contacts. Restore validates every entry with the same parsers the app uses to load storage, always asks before replacing, and only says "restored" if every save succeeded. Bump `BACKUP_VERSION` if the shape changes; newer files are refused, never half-read.
+- Leaving the board never loses progress: once shown, `BoardScreen` stays mounted (hidden) in `App.tsx`, so the message, typed draft, category and page survive Help, Settings, the tile editor and the welcome guide. Don't move that state into a screen that unmounts.
 - Nothing is dropped silently. A word that doesn't fit the 12-word message, or a new phrase when Saved holds 9, is refused with a short on-screen notice (`notice` on `MessageBar`) and a screen-reader status. `savePhrase` never pushes an old phrase out.
 - Every user-visible string on the board, Help and Settings comes from `src/data/strings.ts` in both languages, including the whole Help screen. This includes the tile editor, picture picker, contact form and crash screen (which reads the saved language itself, since it sits outside the provider). Validation helpers in `src/lib` return codes (e.g. `phoneProblem`, photo errors), never sentences; the screen translates them. Known gap: emoji and icon search keywords and the emoji/icon cell names are English only, so the search boxes say so.
 - Short screens (a phone on its side, under 500px tall) use the `short:` variant: the board and Help move the tiles to a right-hand column, and the message bar goes compact. Tiles must stay at least 44px tall there; check 568x320 and 667x375.
@@ -59,8 +60,13 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - The welcome pill shows a tiny sun, sunrise or moon (`DayGlyph`) chosen by `periodFor()` in `src/lib/greeting.ts`; use that helper instead of re-deriving morning/afternoon/evening.
 - `useSpeech` takes a `language` and prefers a matching voice, so Spanish words are read with a Spanish voice.
 
+## Privacy and legal
+
+- `PRIVACY.md` makes promises about what the app does: no network requests, no analytics, data only in `localStorage`, location only when the person chooses it for an alert. Keep it true. Before adding any network request, third-party script, new stored data or new permission, update `PRIVACY.md` (and its date) in the same change. `TERMS.md` says Tap Talk is not an emergency service; never word any screen as if it were.
+
 ## Installable app (PWA)
 
 - Configured in `vite.config.ts` with `vite-plugin-pwa`. Icons live in `public/icons/` (source: `icon.svg`).
 - `registerType: 'prompt'` is deliberate: never auto-reload, because it would wipe a message mid-sentence. `useRegisterSW` in `App.tsx` (so `injectRegister` is `false`) feeds an "App" section in Settings: "ready offline" once after first install, and "A fresh version is ready" with an Update now button the user taps. Never show update UI over the board.
+- Published on GitHub Pages by `.github/workflows/deploy.yml` on every push to `main` (build, tests, then deploy). `vite.config.ts` uses `base: './'` so the app works from a subfolder like `/TapTalk/`; keep every asset path relative and never hard-code a leading `/`. Check a change under a subfolder before merging: the app, its manifest, service worker scope and offline reload must all stay inside it.
 - Everything must work offline. Bundle new assets locally and keep them inside the precache `globPatterns`.
