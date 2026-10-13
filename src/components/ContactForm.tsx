@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { normalizePhone, phoneProblem, type EmergencyContact } from '../lib/contacts';
 import { useI18n } from '../lib/i18n';
 
@@ -17,32 +17,45 @@ export function ContactForm({ contact, onSave, onDelete, onCancel }: ContactForm
   const [name, setName] = useState(contact?.name ?? '');
   const [phone, setPhone] = useState(contact?.phone ?? '');
   const [relationship, setRelationship] = useState(contact?.relationship ?? '');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ field: 'name' | 'phone' | null; text: string } | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const id = useId();
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+
+  // The form opens on a tap, so start in the first field.
+  useEffect(() => nameRef.current?.focus(), []);
+
+  // A problem moves focus to the field it's about, where the error is read out with it.
+  const fail = (field: 'name' | 'phone' | null, text: string) => {
+    setError({ field, text });
+    (field === 'name' ? nameRef : field === 'phone' ? phoneRef : null)?.current?.focus();
+  };
+  const invalid = (field: 'name' | 'phone') =>
+    error?.field === field ? { 'aria-invalid': true, 'aria-describedby': `${id}-error` } : {};
 
   const save = () => {
-    if (!name.trim()) return setError(t('contact', 'err-name'));
+    if (!name.trim()) return fail('name', t('contact', 'err-name'));
     const problem = phoneProblem(phone);
-    if (problem) return setError(t('contact', problem === 'missing' ? 'err-phone-missing' : 'err-phone-length'));
+    if (problem) return fail('phone', t('contact', problem === 'missing' ? 'err-phone-missing' : 'err-phone-length'));
     const ok = onSave({
       id: contact?.id ?? crypto.randomUUID(),
       name: name.trim(),
       phone: normalizePhone(phone),
       relationship: relationship.trim(),
     });
-    if (!ok) setError(t('contact', 'err-storage'));
+    if (!ok) fail(null, t('contact', 'err-storage'));
   };
 
   return (
     <div className="flex flex-col gap-2.5 rounded-tile bg-cream/60 p-3">
       <label htmlFor={`${id}-name`} className="flex flex-col gap-1">
         <span className="text-sm font-semibold text-forest">{t('contact', 'name')}</span>
-        <input id={`${id}-name`} className={inputClass} value={name} maxLength={60} onChange={(e) => setName(e.target.value)} placeholder={t('contact', 'name-placeholder')} autoComplete="off" />
+        <input ref={nameRef} {...invalid('name')} id={`${id}-name`} className={inputClass} value={name} maxLength={60} onChange={(e) => setName(e.target.value)} placeholder={t('contact', 'name-placeholder')} autoComplete="off" />
       </label>
       <label htmlFor={`${id}-phone`} className="flex flex-col gap-1">
         <span className="text-sm font-semibold text-forest">{t('contact', 'phone')}</span>
-        <input id={`${id}-phone`} className={inputClass} value={phone} type="tel" inputMode="tel" maxLength={24} onChange={(e) => setPhone(e.target.value)} placeholder={t('contact', 'phone-placeholder')} autoComplete="off" />
+        <input ref={phoneRef} {...invalid('phone')} id={`${id}-phone`} className={inputClass} value={phone} type="tel" inputMode="tel" maxLength={24} onChange={(e) => setPhone(e.target.value)} placeholder={t('contact', 'phone-placeholder')} autoComplete="off" />
       </label>
       <label htmlFor={`${id}-rel`} className="flex flex-col gap-1">
         <span className="text-sm font-semibold text-forest">{t('contact', 'relationship')}</span>
@@ -50,8 +63,8 @@ export function ContactForm({ contact, onSave, onDelete, onCancel }: ContactForm
       </label>
 
       {error && (
-        <p role="alert" className="rounded-tile bg-hairline px-3 py-2 text-sm font-medium text-charcoal">
-          {error}
+        <p id={`${id}-error`} role="alert" className="rounded-tile bg-hairline px-3 py-2 text-sm font-medium text-charcoal">
+          {error.text}
         </p>
       )}
 

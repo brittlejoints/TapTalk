@@ -40,6 +40,7 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - The message bar has a fixed height (it scrolls internally) so a long message never moves the tiles. Typing goes into a draft owned by `BoardScreen`; it becomes words on Enter, Speak or a tile tap, and the caret always stays at the end.
 - Playful touches (CSS in `index.css`, JS in `src/lib/delight.ts`) must confirm a user action, play once, and run only when `.playful` is set and reduced motion is off.
 - Focus styles use `:focus-visible` only.
+- Focus follows the user (`App.tsx`): opening a screen focuses its `h1`, and returning to the board focuses the button that left it. Paging in the grid keeps focus on slot 9 (`TileGrid.tsx`). A sheet makes everything behind it `inert` and returns focus to its opener on close (`HelpScreen.tsx`). Forms focus their first field on open, and a validation error moves focus to its field with `aria-invalid` and `aria-describedby` pointing at the message. Don't use `aria-live` on counters or anything that changes per keystroke.
 - Never show a success message for something that didn't happen (for example, an alert that wasn't sent).
 - The app must work offline: no runtime requests to font or icon CDNs. Storage can fail, so go through `src/lib/storage.ts`.
 - Sentence case. Say "tap", not "click".
@@ -66,6 +67,8 @@ An AAC (augmentative and alternative communication) web app: people tap words an
 - `PRIVACY.md` makes promises about what the app does: no network requests, no analytics, data only in `localStorage`, location only when the person chooses it for an alert. Keep it true. Before adding any network request, third-party script, new stored data or new permission, update `PRIVACY.md` (and its date) in the same change. `TERMS.md` says Tap Talk is not an emergency service; never word any screen as if it were.
 
 ## Installable app (PWA)
+
+- Production builds carry a Content-Security-Policy meta tag (`contentSecurityPolicy` in `vite.config.ts`): only the app's own files, plus `data:` and `blob:` images. It backs up `PRIVACY.md`. Adding any outside host, inline script or inline `<style>` means changing the policy and `PRIVACY.md` in the same change; never add `'unsafe-inline'` or `'unsafe-eval'`.
 
 - Configured in `vite.config.ts` with `vite-plugin-pwa`. Icons live in `public/icons/` (source: `icon.svg`).
 - `registerType: 'prompt'` is deliberate: never auto-reload, because it would wipe a message mid-sentence. `useRegisterSW` in `App.tsx` (so `injectRegister` is `false`) feeds an "App" section in Settings: "ready offline" once after first install, and "A fresh version is ready" with an Update now button the user taps. Never show update UI over the board.
