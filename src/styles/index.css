@@ -4,6 +4,16 @@
   Tap Talk Greenhouse tokens. Components use these through Tailwind classes
   (bg-sage, text-forest, rounded-tile...). Never write raw hex in components.
 */
+/* Compact message bar: narrow screens, or extra-large text, where the buttons would crowd out the words. */
+@custom-variant compact {
+  @media (max-width: 359px) {
+    @slot;
+  }
+  &:where(.size-x-large *) {
+    @slot;
+  }
+}
+
 @theme {
   /* Ink and paper */
   --color-forest: #0f3e17;

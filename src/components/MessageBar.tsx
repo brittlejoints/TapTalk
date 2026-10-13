@@ -170,11 +170,11 @@ export function MessageBar({
 
       {!empty &&
         (saved ? (
-          <span className="grid size-11 place-items-center text-forest max-[359px]:hidden" role="img" aria-label={t('message', 'is-saved')}>
+          <span className="grid size-11 place-items-center text-forest compact:hidden" role="img" aria-label={t('message', 'is-saved')}>
             <Star size={22} fill="currentColor" aria-hidden="true" className={justSaved ? 'twinkle' : ''} />
           </span>
         ) : (
-          <button type="button" onClick={save} className="grid size-11 place-items-center rounded-md text-forest max-[359px]:hidden" aria-label={t('message', 'save-phrase')}>
+          <button type="button" onClick={save} className="grid size-11 place-items-center rounded-md text-forest compact:hidden" aria-label={t('message', 'save-phrase')}>
             <Star size={22} aria-hidden="true" />
           </button>
         ))}
@@ -185,7 +185,7 @@ export function MessageBar({
             onClear();
             setJustSaved(false);
           }}
-          className="grid size-11 place-items-center rounded-md text-muted max-[359px]:hidden"
+          className="grid size-11 place-items-center rounded-md text-muted compact:hidden"
           aria-label={t('message', 'clear')}
           title={t('message', 'clear')}
         >
@@ -200,13 +200,13 @@ export function MessageBar({
           aria-haspopup="true"
           aria-controls={`${inputId}-more`}
           aria-label={t('message', 'more-actions')}
-          className="hidden size-11 place-items-center rounded-md text-forest max-[359px]:grid"
+          className="hidden size-11 place-items-center rounded-md text-forest compact:grid"
         >
           <Ellipsis size={22} aria-hidden="true" />
         </button>
       )}
       {moreOpen && !empty && (
-        <div id={`${inputId}-more`} className="absolute top-full right-0 z-10 mt-1 flex flex-col gap-1 rounded-tile bg-cream p-1.5 min-[360px]:hidden">
+        <div id={`${inputId}-more`} className="absolute top-full right-0 z-10 mt-1 flex flex-col gap-1 rounded-tile bg-cream p-1.5">
           {saved ? (
             <span className="flex h-12 items-center gap-2 px-3 font-semibold text-forest" role="img" aria-label={t('message', 'is-saved')}>
               <Star size={20} fill="currentColor" aria-hidden="true" />
