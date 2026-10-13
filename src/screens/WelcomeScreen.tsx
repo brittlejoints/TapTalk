@@ -12,7 +12,7 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
   return (
     <main className="mx-auto flex min-h-full max-w-lg flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(21px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
-        <Wordmark className="h-[30px] w-auto text-forest" />
+        <Wordmark className="h-[30px] w-auto text-forest" draw />
         <span className="inline-flex items-center gap-1.5 rounded-full bg-keylime py-1.5 pr-3 pl-2 text-[13px] text-forest" aria-live="polite">
           <DayGlyphIllustration period={period} className="size-5 shrink-0" />
           {greeting}

@@ -66,6 +66,8 @@ export function BoardScreen({
     alreadyGreetedToday.current = true;
   };
   const [draft, setDraft] = useState('');
+  // Replays the logo's letter hop each time Speak is tapped with something to say.
+  const [logoWave, setLogoWave] = useState(0);
   const [notice, setNotice] = useState<string | null>(null);
   const noticeTimer = useRef<number>();
   const flash = (text: string) => {
@@ -150,6 +152,7 @@ export function BoardScreen({
   const speakMessage = (pending: string) => {
     consumeGreeting();
     const all = pending.trim() ? addTypedWords(words, pending) : words;
+    if (all.length > 0) setLogoWave((n) => n + 1);
     if (all.length - words.length < countWords(pending)) flash(t('message', 'message-full'));
     setWords(all);
     setDraft('');
@@ -168,7 +171,7 @@ export function BoardScreen({
     <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
         <h1 className="text-forest">
-          <Wordmark className="h-[30px] w-auto short:h-6" talkPulse={speaking ? wordPulse : 0} />
+          <Wordmark className="h-[30px] w-auto short:h-6" talkPulse={speaking ? wordPulse : 0} wave={logoWave} />
         </h1>
         <div className="flex items-center gap-1">
           <button
