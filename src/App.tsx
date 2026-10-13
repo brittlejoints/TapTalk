@@ -45,9 +45,31 @@ export default function App() {
     saveJSON('saved-phrases', savedPhrases);
   }, [savedPhrases]);
 
+  // Screen changes move keyboard and screen reader focus: a newly opened screen
+  // focuses its heading, and returning to the board puts focus back on the button
+  // that left it. The welcome guide focuses its own step headings.
+  const boardReturnFocus = useRef<HTMLElement | null>(null);
+  const firstView = useRef(true);
+  useEffect(() => {
+    if (firstView.current) {
+      firstView.current = false;
+      return;
+    }
+    if (view === 'welcome') return;
+    if (view === 'board' && boardReturnFocus.current?.isConnected) {
+      boardReturnFocus.current.focus();
+      return;
+    }
+    const heading = Array.from(document.querySelectorAll('h1')).find((h) => h.getClientRects().length > 0);
+    if (!heading) return;
+    if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+    heading.focus();
+  }, [view]);
+
   // Help, Settings and the tile editor are history entries, so the phone's Back button or swipe
   // returns to the previous screen instead of leaving the app.
   const open = (next: View, opts?: { replace?: boolean }) => {
+    if (view === 'board' && document.activeElement instanceof HTMLElement) boardReturnFocus.current = document.activeElement;
     try {
       if (opts?.replace) window.history.replaceState({ tt: next }, '');
       else window.history.pushState({ tt: next }, '');

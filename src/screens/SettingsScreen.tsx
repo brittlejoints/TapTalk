@@ -1,5 +1,5 @@
 import { ArrowLeft, Check, ChevronRight, Phone, Plus, Trash2 } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { BackupSection } from '../components/BackupSection';
 import { ContactForm } from '../components/ContactForm';
 import { AppIcon } from '../components/LogoMark';
@@ -100,6 +100,17 @@ export function SettingsScreen({
 }: SettingsScreenProps) {
   const { t } = useI18n();
   const [editingContact, setEditingContact] = useState<string | null>(null);
+  // Closing a contact form puts focus back on that contact's row, or on "Add an emergency contact".
+  const lastEditing = useRef<string | null>(null);
+  useEffect(() => {
+    const closed = lastEditing.current;
+    lastEditing.current = editingContact;
+    if (!closed || editingContact) return;
+    const row = document.querySelector<HTMLElement>(`[data-contact="${CSS.escape(closed)}"]`);
+    // A new contact has no row id yet; at the contact limit the add button is gone too, so use the last row.
+    const rows = document.querySelectorAll<HTMLElement>('[data-contact]');
+    (row ?? document.querySelector<HTMLElement>('[data-add-contact]') ?? rows[rows.length - 1])?.focus();
+  }, [editingContact]);
 
   return (
     <main className="mx-auto flex min-h-full max-w-lg flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(28px,env(safe-area-inset-bottom))]">
@@ -210,6 +221,7 @@ export function SettingsScreen({
                   <button
                     type="button"
                     onClick={() => setEditingContact(c.id)}
+                    data-contact={c.id}
                     className="flex w-full items-center gap-3 rounded-tile bg-cream p-1.5 pr-3 text-left"
                     aria-label={`${c.name}`}
                   >
@@ -243,6 +255,7 @@ export function SettingsScreen({
           <button
             type="button"
             onClick={() => setEditingContact('new')}
+            data-add-contact
             className="pressable inline-flex h-12 items-center justify-center gap-2 rounded-tile bg-forest font-medium text-cream"
           >
             <Plus size={20} aria-hidden="true" />

@@ -1,6 +1,6 @@
 import { Download, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { backupFileName, buildBackup, parseBackup, type BackupData } from '../lib/backup';
+import { backupFileName, backupSizeProblem, buildBackup, parseBackup, type BackupData } from '../lib/backup';
 import { useI18n } from '../lib/i18n';
 
 interface BackupSectionProps {
@@ -35,9 +35,11 @@ export function BackupSection({ current, onRestore }: BackupSectionProps) {
     if (!file) return;
     setNote(null);
     setPending(null);
+    const tooBig = backupSizeProblem(file.size);
+    if (tooBig) return setNote({ text: t('backup', tooBig), problem: true });
     const result = parseBackup(await file.text().catch(() => ''));
     if (result.ok) setPending(result.data);
-    else setNote({ text: t('backup', result.problem === 'too-new' ? 'too-new' : 'not-backup'), problem: true });
+    else setNote({ text: t('backup', result.problem), problem: true });
   };
 
   const confirm = () => {

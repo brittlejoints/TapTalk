@@ -47,6 +47,11 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
   const [alertText, setAlertText] = useState('');
   const [copied, setCopied] = useState(false);
   const locateRun = useRef(0);
+  const pageRef = useRef<HTMLElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const alertButtonRef = useRef<HTMLButtonElement>(null);
+  const sheetOpen = step !== 'closed';
+  const wasOpen = useRef(false);
 
   const say = (text: string) => {
     onSpeak(text);
@@ -91,10 +96,21 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
     return () => window.removeEventListener('keydown', onKey);
   }, [step]);
 
+  // While the sheet is open everything behind it is inert, so Tab and screen
+  // reader swipes stay inside the sheet. Closing it returns focus to the button
+  // that opened it.
+  useEffect(() => {
+    for (const el of Array.from(pageRef.current?.children ?? [])) {
+      if (el !== sheetRef.current) (el as HTMLElement).inert = sheetOpen;
+    }
+    if (wasOpen.current && !sheetOpen) alertButtonRef.current?.focus();
+    wasOpen.current = sheetOpen;
+  }, [sheetOpen]);
+
   const names = contacts.map((c) => c.name).join(', ');
 
   return (
-    <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-2 short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
+    <main ref={pageRef} className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-2 short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex items-center justify-between">
         <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-help-ink short:text-[28px]">{t('help', 'title')}</h1>
         <button
@@ -132,6 +148,7 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
       {contacts.length > 0 ? (
         <button
           type="button"
+          ref={alertButtonRef}
           onClick={() => setStep('confirm')}
           className="pressable flex h-14 shrink-0 items-center justify-center gap-[9px] rounded-tile bg-help text-[17px] font-semibold text-cream"
         >
@@ -153,8 +170,8 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
       )}
       <p className="shrink-0 text-center text-[13px] text-muted">{t('help', 'note')}</p>
 
-      {step !== 'closed' && (
-        <div className="fixed inset-0 z-10 flex items-end justify-center bg-charcoal/40" onClick={() => step !== 'locating' && setStep('closed')}>
+      {sheetOpen && (
+        <div ref={sheetRef} className="fixed inset-0 z-10 flex items-end justify-center bg-charcoal/40" onClick={() => step !== 'locating' && setStep('closed')}>
           <div
             role="dialog"
             aria-modal="true"

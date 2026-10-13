@@ -223,6 +223,7 @@ type StringTable = {
     'exported': string;
     'not-backup': string;
     'too-new': string;
+    'too-big': string;
     'confirm-title': string;
     'confirm-body': string;
     'replace': string;
@@ -446,6 +447,7 @@ const en: StringTable = {
     'exported': 'Your browser should now be saving {file}. Check your Downloads.',
     'not-backup': 'That file isn’t a Tap Talk backup.',
     'too-new': 'That backup is from a newer version of Tap Talk. Update the app first.',
+    'too-big': 'That file is too big to be a Tap Talk backup.',
     'confirm-title': 'Replace what’s on this device?',
     'confirm-body': 'This backup has {tiles} custom tiles, {contacts} emergency contacts and {phrases} saved phrases. They will replace the ones on this device.',
     'replace': 'Replace',
@@ -669,6 +671,7 @@ const es: StringTable = {
     'exported': 'Tu navegador debería estar guardando {file}. Revisa tus Descargas.',
     'not-backup': 'Ese archivo no es una copia de seguridad de Tap Talk.',
     'too-new': 'Esa copia es de una versión más nueva de Tap Talk. Actualiza la app primero.',
+    'too-big': 'Ese archivo es demasiado grande para ser una copia de Tap Talk.',
     'confirm-title': '¿Reemplazar lo que hay en este dispositivo?',
     'confirm-body': 'Esta copia tiene {tiles} mosaicos, {contacts} contactos de emergencia y {phrases} frases guardadas. Reemplazarán los de este dispositivo.',
     'replace': 'Reemplazar',

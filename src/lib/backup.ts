@@ -17,7 +17,18 @@ export interface BackupData {
   contacts: EmergencyContact[];
 }
 
-export type BackupProblem = 'not-backup' | 'too-new';
+export type BackupProblem = 'not-backup' | 'too-new' | 'too-big';
+
+/**
+ * Largest file restore will read. A real backup comes from browser storage
+ * (about 5 MB at most), so anything bigger isn't one; checking the size first
+ * means a huge file is refused before it is loaded into memory.
+ */
+export const MAX_BACKUP_BYTES = 8 * 1024 * 1024;
+
+export function backupSizeProblem(bytes: number): BackupProblem | null {
+  return bytes > MAX_BACKUP_BYTES ? 'too-big' : null;
+}
 
 export function buildBackup(data: BackupData, now = new Date()): string {
   return JSON.stringify({ app: 'tap-talk', version: BACKUP_VERSION, exportedAt: now.toISOString(), ...data }, null, 2);

@@ -1,6 +1,6 @@
 import { ArrowLeft, Check } from 'lucide-react';
 import { useI18n } from '../lib/i18n';
-import { useId, useState, type ReactNode } from 'react';
+import { useId, useRef, useState, type ReactNode } from 'react';
 import { Tile } from '../components/Tile';
 import { TILE_COLOR_CLASS, TILE_COLORS, type TileColorId } from '../data/colors';
 import { iconFor, type TileIconId } from '../data/icons';
@@ -52,6 +52,8 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const labelId = useId();
+  const labelRef = useRef<HTMLInputElement>(null);
+  const [wordError, setWordError] = useState(false);
 
   const trimmed = label.trim();
 
@@ -62,9 +64,13 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
 
   const save = () => {
     if (!trimmed) {
+      // Focus the word field, where the error is read out with it.
       setError(t('editor', 'err-word'));
+      setWordError(true);
+      labelRef.current?.focus();
       return;
     }
+    setWordError(false);
     if (pictureMode === 'photo' && !photo) {
       setError(t('editor', 'err-photo'));
       return;
@@ -122,16 +128,22 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
           {t('editor', 'word-label')}
         </label>
         <input
+          ref={labelRef}
           id={labelId}
+          aria-describedby={wordError ? `${labelId}-count ${labelId}-error` : `${labelId}-count`}
+          aria-invalid={wordError || undefined}
           type="text"
           value={label}
           maxLength={MAX_LABEL_LENGTH}
-          onChange={(e) => setLabel(e.target.value)}
+          onChange={(e) => {
+            setLabel(e.target.value);
+            if (wordError && e.target.value.trim()) setWordError(false);
+          }}
           placeholder={t('editor', 'word-placeholder')}
           className="h-12 rounded-tile bg-cream px-3.5 text-[17px] text-charcoal placeholder:text-muted"
           autoComplete="off"
         />
-        <span className="self-end text-xs text-muted" aria-live="polite">
+        <span id={`${labelId}-count`} className="self-end text-xs text-muted">
           {label.length} / {MAX_LABEL_LENGTH}
         </span>
       </div>
@@ -212,7 +224,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
       </Field>
 
       {error && (
-        <p role="alert" className="rounded-tile bg-hairline px-[14px] py-[11px] font-medium text-charcoal">
+        <p id={`${labelId}-error`} role="alert" className="rounded-tile bg-hairline px-[14px] py-[11px] font-medium text-charcoal">
           {error}
         </p>
       )}

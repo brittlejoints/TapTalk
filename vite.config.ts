@@ -1,13 +1,40 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+
+/**
+ * Content-Security-Policy for the published app: it may only load its own files,
+ * plus photo and icon images made on the device (data: and blob: URLs). Nothing
+ * can be fetched from or sent to another site, which backs up PRIVACY.md.
+ * Build only: the dev server needs an inline script that this would block.
+ */
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'none'",
+].join('; ');
+
+const contentSecurityPolicy: Plugin = {
+  name: 'content-security-policy',
+  apply: 'build',
+  transformIndexHtml: () => [{ tag: 'meta', attrs: { 'http-equiv': 'Content-Security-Policy', content: CSP }, injectTo: 'head-prepend' }],
+};
 
 export default defineConfig({
   // Relative paths, so the app works from any folder (GitHub Pages serves it at /TapTalk/).
   base: './',
   plugins: [
+    contentSecurityPolicy,
     react(),
     tailwindcss(),
     VitePWA({

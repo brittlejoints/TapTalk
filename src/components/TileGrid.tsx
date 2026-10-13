@@ -1,5 +1,5 @@
 import { ArrowLeft, ChevronRight, Sprout } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import type { Category, Word } from '../data/vocabulary';
 import type { Slot } from '../lib/boardPages';
 import { useI18n } from '../lib/i18n';
@@ -47,6 +47,7 @@ function NavTile({ slot, category, onNav }: { slot: NavSlot; category: Category;
       type="button"
       onClick={() => onNav(slot)}
       aria-label={content.aria}
+      data-nav
       className="pressable flex flex-col items-center justify-center gap-1 rounded-tile bg-forest text-cream"
     >
       {content.icon}
@@ -60,9 +61,24 @@ function NavTile({ slot, category, onNav }: { slot: NavSlot; category: Category;
  * A fixed 3x3 grid that fills the remaining screen height. Empty slots stay
  * blank, and slot 9 is always navigation, so every tile keeps its position.
  */
-export function TileGrid({ category, slots, variant = 'word', emptyMessage, onTile, onNav }: TileGridProps) {
+export function TileGrid({ category, slots, variant = 'word', emptyMessage, onTile, onNav: navigate }: TileGridProps) {
+  // Paging can rebuild the slot-9 button, so focus would fall to the page.
+  // Put it back on slot 9, where it was, so keyboard and screen reader users stay in place.
+  const gridRef = useRef<HTMLDivElement>(null);
+  const refocusNav = useRef(false);
+  const onNav = (slot: NavSlot) => {
+    refocusNav.current = true;
+    navigate(slot);
+  };
+  useEffect(() => {
+    if (!refocusNav.current) return;
+    refocusNav.current = false;
+    gridRef.current?.querySelector<HTMLElement>('[data-nav]')?.focus();
+  });
+
   return (
     <div
+      ref={gridRef}
       id="tile-grid"
       role="tabpanel"
       aria-labelledby={`tab-${category.id}`}
