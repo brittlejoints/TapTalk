@@ -141,7 +141,7 @@ type StringTable = {
   greeting: { morning: string; afternoon: string; evening: string };
   error: { title: string; body: string; 'try-again': string; reload: string };
   colors: { keylime: string; mint: string; sea: string; mist: string; lilac: string; butter: string; peach: string; sand: string };
-  iconGroups: { people: string; food: string; home: string; play: string; places: string; nature: string; health: string };
+  iconGroups: { people: string; food: string; home: string; play: string; places: string; nature: string; health: string; feelings: string };
   emojiGroups: { feelings: string; people: string; food: string; daily: string; play: string; nature: string; places: string; symbols: string };
   editor: {
     'new-tile': string;
@@ -365,7 +365,7 @@ const en: StringTable = {
   greeting: { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening' },
   error: { title: 'Something went wrong.', body: 'Tap Talk ran into an error. Your words and settings are still saved on this device.', 'try-again': 'Try again', reload: 'Reload the app' },
   colors: { keylime: 'Keylime', mint: 'Mint', sea: 'Sea glass', mist: 'Mist', lilac: 'Lilac', butter: 'Butter', peach: 'Peach', sand: 'Sand' },
-  iconGroups: { people: 'People', food: 'Food & drink', home: 'Home', play: 'Play', places: 'Places', nature: 'Nature', health: 'Health' },
+  iconGroups: { people: 'People', food: 'Food & drink', home: 'Home', play: 'Play', places: 'Places', nature: 'Nature', health: 'Health', feelings: 'Feelings' },
   emojiGroups: { feelings: 'Feelings', people: 'People', food: 'Food & drink', daily: 'Daily life', play: 'Play', nature: 'Nature', places: 'Places', symbols: 'Symbols' },
   editor: {
     'new-tile': 'New tile',
@@ -589,7 +589,7 @@ const es: StringTable = {
   greeting: { morning: 'Buenos días', afternoon: 'Buenas tardes', evening: 'Buenas noches' },
   error: { title: 'Algo salió mal.', body: 'Tap Talk tuvo un error. Tus palabras y ajustes siguen guardados en este dispositivo.', 'try-again': 'Intentar de nuevo', reload: 'Recargar la app' },
   colors: { keylime: 'Lima', mint: 'Menta', sea: 'Cristal marino', mist: 'Niebla', lilac: 'Lila', butter: 'Mantequilla', peach: 'Melocotón', sand: 'Arena' },
-  iconGroups: { people: 'Personas', food: 'Comida y bebida', home: 'Casa', play: 'Juego', places: 'Lugares', nature: 'Naturaleza', health: 'Salud' },
+  iconGroups: { people: 'Personas', food: 'Comida y bebida', home: 'Casa', play: 'Juego', places: 'Lugares', nature: 'Naturaleza', health: 'Salud', feelings: 'Sentimientos' },
   emojiGroups: { feelings: 'Sentimientos', people: 'Personas', food: 'Comida y bebida', daily: 'Vida diaria', play: 'Juego', nature: 'Naturaleza', places: 'Lugares', symbols: 'Símbolos' },
   editor: {
     'new-tile': 'Nuevo mosaico',
