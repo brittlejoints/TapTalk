@@ -27,6 +27,14 @@ export function TwoBubblesIllustration({ className = '' }: { className?: string 
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
+      {/* A line of words in each bubble, a little sprout on the one that's listening */}
+      <g stroke="var(--color-forest)" strokeWidth="2.5" strokeLinecap="round" opacity="0.4">
+        <path d="M27 45h12M27 54h8" />
+        <path d="M76 45h16M80 54h12" />
+      </g>
+      <path d="M33 34V28" stroke="var(--color-forest)" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M32.5 30c-4 0-6-2-7-5 4-1 6 1 7 5Z" fill="var(--color-sage)" stroke="var(--color-forest)" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M34 29c1-4 4-5 7-4-1 4-4 5-7 4Z" fill="var(--color-tile-keylime)" stroke="var(--color-forest)" strokeWidth="1.8" strokeLinejoin="round" />
       {/* Heart in the middle */}
       <path
         className="sparkle"
