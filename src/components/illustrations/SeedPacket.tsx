@@ -33,16 +33,16 @@ export function SeedPacketIllustration({ className = '' }: { className?: string 
       {/* Label: a name and a line of small print */}
       <path d="M44 86h24" stroke="var(--color-forest)" strokeWidth="3" strokeLinecap="round" opacity="0.5" />
       <path d="M48 92h16" {...vein} />
-      <path className="grow-stem" d="M56 77V59" stroke="var(--color-forest)" strokeWidth="2.5" strokeLinecap="round" />
+      <path className="grow-stem" d="M56 76.5V61" stroke="var(--color-forest)" strokeWidth="2.5" strokeLinecap="round" />
       <g className="grow-leaf left">
-        <path d="M55 72c-7 0-11-3-12-9 7-1 11 2 12 9Z" fill="var(--color-sage)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M53.5 70.5C49 69 46 66.5 44.5 64.5" {...vein} />
+        <path d="M55 75c-7 0-11-3-12-9 7-1 11 2 12 9Z" fill="var(--color-sage)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M53.5 73.5C49 72 46 69.5 44.5 67.5" {...vein} />
       </g>
       <g className="grow-leaf right">
-        <path d="M57 69c1-6 6-9 12-8-1 6-6 9-12 8Z" fill="var(--color-tile-keylime)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M58.5 67.5C61.5 65 64.5 63.5 67 62.5" {...vein} />
+        <path d="M57 74c1-6 6-9 12-8-1 6-6 9-12 8Z" fill="var(--color-tile-keylime)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M58.5 72.5C61.5 70 64.5 68.5 67 67.5" {...vein} />
       </g>
-      <Bloom className="grow-leaf" cx={56} cy={55} r={9} petal="tile-lilac" center="tile-butter" strokeWidth={1.6} />
+      <Bloom className="grow-leaf" cx={56} cy={58.5} r={8} petal="tile-lilac" center="tile-butter" strokeWidth={1.6} />
     </svg>
   );
 }
