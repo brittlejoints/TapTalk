@@ -1,12 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { EMOJI_GROUPS, firstEmoji, isEmoji } from './emoji';
 import { ICON_GROUPS, TILE_ICONS } from './icons';
+import { LANGUAGES, STRINGS } from './strings';
 
 describe('icon groups', () => {
   it('list every icon exactly once', () => {
     const grouped = ICON_GROUPS.flatMap((g) => g.ids);
     expect(new Set(grouped).size).toBe(grouped.length);
     expect([...grouped].sort()).toEqual(Object.keys(TILE_ICONS).sort());
+  });
+});
+
+describe('group names', () => {
+  it('every icon and emoji group has a name in every language', () => {
+    for (const { id: lang } of LANGUAGES) {
+      const iconNames = STRINGS[lang].iconGroups as Record<string, string>;
+      const emojiNames = STRINGS[lang].emojiGroups as Record<string, string>;
+      for (const g of ICON_GROUPS) expect(iconNames[g.id], `${lang} icon group ${g.id}`).toBeTruthy();
+      for (const g of EMOJI_GROUPS) expect(emojiNames[g.id], `${lang} emoji group ${g.id}`).toBeTruthy();
+    }
   });
 });
 
