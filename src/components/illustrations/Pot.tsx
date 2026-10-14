@@ -1,5 +1,7 @@
+import { Bloom } from './Bloom';
+
 /**
- * A seedling in a pot. Shown on the empty Saved page.
+ * A seedling in a pot, with a first flower at the tip. Shown on the empty Saved page.
  * Reuses the sprout's `.grow-stem` and `.grow-leaf` animations so it grows
  * in once when the user lands on an empty Saved tab.
  * Detail lines (veins, bands) are 1.5 units at half strength so they stay
@@ -29,7 +31,7 @@ export function PotIllustration({ className = '' }: { className?: string }) {
       <rect x="31" y="68" width="50" height="9" rx="3.5" fill="var(--color-tile-peach)" stroke="var(--color-forest)" strokeWidth="2.5" strokeLinejoin="round" />
       <path d="M38 72.5h10" stroke="var(--color-cream)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
       {/* Stem */}
-      <path className="grow-stem" d="M56 68V42" stroke="var(--color-forest)" strokeWidth="3" strokeLinecap="round" />
+      <path className="grow-stem" d="M56 68V40" stroke="var(--color-forest)" strokeWidth="3" strokeLinecap="round" />
       {/* Left leaf, with its midrib */}
       <g className="grow-leaf left">
         <path d="M55 60c-10 0-17-5-18-14 10-1 17 4 18 14Z" fill="var(--color-sage)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
@@ -40,18 +42,10 @@ export function PotIllustration({ className = '' }: { className?: string }) {
         <path d="M57 54c2-9 10-14 20-13-1 10-10 15-20 13Z" fill="var(--color-tile-butter)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
         <path d="M58.5 52.5C64 48 70 44.5 75 43" {...vein} />
       </g>
-      {/* A small new bud at the tip */}
-      <path
-        className="grow-leaf right"
-        style={{ transformOrigin: '56px 44px' }}
-        d="M56 44c-5-1-6-6-4-10 5 1 7 5 4 10Z"
-        fill="var(--color-tile-keylime)"
-        stroke="var(--color-forest)"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
+      {/* The first flower, opening at the tip */}
+      <Bloom className="grow-leaf" cx={56} cy={33} r={13} petal="tile-lilac" center="tile-butter" strokeWidth={2} />
       {/* Sparkle */}
-      <path className="sparkle" d="M90 40l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5Z" fill="var(--color-forest)" opacity="0.7" />
+      <path className="sparkle" d="M90 30l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5Z" fill="var(--color-forest)" opacity="0.7" />
     </svg>
   );
 }

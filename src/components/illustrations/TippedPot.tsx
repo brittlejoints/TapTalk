@@ -1,3 +1,5 @@
+import { Bloom } from './Bloom';
+
 /**
  * A gently tipped-over flower pot — for the error screen. Says "something fell,
  * but it's not broken." Softer than a bare error message, without being cute
@@ -23,13 +25,12 @@ export function TippedPotIllustration({ className = '' }: { className?: string }
         <rect x="31" y="63" width="50" height="9" rx="3.5" fill="var(--color-tile-peach)" stroke="var(--color-forest)" strokeWidth="2.5" strokeLinejoin="round" />
         <path d="M38 67.5h10" stroke="var(--color-cream)" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
       </g>
-      {/* Soil that spilled out, and a leaf that came with it */}
-      <path d="M76 97c2-7 11-9 17-6 3 1 6 3 8 6Z" fill="var(--color-forest)" opacity="0.45" />
+      {/* Soil that spilled out, and a flower that came with it */}
+      <path d="M73 97c2-7 11-9 17-6 3 1 6 3 8 6Z" fill="var(--color-forest)" opacity="0.45" />
       <circle cx="82" cy="86" r="2" fill="var(--color-forest)" opacity="0.5" />
       <circle cx="89" cy="87" r="1.5" fill="var(--color-forest)" opacity="0.4" />
       <circle cx="94" cy="84" r="1.2" fill="var(--color-forest)" opacity="0.3" />
-      <path d="M97 99c3-3 8-3 11-1-2 3-8 4-11 1Z" fill="var(--color-tile-butter)" stroke="var(--color-forest)" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M98.5 99C101 98 104 97.8 106.5 98" {...vein} />
+      <Bloom cx={99} cy={94} r={7.5} petal="tile-lilac" center="tile-butter" strokeWidth={1.6} />
       {/* A pebble */}
       <ellipse cx="20" cy="97" rx="3.5" ry="2.5" fill="var(--color-tile-sand)" stroke="var(--color-forest)" strokeWidth="1.5" />
       {/* Sprout sitting next to the pot, still fine */}

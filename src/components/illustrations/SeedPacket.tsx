@@ -1,4 +1,6 @@
-/** A seed packet with a sprout on its label. Shown when there are no custom tiles yet: words are planted here. */
+import { Bloom } from './Bloom';
+
+/** A seed packet with a flower on its label, like a real one. Shown when there are no custom tiles yet: words are planted here. */
 export function SeedPacketIllustration({ className = '' }: { className?: string }) {
   const vein = { stroke: 'var(--color-forest)', strokeWidth: 1.5, strokeLinecap: 'round', opacity: 0.55 } as const;
   return (
@@ -31,15 +33,16 @@ export function SeedPacketIllustration({ className = '' }: { className?: string 
       {/* Label: a name and a line of small print */}
       <path d="M44 86h24" stroke="var(--color-forest)" strokeWidth="3" strokeLinecap="round" opacity="0.5" />
       <path d="M48 92h16" {...vein} />
-      <path className="grow-stem" d="M56 74V58" stroke="var(--color-forest)" strokeWidth="2.5" strokeLinecap="round" />
+      <path className="grow-stem" d="M56 77V59" stroke="var(--color-forest)" strokeWidth="2.5" strokeLinecap="round" />
       <g className="grow-leaf left">
-        <path d="M55 66c-7 0-11-3-12-9 7-1 11 2 12 9Z" fill="var(--color-sage)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M53.5 64.5C49 63 46 60.5 44.5 58.5" {...vein} />
+        <path d="M55 72c-7 0-11-3-12-9 7-1 11 2 12 9Z" fill="var(--color-sage)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M53.5 70.5C49 69 46 66.5 44.5 64.5" {...vein} />
       </g>
       <g className="grow-leaf right">
-        <path d="M57 62c1-6 6-9 12-8-1 6-6 9-12 8Z" fill="var(--color-tile-keylime)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
-        <path d="M58.5 60.5C61.5 58 64.5 56.5 67 55.5" {...vein} />
+        <path d="M57 69c1-6 6-9 12-8-1 6-6 9-12 8Z" fill="var(--color-tile-keylime)" stroke="var(--color-forest)" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M58.5 67.5C61.5 65 64.5 63.5 67 62.5" {...vein} />
       </g>
+      <Bloom className="grow-leaf" cx={56} cy={55} r={9} petal="tile-lilac" center="tile-butter" strokeWidth={1.6} />
     </svg>
   );
 }
