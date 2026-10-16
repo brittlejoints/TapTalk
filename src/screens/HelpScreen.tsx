@@ -110,7 +110,7 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
   const names = contacts.map((c) => c.name).join(', ');
 
   return (
-    <main ref={pageRef} className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-2 short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
+    <main ref={pageRef} className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] roomy:max-w-5xl roomy:gap-3.5 side:grid side:max-w-[1440px] side:grid-cols-2 side:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] roomy:side:grid-rows-[auto_minmax(0,1fr)_auto_auto] side:gap-x-3 side:gap-y-[7px] roomy:side:gap-x-5 roomy:side:gap-y-3 px-3.5 roomy:px-6 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex items-center justify-between">
         <h1 className="font-display text-title leading-none font-light tracking-[-0.02em] text-help-ink short:text-[28px]">{t('help', 'title')}</h1>
         <button
@@ -123,12 +123,12 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
         </button>
       </header>
 
-      <div className="flex min-h-[52px] items-baseline gap-[9px] rounded-tile bg-keylime p-[14px]" aria-live="polite">
+      <div className="flex min-h-[52px] items-baseline gap-[9px] rounded-tile bg-keylime p-[14px] roomy:side:flex-col roomy:side:gap-2 roomy:side:p-5" aria-live="polite">
         <span className="eyebrow text-muted short:hidden">{t('help', 'you-said')}</span>
-        <b className="text-message text-forest short:text-base">{lastSaid ?? t('help', 'tap-a-phrase')}</b>
+        <b className="text-message text-forest roomy:text-[24px] roomy:side:text-[36px] roomy:side:leading-tight short:text-base">{lastSaid ?? t('help', 'tap-a-phrase')}</b>
       </div>
 
-      <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-[7px] short:col-start-2 short:row-span-5 short:row-start-1">
+      <div className="grid min-h-0 flex-1 auto-rows-fr grid-cols-2 gap-[7px] roomy:gap-3 side:col-start-2 side:row-span-5 side:row-start-1">
         {HELP_PHRASES.map(({ key, icon: Icon, urgency }) => {
           const label = t('help', key);
           return (
@@ -138,7 +138,7 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
             onClick={() => say(label)}
             className={`pressable flex flex-col items-center justify-center gap-1.5 rounded-tile p-[7px] text-center [@media(max-height:640px)]:flex-row [@media(max-height:640px)]:gap-2 text-tile leading-tight font-semibold ${URGENCY_CLASS[urgency]}`}
           >
-            <Icon size={26} aria-hidden="true" className="shrink-0 [@media(max-height:640px)]:size-5" />
+            <Icon size={26} aria-hidden="true" className="shrink-0 roomy:size-10 [@media(max-height:640px)]:size-5" />
             <FitText className="max-w-full min-w-0 overflow-hidden">{label}</FitText>
           </button>
           );

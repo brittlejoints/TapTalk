@@ -32,7 +32,7 @@ export function CategoryTabs({ categories, current, onSelect }: CategoryTabsProp
             aria-label={fullName}
             aria-controls="tile-grid"
             onClick={() => onSelect(id)}
-            className={`flex h-[50px] min-w-0 flex-col items-center justify-center gap-px overflow-hidden rounded-full text-xs font-semibold ${
+            className={`flex h-[50px] min-w-0 flex-col items-center justify-center gap-px overflow-hidden rounded-full text-xs font-semibold roomy:h-[62px] roomy:text-sm ${
               selected ? 'bg-forest text-cream' : 'text-forest'
             }`}
           >

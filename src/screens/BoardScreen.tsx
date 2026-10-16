@@ -169,11 +169,11 @@ export function BoardScreen({
   const greetingText = yourName.trim() ? `${greetingBase}, ${yourName.trim()}` : greetingBase;
 
   return (
-    <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] short:grid short:max-w-none short:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] short:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] short:gap-x-3 short:gap-y-[7px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
+    <main className="mx-auto flex h-full max-w-2xl flex-col gap-[11px] roomy:max-w-5xl roomy:gap-3.5 side:grid side:max-w-[1440px] side:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] side:grid-rows-[auto_auto_auto_auto_minmax(0,1fr)] roomy:side:grid-rows-[auto_minmax(0,1fr)_auto_auto] side:gap-x-3 side:gap-y-[7px] roomy:side:gap-x-5 roomy:side:gap-y-3 px-3.5 roomy:px-6 pt-[max(11px,env(safe-area-inset-top))] pb-[max(14px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between">
         <h1 className="flex items-center gap-2 text-forest">
-          <AppIcon className="hidden size-8 min-[390px]:block short:hidden" />
-          <Wordmark className="h-[30px] w-auto short:h-6" talkPulse={speaking ? wordPulse : 0} wave={logoWave} />
+          <AppIcon className="hidden size-8 min-[390px]:block roomy:size-10 short:hidden" />
+          <Wordmark className="h-[30px] w-auto roomy:h-9 short:h-6" talkPulse={speaking ? wordPulse : 0} wave={logoWave} />
         </h1>
         <div className="flex items-center gap-1">
           <button

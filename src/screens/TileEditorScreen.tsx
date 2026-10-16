@@ -94,7 +94,7 @@ export function TileEditorScreen({ tile, onSave, onDelete, onSpeak, onClose }: T
   };
 
   return (
-    <main className="mx-auto flex min-h-full max-w-lg flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(28px,env(safe-area-inset-bottom))]">
+    <main className="mx-auto flex min-h-full max-w-lg roomy:max-w-2xl flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(28px,env(safe-area-inset-bottom))]">
       <header className="flex items-center gap-2">
         <button
           type="button"

@@ -43,13 +43,13 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
   // Remounting the picture on each step lets its leaves grow in once (only with playful touches on).
   const picture: ReactNode = [
     <MockBoard key="board" />,
-    <TapSpeakIllustration key="tap" className="size-40 min-[390px]:size-44" />,
-    <LifeRingIllustration key="ring" className="size-40 min-[390px]:size-44" />,
-    <SeedPacketIllustration key="seed" className="size-40 min-[390px]:size-44" />,
+    <TapSpeakIllustration key="tap" className="size-40 min-[390px]:size-44 roomy:size-64" />,
+    <LifeRingIllustration key="ring" className="size-40 min-[390px]:size-44 roomy:size-64" />,
+    <SeedPacketIllustration key="seed" className="size-40 min-[390px]:size-44 roomy:size-64" />,
   ][step];
 
   return (
-    <main className="mx-auto flex min-h-full max-w-lg flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(21px,env(safe-area-inset-bottom))]">
+    <main className="mx-auto flex min-h-full max-w-lg roomy:max-w-2xl flex-col gap-[14px] px-3.5 pt-[max(11px,env(safe-area-inset-top))] pb-[max(21px,env(safe-area-inset-bottom))]">
       <header className="flex min-h-11 items-center justify-between gap-2">
         <Wordmark className="h-[30px] w-auto text-forest" draw />
         <div className="flex items-center gap-1">

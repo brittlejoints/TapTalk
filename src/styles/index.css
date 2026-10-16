@@ -4,8 +4,23 @@
   Tap Talk Greenhouse tokens. Components use these through Tailwind classes
   (bg-sage, text-forest, rounded-tile...). Never write raw hex in components.
 */
-/* Short screens (a phone on its side): the board and Help move the tiles into a second column. */
+/* Short screens (a phone on its side): tighter header and text. */
 @custom-variant short (@media (max-height: 500px));
+
+/* Roomy: a tablet-sized screen with height to spare. The board fills more of it, and words, icons and the
+   message grow with the tiles (see the roomy text sizes below). Registered before side so side's layout wins. */
+@custom-variant roomy (@media (min-width: 700px) and (min-height: 600px));
+
+/* Side by side: a phone on its side, or a wide landscape screen such as an iPad turned sideways.
+   The board and Help put the controls on the left and the tiles on the right. */
+@custom-variant side {
+  @media (max-height: 500px) {
+    @slot;
+  }
+  @media (min-width: 900px) and (orientation: landscape) {
+    @slot;
+  }
+}
 
 /* Compact message bar: narrow screens, a phone on its side, or extra-large text, where the buttons would crowd out the words. */
 @custom-variant compact {
@@ -132,6 +147,57 @@ html.size-x-large .phrase-tile-label {
 }
 html.size-x-large .core-label {
   font-size: 20px;
+}
+
+/*
+  Roomy screens (tablets): text and icons grow with the bigger tiles, and the
+  text size setting still steps up from there. The 3x3 grid never changes.
+*/
+@media (min-width: 700px) and (min-height: 600px) {
+  html .text-tile {
+    font-size: 22px;
+  }
+  html .message-chip {
+    font-size: 24px;
+  }
+  html .phrase-tile-label {
+    font-size: 18px;
+  }
+  html .core-label {
+    font-size: 19px;
+  }
+  html.size-large .text-tile {
+    font-size: 26px;
+  }
+  html.size-large .message-chip {
+    font-size: 28px;
+  }
+  html.size-large .phrase-tile-label {
+    font-size: 21px;
+  }
+  html.size-large .core-label {
+    font-size: 22px;
+  }
+  html.size-x-large .text-tile {
+    font-size: 30px;
+  }
+  html.size-x-large .message-chip {
+    font-size: 32px;
+  }
+  html.size-x-large .phrase-tile-label {
+    font-size: 23px;
+  }
+  html.size-x-large .core-label {
+    font-size: 24px;
+  }
+  .tile-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .tile-icon-sm {
+    width: 26px;
+    height: 26px;
+  }
 }
 
 /* User-chosen emoji on tiles use the device's color emoji font */
