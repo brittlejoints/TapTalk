@@ -23,20 +23,20 @@ function NavTile({ slot, category, onNav }: { slot: NavSlot; category: Category;
   const content =
     slot.kind === 'mine'
       ? {
-          icon: <Sprout size={30} strokeWidth={1.6} aria-hidden="true" />,
+          icon: <Sprout size={30} strokeWidth={1.6} aria-hidden="true" className="tile-icon" />,
           label: t('message', 'my-words'),
           sub: slot.count ? String(slot.count) : null,
           aria: `${t('message', 'my-words')} · ${categoryName} · ${slot.count}`,
         }
       : slot.kind === 'more'
         ? {
-            icon: <ChevronRight size={30} aria-hidden="true" />,
+            icon: <ChevronRight size={30} aria-hidden="true" className="tile-icon" />,
             label: t('message', 'more'),
             sub: `${slot.page} / ${slot.pages}`,
             aria: `${t('message', 'more')} · ${slot.page}/${slot.pages}`,
           }
         : {
-            icon: <ArrowLeft size={28} aria-hidden="true" />,
+            icon: <ArrowLeft size={28} aria-hidden="true" className="tile-icon" />,
             label: t('message', 'back'),
             sub: null,
             aria: `${t('message', 'back')} · ${categoryName}`,
@@ -51,8 +51,8 @@ function NavTile({ slot, category, onNav }: { slot: NavSlot; category: Category;
       className="pressable flex flex-col items-center justify-center gap-1 rounded-tile bg-forest text-cream"
     >
       {content.icon}
-      <span className="font-semibold">{content.label}</span>
-      {content.sub && <span className="text-xs opacity-80">{content.sub}</span>}
+      <span className="font-semibold roomy:text-[20px]">{content.label}</span>
+      {content.sub && <span className="text-xs opacity-80 roomy:text-sm">{content.sub}</span>}
     </button>
   );
 }
@@ -82,7 +82,7 @@ export function TileGrid({ category, slots, variant = 'word', emptyMessage, onTi
       id="tile-grid"
       role="tabpanel"
       aria-labelledby={`tab-${category.id}`}
-      className="grid min-h-0 flex-1 grid-cols-3 grid-rows-3 gap-[7px] short:col-start-2 short:row-span-5 short:row-start-1"
+      className="grid min-h-0 flex-1 grid-cols-3 grid-rows-3 gap-[7px] roomy:gap-3 side:col-start-2 side:row-span-5 side:row-start-1"
     >
       {emptyMessage ? (
         <>

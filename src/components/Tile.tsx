@@ -42,11 +42,11 @@ export function Tile({ label, color, icon: Icon, photo, emoji, variant = 'word',
           className="aspect-square max-h-[58%] min-h-0 w-auto rounded-[9px] object-cover"
         />
       ) : emoji ? (
-        <span className={`emoji shrink-0 leading-none ${phrase ? 'text-[22px]' : 'text-[36px]'}`} aria-hidden="true">
+        <span className={`emoji shrink-0 leading-none ${phrase ? 'text-[22px] roomy:text-[28px]' : 'text-[36px] roomy:text-[48px]'}`} aria-hidden="true">
           {emoji}
         </span>
       ) : (
-        Icon && <Icon size={phrase ? 20 : 32} strokeWidth={1.6} aria-hidden="true" className="shrink-0" />
+        Icon && <Icon size={phrase ? 20 : 32} strokeWidth={1.6} aria-hidden="true" className={`shrink-0 ${phrase ? 'tile-icon-sm' : 'tile-icon'}`} />
       )}
       <FitText className="line-clamp-2 max-w-full min-w-0">{label}</FitText>
       {ink && <span key={ink.id} className="ink" style={{ left: ink.x, top: ink.y }} aria-hidden="true" />}

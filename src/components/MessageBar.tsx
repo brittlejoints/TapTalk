@@ -121,7 +121,7 @@ export function MessageBar({
   };
 
   return (
-    <div ref={bar} className="relative flex h-[74px] shrink-0 items-center gap-1 rounded-tile bg-keylime py-2 pr-2 pl-3.5">
+    <div ref={bar} className="relative flex h-[74px] roomy:h-[92px] roomy:side:h-auto roomy:side:items-start roomy:side:py-3 shrink-0 items-center gap-1 rounded-tile bg-keylime py-2 pr-2 pl-3.5">
       <label
         ref={scroller}
         htmlFor={inputId}

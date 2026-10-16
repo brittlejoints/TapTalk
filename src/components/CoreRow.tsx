@@ -20,7 +20,7 @@ export function CoreRow({ onWord }: { onWord: (word: string) => void }) {
             key={key}
             type="button"
             onClick={() => onWord(label)}
-            className={`pressable tile-edge core-label flex h-13 items-center justify-center gap-1.5 rounded-tile font-semibold text-[16px] text-forest ${className}`}
+            className={`pressable tile-edge core-label flex h-13 roomy:h-16 items-center justify-center gap-1.5 rounded-tile font-semibold text-[16px] text-forest ${className}`}
           >
             <Icon size={18} aria-hidden="true" className="hidden min-[360px]:block" />
             {label}
