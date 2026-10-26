@@ -7,6 +7,7 @@ import { buildAlertMessage, buildSmsUrl, detectPlatform, getLocation } from '../
 import { FitText } from '../components/FitText';
 import { TwoBubblesIllustration } from '../components/illustrations';
 import { useI18n } from '../lib/i18n';
+import { record } from '../lib/insights';
 import type { EmergencyContact } from '../lib/contacts';
 
 type Urgency = 'critical' | 'urgent' | 'medical';
@@ -54,11 +55,13 @@ export function HelpScreen({ contacts, yourName, onSpeak, onClose, onSetUpContac
   const wasOpen = useRef(false);
 
   const say = (text: string) => {
+    record('helpPhrasesSpoken');
     onSpeak(text);
     setLastSaid(text);
   };
 
   const openMessages = (location: Awaited<ReturnType<typeof getLocation>>) => {
+    record('alertsStarted');
     const text = buildAlertMessage({ name: yourName, said: lastSaid, location });
     setAlertText(text);
     setStep('opened');

@@ -1,0 +1,7 @@
+# Tap Talk's optional anonymous usage counts. See supabase/README.md.
+# The app has no sign-in, so the gateway's JWT check is off; each function checks its own input.
+[functions.insights]
+verify_jwt = false
+
+[functions.insights-summary]
+verify_jwt = false

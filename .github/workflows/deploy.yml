@@ -29,6 +29,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # Optional "Help improve Tap Talk" counter (see supabase/README.md). Empty: the feature stays off and hidden.
+          VITE_INSIGHTS_URL: ${{ vars.INSIGHTS_URL }}
       - run: npm test
       - uses: actions/upload-pages-artifact@v3
         with:

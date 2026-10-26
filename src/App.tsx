@@ -4,6 +4,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { STRINGS } from './data/strings';
 import { TILES_PER_PAGE } from './data/vocabulary';
 import { useEmergencyContacts } from './lib/contacts';
+import { flushInsights, record, startInsights, type Snapshot } from './lib/insights';
 import { useCustomTiles } from './lib/customTiles';
 import { I18nProvider, useI18n } from './lib/i18n';
 import type { BackupData } from './lib/backup';
@@ -45,6 +46,33 @@ export default function App() {
     saveJSON('saved-phrases', savedPhrases);
   }, [savedPhrases]);
 
+  // Optional anonymous counts (off unless the person turns sharing on in Settings).
+  // A finished week is sent at start, when the app returns to the foreground, and when the connection returns.
+  const snapshotRef = useRef<Snapshot | null>(null);
+  snapshotRef.current = {
+    language: settings.language,
+    textSize: settings.textSize,
+    customTiles: custom.tiles.length,
+    hasContacts: emergency.contacts.length > 0,
+    playful: settings.playful,
+    speakOnTap: settings.speakOnTap,
+    highVisibility: settings.highVisibility,
+  };
+  useEffect(() => {
+    startInsights(window.location.search);
+    record('sessions');
+    const flush = () => {
+      if (snapshotRef.current && document.visibilityState === 'visible') void flushInsights(snapshotRef.current);
+    };
+    flush();
+    window.addEventListener('online', flush);
+    document.addEventListener('visibilitychange', flush);
+    return () => {
+      window.removeEventListener('online', flush);
+      document.removeEventListener('visibilitychange', flush);
+    };
+  }, []);
+
   // Screen changes move keyboard and screen reader focus: a newly opened screen
   // focuses its heading, and returning to the board puts focus back on the button
   // that left it. The welcome guide focuses its own step headings.
@@ -69,6 +97,7 @@ export default function App() {
   // Help, Settings and the tile editor are history entries, so the phone's Back button or swipe
   // returns to the previous screen instead of leaving the app.
   const open = (next: View, opts?: { replace?: boolean }) => {
+    if (next === 'help') record('helpOpened');
     if (view === 'board' && document.activeElement instanceof HTMLElement) boardReturnFocus.current = document.activeElement;
     try {
       if (opts?.replace) window.history.replaceState({ tt: next }, '');
@@ -250,7 +279,12 @@ function AppShell({ view, open, back, start, settings, update, speech, custom, e
         <TileEditorScreen
           key={editingTileId ?? 'new'}
           tile={custom.tiles.find((t) => t.id === editingTileId)}
-          onSave={custom.saveTile}
+          onSave={(tile) => {
+            const isNew = !custom.tiles.some((t) => t.id === tile.id);
+            const ok = custom.saveTile(tile);
+            if (ok && isNew) record('customTilesAdded');
+            return ok;
+          }}
           onDelete={custom.removeTile}
           onSpeak={speech.speak}
           onClose={back}

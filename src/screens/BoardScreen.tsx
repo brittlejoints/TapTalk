@@ -12,6 +12,7 @@ import { CATEGORIES, TILES_PER_PAGE, type CategoryId, type Word, type WordDef } 
 import { boardPage, type Slot } from '../lib/boardPages';
 import type { CustomTile } from '../lib/customTiles';
 import { flyStarTo, tapHaptic } from '../lib/delight';
+import { record } from '../lib/insights';
 import { useI18n } from '../lib/i18n';
 import { addTypedWords, addWord, removeLastWord, toSentence } from '../lib/message';
 import { loadJSON, saveJSON } from '../lib/storage';
@@ -134,6 +135,7 @@ export function BoardScreen({
   const handleWord = (word: string) => {
     tapHaptic();
     consumeGreeting();
+    record('tilesTapped');
     const next = addWord(withDraft(words), word);
     // A word that doesn't fit is never dropped silently.
     if (next.length - words.length < countWords(draft) + 1) flash(t('message', 'message-full'));
@@ -144,6 +146,7 @@ export function BoardScreen({
 
   const commitDraft = () => {
     consumeGreeting();
+    if (draft.trim()) record('typedMessages');
     const next = withDraft(words);
     if (next.length - words.length < countWords(draft)) flash(t('message', 'message-full'));
     setWords(next);
@@ -153,7 +156,10 @@ export function BoardScreen({
   const speakMessage = (pending: string) => {
     consumeGreeting();
     const all = pending.trim() ? addTypedWords(words, pending) : words;
-    if (all.length > 0) setLogoWave((n) => n + 1);
+    if (all.length > 0) {
+      setLogoWave((n) => n + 1);
+      record('messagesSpoken');
+    }
     if (all.length - words.length < countWords(pending)) flash(t('message', 'message-full'));
     setWords(all);
     setDraft('');
@@ -209,7 +215,10 @@ export function BoardScreen({
         }}
         onSave={(from) => {
           const saved = onSavePhrase(sentence);
-          if (saved) flyStarTo(from, document.getElementById('tab-saved'));
+          if (saved) {
+            flyStarTo(from, document.getElementById('tab-saved'));
+            record('phrasesSaved');
+          }
           else flash(t('message', 'saved-full'));
           return saved;
         }}

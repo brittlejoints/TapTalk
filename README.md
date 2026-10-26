@@ -11,7 +11,7 @@ npm run dev
 
 Then open the URL it prints. Other commands: `npm run build` (type-checks, then builds), `npm test`.
 
-Your words, settings and contacts are stored only on the device. There are no accounts and no analytics. To move to a new device or recover after clearing the browser, use **Settings → Backup** to save a file and restore it later. The file is plain JSON and includes phone numbers, so keep it private.
+Your words, settings and contacts are stored only on the device. There are no accounts, and no analytics unless someone opts in to anonymous weekly counts ("Help improve Tap Talk" in Settings, off by default; setup in `supabase/README.md`). To move to a new device or recover after clearing the browser, use **Settings → Backup** to save a file and restore it later. The file is plain JSON and includes phone numbers, so keep it private.
 
 ## What's here
 
@@ -37,7 +37,7 @@ Every push to `main` builds the app, runs the tests, and publishes it (`.github/
 ## License, privacy and terms
 
 - [MIT License](LICENSE): the code is open source.
-- [Privacy](PRIVACY.md): Tap Talk collects nothing; everything stays on the device.
+- [Privacy](PRIVACY.md): everything stays on the device; the only exception is optional, anonymous weekly counts that are off unless you turn them on.
 - [Terms of use](TERMS.md): including that Tap Talk is not an emergency service.
 
 Third-party software: React (MIT), Lucide icons (ISC), Tailwind CSS (MIT), and the fonts Cormorant Garamond and Inter (SIL Open Font License 1.1).

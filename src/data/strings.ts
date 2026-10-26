@@ -215,6 +215,24 @@ type StringTable = {
     license: string;
     source: string;
   };
+  insights: {
+    'title': string;
+    'toggle': string;
+    'hint': string;
+    'see': string;
+    'this-week': string;
+    'nothing-yet': string;
+    'also': string;
+    'sessions': string;
+    'tilesTapped': string;
+    'messagesSpoken': string;
+    'typedMessages': string;
+    'phrasesSaved': string;
+    'helpOpened': string;
+    'helpPhrasesSpoken': string;
+    'alertsStarted': string;
+    'customTilesAdded': string;
+  };
   backup: {
     'title': string;
     'hint': string;
@@ -439,6 +457,24 @@ const en: StringTable = {
     license: 'License',
     source: 'Source code',
   },
+  insights: {
+    'title': 'Help improve Tap Talk',
+    'toggle': 'Share anonymous usage counts',
+    'hint': 'Once a week, Tap Talk sends counts such as how many messages were spoken. Never your words, names, contacts, photos or location, and nothing that identifies you. Turning it off deletes the counts kept here.',
+    'see': 'See exactly what is shared',
+    'this-week': 'This week so far',
+    'nothing-yet': 'Nothing counted yet this week.',
+    'also': 'Also shared: language, text size, phone or tablet, whether Tap Talk is on your home screen, how many weeks you have used it, a rough number of your own tiles, whether contacts are set up, the on or off choices in Settings, and the tag of the link that first brought you here, if it had one.',
+    'sessions': 'Times opened',
+    'tilesTapped': 'Tiles tapped',
+    'messagesSpoken': 'Messages spoken',
+    'typedMessages': 'Typed entries',
+    'phrasesSaved': 'Phrases saved',
+    'helpOpened': 'Help opened',
+    'helpPhrasesSpoken': 'Help phrases spoken',
+    'alertsStarted': 'Alerts started',
+    'customTilesAdded': 'Tiles added',
+  },
   backup: {
     'title': 'Backup',
     'hint': 'Save everything you have set up (tiles, contacts, saved phrases and settings) to a file, or restore it on this or another device. The file is not encrypted and contains phone numbers, so keep it somewhere private.',
@@ -662,6 +698,24 @@ const es: StringTable = {
     terms: 'Términos de uso',
     license: 'Licencia',
     source: 'Código fuente',
+  },
+  insights: {
+    'title': 'Ayuda a mejorar Tap Talk',
+    'toggle': 'Compartir recuentos de uso anónimos',
+    'hint': 'Una vez por semana, Tap Talk envía recuentos, como cuántos mensajes se dijeron. Nunca tus palabras, nombres, contactos, fotos ni ubicación, ni nada que te identifique. Al desactivarlo se borran los recuentos guardados aquí.',
+    'see': 'Ver exactamente lo que se comparte',
+    'this-week': 'Esta semana hasta ahora',
+    'nothing-yet': 'Todavía no hay nada contado esta semana.',
+    'also': 'También se comparte: idioma, tamaño del texto, teléfono o tableta, si Tap Talk está en tu pantalla de inicio, cuántas semanas lo has usado, un número aproximado de tus mosaicos, si hay contactos, las opciones de Ajustes que están activadas y la etiqueta del enlace que te trajo por primera vez, si tenía una.',
+    'sessions': 'Veces abierto',
+    'tilesTapped': 'Mosaicos tocados',
+    'messagesSpoken': 'Mensajes dichos',
+    'typedMessages': 'Entradas escritas',
+    'phrasesSaved': 'Frases guardadas',
+    'helpOpened': 'Ayuda abierta',
+    'helpPhrasesSpoken': 'Frases de ayuda dichas',
+    'alertsStarted': 'Alertas iniciadas',
+    'customTilesAdded': 'Mosaicos agregados',
   },
   backup: {
     'title': 'Copia de seguridad',

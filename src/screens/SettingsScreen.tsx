@@ -2,6 +2,7 @@ import { ArrowLeft, Check, ChevronRight, Phone, Plus, Trash2 } from 'lucide-reac
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { BackupSection } from '../components/BackupSection';
 import { ContactForm } from '../components/ContactForm';
+import { InsightsSection } from '../components/InsightsSection';
 import { AppIcon } from '../components/LogoMark';
 import { Wordmark } from '../components/Wordmark';
 import { QuietBubbleIllustration, SeedPacketIllustration, WateringCanIllustration } from '../components/illustrations';
@@ -13,6 +14,7 @@ import type { BackupData } from '../lib/backup';
 import { MAX_CONTACTS, type EmergencyContact } from '../lib/contacts';
 import type { CustomTile } from '../lib/customTiles';
 import { useI18n } from '../lib/i18n';
+import { insightsAvailable } from '../lib/insights';
 import { TEXT_SIZES, type Settings, type TextSize } from '../lib/settings';
 
 interface SettingsScreenProps {
@@ -410,6 +412,22 @@ export function SettingsScreen({
           onRestore={onRestore}
         />
       </Section>
+
+      {insightsAvailable() && (
+        <Section title={t('insights', 'title')}>
+          <InsightsSection
+            snapshot={{
+              language: settings.language,
+              textSize: settings.textSize,
+              customTiles: customTiles.length,
+              hasContacts: contacts.length > 0,
+              playful: settings.playful,
+              speakOnTap: settings.speakOnTap,
+              highVisibility: settings.highVisibility,
+            }}
+          />
+        </Section>
+      )}
 
       <Section title={t('settings', 'saved-phrases')}>
         {savedPhrases.length === 0 ? (

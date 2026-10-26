@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Tap Talk insights</title>
+  <link rel="icon" href="../icons/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="portal.css" />
+</head>
+<body>
+  <main>
+    <header class="top">
+      <div>
+        <p class="eyebrow">Tap Talk · private</p>
+        <h1>Insights</h1>
+      </div>
+      <button type="button" id="signout" class="ghost" hidden>Sign out</button>
+    </header>
+
+    <section id="login" class="card" hidden>
+      <h2>Sign in</h2>
+      <p class="muted">Enter the dashboard password you set in Supabase. It is kept only until you close this tab.</p>
+      <form id="login-form">
+        <label for="pw">Password</label>
+        <div class="row">
+          <input id="pw" type="password" autocomplete="current-password" required minlength="12" />
+          <button type="submit">Show insights</button>
+        </div>
+        <p id="login-error" class="error" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <section id="setup" class="card" hidden>
+      <h2>Not set up yet</h2>
+      <p>This build of Tap Talk has no counter address, so there is nothing to show. Follow <code>supabase/README.md</code> in the repository, then add the address as the <code>INSIGHTS_URL</code> repository variable and publish again.</p>
+    </section>
+
+    <div id="dash" hidden>
+      <p class="muted note">Counts come only from devices where someone switched on “Help improve Tap Talk”. Each opted-in device that used Tap Talk in a week sends one report after the week ends, so “devices” means weekly active, opted-in devices. Weeks run Monday to Sunday.</p>
+      <section class="stats" id="stats" aria-label="Last finished week"></section>
+      <section class="card" id="chart-devices"></section>
+      <section class="card" id="chart-messages"></section>
+      <section class="card" id="chart-features"></section>
+      <section class="grid2" id="breakdowns"></section>
+      <section class="card" id="refs"></section>
+      <p class="muted note" id="generated"></p>
+    </div>
+  </main>
+  <div id="tip" class="tip" role="tooltip" hidden></div>
+  <script src="portal.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+/* Tap Talk insights portal. Greenhouse colours; chart hues validated for colour-blind separation. */
+:root {
+  color-scheme: light;
+  --forest: #0f3e17;
+  --cream: #fffefc;
+  --keylime: #e1f4df;
+  --hairline: #efeeeb;
+  --charcoal: #222222;
+  --muted: #4d5f50;
+  --series-1: #2e7a45; /* returning devices, and single-series bars */
+  --series-2: #b8862a; /* new devices */
+  --grid: #e3e6e1;
+  --error: #7a1a12;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--cream); color: var(--charcoal); font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; display: flex; flex-direction: column; gap: 16px; }
+h1 { font: 300 40px/1.05 Georgia, 'Times New Roman', serif; color: var(--forest); margin: 0; letter-spacing: -0.02em; }
+h2 { font-size: 17px; margin: 0 0 4px; color: var(--forest); }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+.muted { color: var(--muted); }
+.note { font-size: 14px; margin: 0; }
+.top { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.card { background: var(--keylime); border-radius: 14px; padding: 20px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.stat { background: var(--keylime); border-radius: 14px; padding: 16px; }
+.stat .label { font-size: 13px; color: var(--muted); margin: 0; }
+.stat .value { font-size: 32px; font-weight: 600; color: var(--forest); margin: 2px 0 0; font-variant-numeric: tabular-nums; }
+.stat .delta { font-size: 13px; color: var(--muted); margin: 0; }
+label { font-weight: 600; color: var(--forest); display: block; margin: 12px 0 6px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+input { flex: 1; min-width: 200px; min-height: 48px; border-radius: 14px; border: 1.5px solid var(--muted); padding: 0 14px; font: inherit; background: var(--cream); }
+button { min-height: 48px; padding: 0 20px; border-radius: 14px; border: 0; background: var(--forest); color: var(--cream); font: inherit; font-weight: 600; cursor: pointer; }
+button.ghost { background: var(--hairline); color: var(--forest); }
+:focus-visible { outline: 2px solid var(--forest); outline-offset: 2px; }
+.error { color: var(--error); font-weight: 600; margin: 8px 0 0; }
+code { background: var(--cream); padding: 1px 5px; border-radius: 6px; }
+.chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.legend { display: flex; gap: 14px; font-size: 13px; color: var(--charcoal); list-style: none; padding: 0; margin: 0; }
+.legend span.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.legend .s1 { background: var(--series-1); }
+.legend .s2 { background: var(--series-2); }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { font: 12px system-ui, sans-serif; fill: var(--muted); }
+svg .value-label { fill: var(--charcoal); font-weight: 600; }
+.bar:hover, .bar:focus { opacity: 0.85; outline: none; }
+details { margin-top: 10px; font-size: 14px; }
+summary { cursor: pointer; font-weight: 600; color: var(--forest); min-height: 32px; display: flex; align-items: center; }
+table { border-collapse: collapse; width: 100%; margin-top: 6px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--grid); }
+th { color: var(--muted); font-weight: 600; }
+td.n, th.n { text-align: right; }
+.empty { color: var(--muted); margin: 8px 0 0; }
+.tip { position: fixed; pointer-events: none; background: var(--forest); color: var(--cream); font-size: 13px; padding: 6px 10px; border-radius: 8px; z-index: 10; white-space: nowrap; }
+.hbars { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.hrow { display: grid; grid-template-columns: minmax(90px, 34%) 1fr 48px; gap: 10px; align-items: center; min-height: 30px; font-size: 14px; border-radius: 6px; }
+.hrow:focus-visible { outline: 2px solid var(--forest); outline-offset: 2px; }
+.hlabel { text-align: right; color: var(--charcoal); overflow-wrap: anywhere; }
+.htrack { height: 16px; }
+.hfill { display: block; height: 100%; min-width: 2px; background: var(--series-1); border-radius: 4px; }
+.hval { font-weight: 600; color: var(--charcoal); font-variant-numeric: tabular-nums; }
